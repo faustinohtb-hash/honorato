@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta property="og:title" content="Solicitud de Permiso Docente - Secundaria Honorato Tlaseca Barrera">
+    <meta property="og:description" content="Formulario oficial para que el personal docente solicite permisos laborales y personales.">
+    <meta property="og:image" content="https://faustinohtb-hash.github.io/honorato/SP.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="URL_DEL_FORMULARIO">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Secundaria Profr. Honorato Tlaseca Barrera">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Solicitud de Permiso Docente">
+    <meta name="twitter:description" content="Formulario oficial para docentes solicitar permisos">
+    <meta name="twitter:image" content="https://faustinohtb-hash.github.io/honorato/SP.png">
+    
+    <title>Solicitud de Permiso Docente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 30px 30px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .logo-container {
+            width: 220px;
+            max-width: 80%;
+            height: auto;
+            margin: 0 auto 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .home-btn-icon {
+            font-size: 16px;
+        }
+
+        .form-content {
+            padding: 40px 30px;
+        }
+
+        /* --- Estilos de Estadísticas --- */
+        .stats-section {
+            background: #f0f4f8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .stats-section h3 {
+            color: #1e3c72;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h4 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .big-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2a5298;
+        }
+
+        .teacher-stats {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            max-height: 300px; 
+            overflow-y: auto;
+        }
+
+        .teacher-stats-list {
+            list-style: none;
+        }
+
+        .teacher-stats-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .teacher-stats-list li:last-child {
+            border-bottom: none;
+        }
+
+        .badge-count {
+            background: #eef2f7;
+            color: #2a5298;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        /* --- Fin Estilos Estadísticas --- */
+
+        /* --- Estilos del Botón Toggle --- */
+        .toggle-history-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-history-btn {
+            background: #546e7a; /* Color gris azulado */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .toggle-history-btn:hover {
+            background: #455a64;
+            transform: translateY(-2px);
+        }
+
+        .toggle-history-btn.active {
+            background: #e74c3c; /* Rojo para cerrar */
+        }
+        /* ------------------------------- */
+
+        /* --- NUEVO ESTILO: Lista de Detalles --- */
+        .history-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            /* Oculto por defecto */
+            display: none; 
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f4f8;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .history-header h3 {
+            font-size: 16px;
+            color: #1e3c72;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Estilo del Botón Actualizar */
+        .refresh-btn {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            color: #2a5298;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        .refresh-btn:hover {
+            background: #2a5298;
+            color: white;
+            border-color: #2a5298;
+        }
+
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+
+        .history-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Scrollbar personalizado para la lista */
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .history-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #f8f9fa;
+            transition: background 0.2s;
+            border-radius: 8px;
+        }
+
+        .history-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .history-info {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .history-info strong {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .history-info span {
+            color: #666;
+            font-size: 12px;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .history-meta {
+            text-align: right;
+            min-width: 100px;
+        }
+
+        .history-date-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .history-motive {
+            display: block;
+            font-size: 11px;
+            color: #888;
+            text-align: right;
+        }
+        /* --- FIN Estilos Lista Detalles --- */
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .teacher-stats {
+                max-height: 150px;
+            }
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .history-meta {
+                text-align: left;
+                margin-top: 8px;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label span {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Poppins', Arial, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .row.three-columns {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin-top: 15px;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .footer-home-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        .footer-home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 5px solid #2a5298;
+        }
+
+        .summary h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .summary-item {
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-item strong {
+            color: #2a5298;
+            margin-right: 10px;
+        }
+
+        .fechas-list {
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .fechas-list li {
+            margin-bottom: 4px;
+            font-size: 13px;
+            color: #555;
+            list-style-type: none;
+        }
+
+        .fechas-list li::before {
+            content: "📅 ";
+            margin-right: 5px;
+        }
+
+        .whatsapp-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .print-btn {
+            display: inline-block;
+            background-color: #4285F4;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .print-btn:hover {
+            background-color: #0d47a1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .row.three-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .form-content {
+                padding: 30px 20px;
+            }
+
+            .logo-container {
+                width: 180px;
+            }
+
+            .home-btn {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .footer-home-btn {
+                position: static;
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .permission-preview {
+            background: white;
+            border: 2px solid #2a5298;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 20px;
+            display: none;
+            color: #000;
+        }
+
+        .permission-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .permission-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .permission-subtitle {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .permission-body {
+            text-align: justify;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .permission-details {
+            margin-bottom: 25px;
+            padding-left: 20px;
+            font-size: 14px;
+        }
+
+        .permission-details li {
+            margin-bottom: 8px;
+        }
+
+        .permission-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            font-size: 12px;
+        }
+
+        .permission-signature {
+            border-top: 1px solid #333;
+            padding-top: 5px;
+            width: 45%;
+            text-align: center;
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                border: none;
+            }
+            .header, .form-content, .footer, .whatsapp-container, .message, .summary, .submit-btn, .reset-btn, .home-btn, .footer-home-btn, .stats-section, .history-section {
+                display: none;
+            }
+            .permission-preview {
+                display: block;
+                border: none;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="https://faustinohtb-hash.github.io/honorato/index.html" class="home-btn">
+                <span class="home-btn-icon">🏠</span>
+                <span>Inicio</span>
+            </a>
+            
+            <div class="logo-container">
+                <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Secundaria HTB" class="logo">
+            </div>
+            <h1>📝 Solicitud de Permiso Docente</h1>
+            <p>Formulario para que el personal docente solicite permisos por asuntos personales, médicos, oficiales, etc.</p>
+        </div>
+
+        <div class="form-content">
+            
+            <!-- NUEVA SECCIÓN: Contador de Ciclo Escolar -->
+            <div class="stats-section" id="cycle-section">
+                <h3>📅 Avance del Ciclo Escolar 2026</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Días Hábiles Transcurridos</h4>
+                        <div class="big-number" id="diasHabiles">0</div>
+                        <small style="color:#999; font-size:11px;">Lunes a Viernes</small>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Semanas Transcurridas</h4>
+                        <div class="big-number" id="semanas">0</div>
+                        <small style="color:#999; font-size:11px;">Desde 01/01/2026</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Estadísticas -->
+            <div class="stats-section" id="stats-section" style="display:none;">
+                <h3>📊 Estadísticas de Permisos</h3>
+                <div class="stats-grid">
+                    <!-- Columna Izquierda: Apilada -->
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Caja Total Solicitados -->
+                        <div class="stat-card">
+                            <h4>Total Solicitados</h4>
+                            <div class="big-number" id="totalPermisos">0</div>
+                        </div>
+                        
+                        <!-- Caja Permisos Económicos -->
+                        <div class="stat-card">
+                            <h4>Permisos Económicos</h4>
+                            <div class="big-number" id="totalEconomicos" style="color: #e67e22; font-size: 28px;">0</div>
+                            
+                            <!-- Lista específica para económicos -->
+                            <div class="teacher-stats" style="margin-top: 10px; max-height: 120px; border: 1px solid #eee; background: #fdfdfd;">
+                                <ul class="teacher-stats-list" id="listadoEconomicos">
+                                    <!-- JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Lista General -->
+                    <div class="teacher-stats">
+                        <h4>Por Docente (General)</h4>
+                        <ul class="teacher-stats-list" id="listadoDocentes">
+                            <!-- Se llena con JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NUEVO BOTÓN TOGGLE: Muestra/Oculta el Historial -->
+            <div class="toggle-history-container" id="toggleContainer" style="display:none;">
+                <button id="toggleHistoryBtn" class="toggle-history-btn">
+                    📋 Ver Historial de Permisos
+                </button>
+            </div>
+
+            <!-- NUEVA SECCIÓN: Lista Detallada (Oculta por defecto) -->
+            <div class="history-section" id="history-section">
+                <div class="history-header">
+                    <h3>📑 Detalle de Permisos Recientes</h3>
+                    <div>
+                        <small style="color:#888; font-size:12px; margin-right:10px;">Últimos registros</small>
+                        <button id="refreshBtn" class="refresh-btn" title="Actualizar datos">
+                            🔄 Actualizar
+                        </button>
+                    </div>
+                </div>
+                <ul class="history-list" id="history-list">
+                    <!-- Los items se generarán aquí con JS -->
+                </ul>
+            </div>
+
+            <div class="message" id="message"></div>
+            <div class="summary" id="summary"></div>
+
+            <form id="permisoForm">
+                <div class="form-group">
+                    <label>Nombre del docente solicitante <span>*</span></label>
+                    <select id="nombreDocente" required>
+                        <option value="">Cargando docentes...</option>
+                    </select>
+                    <div class="error-message" id="errorNombreDocente"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cargo <span>*</span></label>
+                    <select id="cargo" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Docente">Docente</option>
+                        <option value="Director">Director</option>
+                        <option value="Secretario">Secretario</option>
+                        <option value="Intendencia">Intendencia</option>
+                    </select>
+                    <div class="error-message" id="errorCargo"></div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Motivo del permiso <span>*</span></label>
+                        <select id="motivo" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Asuntos personales">Asuntos personales</option>
+                            <option value="Cita médica">Cita médica</option>
+                            <option value="Trámite oficial">Trámite oficial</option>
+                            <option value="Duelo">Duelo</option>
+                            <option value="Enfermedad">Enfermedad</option>
+                            <option value="Incapacidad Temporal para el trabajo">Incapacidad Temporal para el trabajo</option>
+                            <option value="Reposición de día">Reposición de día</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                        <div class="error-message" id="errorMotivo"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                         <label>Docente que cubrirá <span>*</span></label>
+                         <select id="docenteCubre" required>
+                             <option value="">Seleccione...</option>
+                             <option value="Docente de Guardia">Docente de Guardia</option>
+                             <option value="Dirección">Dirección</option>
+                             <option value="Sin definir">Sin definir</option>
+                             <option value="CTE Fase Intensiva">CTE Fase Intensiva</option>
+                             <option value="CTE Sesión ordinaria">CTE Sesión ordinaria</option>
+                             <option value="Taller Intensivo">Taller Intensivo</option>
+                             <option value="Registro de Calificaciones">Registro de Calificaciones</option>
+                         </select>
+                         <div class="error-message" id="errorDocenteCubre"></div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="otroMotivoGroup" style="display: none;">
+                    <label>Especifique el motivo <span>*</span></label>
+                    <input type="text" id="otroMotivo">
+                    <div class="error-message" id="errorOtroMotivo"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción detallada (Opcional)</label>
+                    <textarea id="comentarios" placeholder="Agregue detalles relevantes sobre las actividades que dejará pendientes, avances de programa, etc."></textarea>
+                </div>
+
+                <div class="row three-columns">
+                    <div class="form-group">
+                        <label>Fecha de inicio <span>*</span></label>
+                        <input type="date" id="fecha" required>
+                        <div class="error-message" id="errorFecha"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Cantidad de días <span>*</span></label>
+                        <input type="number" id="cantidadDias" min="1" value="1" required>
+                        <div class="error-message" id="errorCantidadDias"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Horario de ausencia</label>
+                        <select id="horarioAusencia">
+                            <option value="Todo el día">Todo el día</option>
+                            <option value="Primera hora(7:30 - 8:20)">Primera hora(7:30 - 8:20)</option>
+                            <option value="Primera hora(8:20 - 9:10)">Primera hora(8:20 - 9:10)</option>
+                            <option value="Primera hora(9:30 - 10:20)">Primera hora(9:30 - 10:20)</option>
+                            <option value="Primera hora(10:20 - 11:10)">Primera hora(10:20 - 11:10)</option>
+                            <option value="Primera hora(11:30 - 12:20)">Primera hora(11:30 - 12:20)</option>
+                            <option value="Primera hora(12:20 - 13:10)">Primera hora(12:20 - 13:10)</option>
+                            <option value="Primera hora(13:10 - 14:00)">Primera hora(13:10 - 14:00)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="declaracion" required>
+                        <label for="declaracion">Me comprometo a dejar las actividades académicas y administrativas en orden, así como entregar el portafolio de evidencias actualizado. <span>*</span></label>
+                    </div>
+                    <div class="error-message" id="errorDeclaracion"></div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    📤 Enviar Solicitud
+                </button>
+            </form>
+
+            <!-- Vista previa estilo oficio -->
+            <div class="permission-preview" id="permissionPreview">
+                <div class="permission-header">
+                    <div class="permission-title">OFICIO DE SOLICITUD DE PERMISO</div>
+                    <div class="permission-subtitle">SECUNDARIA PROFR. HONORATO TLASECA BARRERA</div>
+                    <div class="permission-subtitle">Huehuetlán el Chico, Puebla</div>
+                    <br>
+                    <div style="text-align: right; margin-bottom: 20px;">
+                        <strong>Fecha de emisión:</strong> <span id="previewFechaEmision"></span>
+                    </div>
+                </div>
+                
+                <div class="permission-body">
+                    <p><strong>Presente:</strong></p>
+                    <br>
+                    <p style="text-indent: 40px;">El que suscribe, <strong><span id="previewNombre"></span></strong>, docente de esta institución, solicita respetuosamente a la Dirección Escolar se me sirva autorizar permiso por los motivos que a continuación se detallan:</p>
+                    
+                    <ul class="permission-details">
+                        <li><strong>Cargo:</strong> <span id="previewCargo"></span></li>
+                        <li><strong>Motivo:</strong> <span id="previewMotivo"></span></li>
+                        <li><strong>Docente que cubrirá:</strong> <span id="previewCubre"></span></li>
+                        <li><strong>Días de ausencia:</strong> <span id="previewDias"></span></li>
+                        <li><strong>Fechas:</strong> <span id="previewFechas"></span></li>
+                        <li><strong>Horario:</strong> <span id="previewHorario"></span></li>
+                    </ul>
+
+                    <p style="text-indent: 40px;">Agradezco de antemano el apoyo para trámite de este permiso y manifiesto mi compromiso de reincorporarme en la fecha indicada.</p>
+                </div>
+                
+                <div class="permission-footer">
+                    <div class="permission-signature">
+                        <p>_________________________</p>
+                        <p>Firma del Docente Solicitante</p>
+                    </div>
+                    <div class="permission-signature">
+                        <p>_________________________</p>
+                        <p>Vo. Bo. Director(a)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Formulario elaborado para la Secundaria Profr. Honorato Tlaseca Barrera<br>
+            Huehuetlán el Chico, Puebla. Edición 2025.
+            
+            <a href="https://faustinohtb-hash.github.io/honorato/index.html" class="footer-home-btn">
+                <span>🏠</span>
+                <span>Regresar al inicio</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('permisoForm');
+        const motivoSelect = document.getElementById('motivo');
+        const otroMotivoGroup = document.getElementById('otroMotivoGroup');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('message');
+        const summaryDiv = document.getElementById('summary');
+        const permissionPreview = document.getElementById('permissionPreview');
+        
+        // URL para cargar la lista de docentes
+        const GOOGLE_SCRIPT_TEACHERS_URL = 'https://script.google.com/macros/s/AKfycbzPUWFLXhFAoC9w_Yqo5shO9TRyquOYYvzg8ovKB1mdFNh4dUhK7MKLOs1ITupLxb-hXQ/exec';
+        
+        // URL para enviar los datos
+        const GOOGLE_SCRIPT_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbw28oRV_Fi8yc7OpDnTP8ODfcWuhLYCJo7UPYmydYVxL1__NCvaPrmIh13Gdel8sN67/exec';
+
+        // --- NUEVA FUNCIÓN: Calcular días hábiles y semanas ---
+        function updateCycleCounters() {
+            const startDate = new Date(2026, 0, 1); // 1 de Enero de 2026
+            const today = new Date();
+            
+            // Ajustar para ignorar horas/minutos/segundos
+            startDate.setHours(0,0,0,0);
+            today.setHours(0,0,0,0);
+
+            const diffTime = today.getTime() - startDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            let businessDays = 0;
+            let weeks = 0;
+
+            if (diffDays > 0) {
+                // Calcular semanas completas (7 días)
+                weeks = Math.floor(diffDays / 7);
+
+                // Calcular días hábiles (Lunes a Viernes)
+                // Iteramos día por día desde el inicio
+                let currentDay = new Date(startDate);
+                while(currentDay < today) {
+                    const dayOfWeek = currentDay.getDay();
+                    // 0 = Domingo, 6 = Sábado
+                    if(dayOfWeek !== 0 && dayOfWeek !== 6) {
+                        businessDays++;
+                    }
+                    currentDay.setDate(currentDay.getDate() + 1);
+                }
+            }
+
+            // Actualizar el DOM
+            const diasElement = document.getElementById('diasHabiles');
+            const semanasElement = document.getElementById('semanas');
+            
+            if(diasElement) diasElement.textContent = businessDays;
+            if(semanasElement) semanasElement.textContent = weeks;
+        }
+        // -----------------------------------------------------
+
+        // --- Función para cargar Estadísticas y Lista Detallada ---
+        async function loadStats() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            if(refreshBtn) refreshBtn.disabled = true;
+            if(refreshBtn) refreshBtn.innerHTML = '⏳...';
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_SUBMIT_URL);
+                if (!response.ok) {
+                    console.log("No se pudo obtener estadísticas (GET no disponible en el script)");
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (Array.isArray(data)) {
+                    processStatsData(data);
+                } else {
+                    console.log("El formato de datos no es un array de registros.");
+                }
+            } catch (error) {
+                console.log("Nota: Las estadísticas requieren que el script Google Apps soporte peticiones GET y devuelva JSON.", error);
+                const statsSection = document.getElementById('stats-section');
+                const historySection = document.getElementById('history-section');
+                const toggleContainer = document.getElementById('toggleContainer');
+                if(statsSection) statsSection.style.display = 'none';
+                if(historySection) historySection.style.display = 'none';
+                if(toggleContainer) toggleContainer.style.display = 'none';
+            } finally {
+                if(refreshBtn) {
+                    refreshBtn.disabled = false;
+                    refreshBtn.innerHTML = '🔄 Actualizar';
+                }
+            }
+        }
+
+        function processStatsData(data) {
+            const statsSection = document.getElementById('stats-section');
+            const historySection = document.getElementById('history-section');
+            const toggleContainer = document.getElementById('toggleContainer');
+            
+            const totalElement = document.getElementById('totalPermisos');
+            const totalEconomicElement = document.getElementById('totalEconomicos');
+            const listElement = document.getElementById('listadoDocentes');
+            const economicListElement = document.getElementById('listadoEconomicos');
+            const historyListElement = document.getElementById('history-list');
+            
+            const total = data.length;
+            
+            // 1. Procesamiento para la gráfica de "Por Docente" (General)
+            const teacherCounts = {};
+            
+            data.forEach(row => {
+                const name = row.nombreDocente || row.nombre || row.Docente || "Desconocido";
+                teacherCounts[name] = (teacherCounts[name] || 0) + 1;
+            });
+            
+            const sortedTeachers = Object.keys(teacherCounts)
+                .map(name => ({ name, count: teacherCounts[name] }))
+                .sort((a, b) => b.count - a.count);
+            
+            // 2. Procesamiento para "Permisos Económicos"
+            // Filtros: "Asuntos personales" y "Otro"
+            const economicData = data.filter(row => {
+                const motivo = (row.motivo || "").trim();
+                return motivo === "Asuntos personales" || motivo === "Otro";
+            });
+
+            const totalEconomic = economicData.length;
+            
+            // Contar docentes dentro del filtro económico
+            const economicTeacherCounts = {};
+            economicData.forEach(row => {
+                const name = row.nombreDocente || row.nombre || row.Docente || "Desconocido";
+                economicTeacherCounts[name] = (economicTeacherCounts[name] || 0) + 1;
+            });
+            
+            const sortedEconomicTeachers = Object.keys(economicTeacherCounts)
+                .map(name => ({ name, count: economicTeacherCounts[name] }))
+                .sort((a, b) => b.count - a.count);
+
+            // Mostrar/Ocultar secciones generales
+            if (total > 0) {
+                statsSection.style.display = 'block';
+                toggleContainer.style.display = 'block'; // Mostrar el botón toggle
+                
+                // IMPORTANTE: Ocultar la lista detallada por defecto
+                historySection.style.display = 'none';
+                
+                // Llenar Stats (Total General)
+                totalElement.textContent = total;
+                listElement.innerHTML = '';
+                sortedTeachers.forEach(teacher => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${teacher.name}</span> <span class="badge-count">${teacher.count}</span>`;
+                    listElement.appendChild(li);
+                });
+
+                // Llenar Stats (Económicos)
+                totalEconomicElement.textContent = totalEconomic;
+                economicListElement.innerHTML = '';
+                sortedEconomicTeachers.forEach(teacher => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${teacher.name}</span> <span class="badge-count">${teacher.count}</span>`;
+                    economicListElement.appendChild(li);
+                });
+
+                // 3. Procesamiento para la Lista Detallada (Historial General)
+                // Ordenar por fecha (descendente) o timestamp
+                const sortedData = [...data].sort((a, b) => {
+                    const dateA = new Date(a.fecha || a.timestamp);
+                    const dateB = new Date(b.fecha || b.timestamp);
+                    return dateB - dateA;
+                });
+
+                historyListElement.innerHTML = '';
+                
+                sortedData.forEach(item => {
+                    // Normalizar nombres de campos
+                    const nombre = item.nombreDocente || item.nombre || 'Docente';
+                    const motivo = item.motivo || item.descripcion || 'Sin motivo especificado';
+                    const cubre = item.docenteCubrira || item.docenteQueCubre || '---';
+                    
+                    // --- FORMATEO DE FECHA (Sólo Día, Mes y Año) ---
+                    let dateSource = item.fecha;
+                    if (!dateSource) dateSource = item.timestamp;
+
+                    let fechaDisplay = "Sin fecha";
+                    
+                    // Intentamos crear un objeto Date
+                    let dateObj = new Date(dateSource);
+                    
+                    if (!isNaN(dateObj.getTime())) {
+                        // Usamos toLocaleDateString para asegurar que se muestre DD/MM/YYYY
+                        // sin hora ni segundos, independientemente del formato original.
+                        fechaDisplay = dateObj.toLocaleDateString('es-MX', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                    }
+                    // ------------------------------------------------
+
+                    const li = document.createElement('li');
+                    li.className = 'history-item';
+                    li.innerHTML = `
+                        <div class="history-info">
+                            <strong>${nombre}</strong>
+                            <span>Cubre: ${cubre}</span>
+                        </div>
+                        <div class="history-meta">
+                            <span class="history-date-badge">${fechaDisplay}</span>
+                            <span class="history-motive">${motivo}</span>
+                        </div>
+                    `;
+                    historyListElement.appendChild(li);
+                });
+
+            } else {
+                statsSection.style.display = 'none';
+                historySection.style.display = 'none';
+                toggleContainer.style.display = 'none';
+            }
+        }
+        // ------------------------------------------
+
+        function setMinDate() {
+            const fechaInput = document.getElementById('fecha');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedToday = `${year}-${month}-${day}`;
+            
+            // Se permite poner fechas hacia atrás y actuales
+            
+            fechaInput.value = formattedToday;
+        }
+        
+        async function loadTeachers() {
+            const nombreDocenteSelect = document.getElementById('nombreDocente');
+            nombreDocenteSelect.disabled = true;
+            nombreDocenteSelect.innerHTML = '<option value="">Cargando docentes...</option>';
+            
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_TEACHERS_URL);
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+                
+                const data = await response.json();
+                nombreDocenteSelect.innerHTML = '<option value="">Seleccione su nombre...</option>';
+
+                function processArray(array) {
+                    if (array.length === 0) nombreDocenteSelect.innerHTML = '<option value="">No hay docentes disponibles</option>';
+                    array.forEach(item => {
+                        let nombre = (typeof item === 'string') ? item : (item.nombre || item.name || item.docente || item.value || '');
+                        if (nombre.trim() !== '') {
+                            const option = document.createElement('option');
+                            option.value = nombre.trim();
+                            option.textContent = nombre.trim();
+                            nombreDocenteSelect.appendChild(option);
+                        }
+                    });
+                }
+
+                if (Array.isArray(data)) processArray(data);
+                else {
+                    const teachersArray = data.teachers || data.data || data.docentes;
+                    if (teachersArray) processArray(teachersArray);
+                    else throw new Error('Formato de datos no reconocido');
+                }
+                nombreDocenteSelect.disabled = false;
+                
+                const cargoSelect = document.getElementById('cargo');
+                if(cargoSelect.value === 'Director') {
+                    handleDirectorSelection();
+                }
+            } catch (error) {
+                console.error('Error al cargar docentes:', error);
+                nombreDocenteSelect.innerHTML = '<option value="">Error al cargar</option>';
+                nombreDocenteSelect.removeAttribute('disabled'); 
+            }
+        }
+
+        function handleDirectorSelection() {
+            const nombreDocenteSelect = document.getElementById('nombreDocente');
+            const nombreDirector = "Laura Cholula Rivera";
+            
+            let exists = false;
+            for (let i = 0; i < nombreDocenteSelect.options.length; i++) {
+                if (nombreDocenteSelect.options[i].value === nombreDirector) {
+                    exists = true;
+                    break;
+                }
+            }
+            
+            if (!exists) {
+                const option = document.createElement('option');
+                option.value = nombreDirector;
+                option.textContent = nombreDirector;
+                nombreDocenteSelect.insertBefore(option, nombreDocenteSelect.options[1]);
+            }
+            
+            nombreDocenteSelect.value = nombreDirector;
+        }
+
+        document.getElementById('cargo').addEventListener('change', function() {
+            if (this.value === 'Director') {
+                handleDirectorSelection();
+            }
+        });
+
+        function resetForm() {
+            form.reset();
+            otroMotivoGroup.style.display = 'none';
+            setMinDate();
+            document.getElementById('cantidadDias').value = 1;
+            summaryDiv.style.display = 'none';
+            permissionPreview.style.display = 'none';
+            const resetBtn = document.getElementById('resetBtn');
+            if (resetBtn) resetBtn.remove();
+            const whatsappContainer = document.querySelector('.whatsapp-container');
+            if (whatsappContainer) whatsappContainer.remove();
+            submitBtn.disabled = false;
+            submitBtn.textContent = '📤 Enviar Solicitud';
+            
+            // Resetear el estado del botón de historial a oculto
+            const historySection = document.getElementById('history-section');
+            const toggleBtn = document.getElementById('toggleHistoryBtn');
+            if(historySection) historySection.style.display = 'none';
+            if(toggleBtn) {
+                toggleBtn.textContent = '📋 Ver Historial de Permisos';
+                toggleBtn.classList.remove('active');
+            }
+
+            loadTeachers();
+            loadStats();
+        }
+
+        // FUNCIÓN CORREGIDA PARA MANEJO DE FECHAS LOCALES
+        function getFechasConsecutivas(fechaInicio, cantidadDias) {
+            const fechas = [];
+            
+            // CORRECCIÓN: Parsear manualmente la fecha para asegurar Hora Local
+            // Esto evita el problema de zona horaria que restaba un día.
+            const [year, month, day] = fechaInicio.split('-').map(Number);
+            let fechaActual = new Date(year, month - 1, day);
+            
+            for (let i = 0; i < cantidadDias; i++) {
+                // Si cae sábado (6), saltar al lunes
+                if (fechaActual.getDay() === 6) fechaActual.setDate(fechaActual.getDate() + 2); 
+                // Si cae domingo (0), saltar al lunes
+                else if (fechaActual.getDay() === 0) fechaActual.setDate(fechaActual.getDate() + 1);
+                
+                const year = fechaActual.getFullYear();
+                const month = String(fechaActual.getMonth() + 1).padStart(2, '0');
+                const day = String(fechaActual.getDate()).padStart(2, '0');
+                fechas.push(`${day}/${month}/${year}`);
+                
+                // Pasar al siguiente día
+                fechaActual.setDate(fechaActual.getDate() + 1);
+            }
+            return fechas;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setMinDate();
+            loadTeachers();
+            loadStats();
+            updateCycleCounters(); // Llamada a la nueva función
+
+            // Event listener para el botón de Actualizar
+            const refreshBtn = document.getElementById('refreshBtn');
+            if(refreshBtn) {
+                refreshBtn.addEventListener('click', loadStats);
+            }
+
+            // Event listener para el botón Toggle Historial
+            const toggleBtn = document.getElementById('toggleHistoryBtn');
+            if(toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    const historySection = document.getElementById('history-section');
+                    const isHidden = historySection.style.display === 'none';
+                    
+                    if (isHidden) {
+                        historySection.style.display = 'block';
+                        this.textContent = '🔼 Ocultar Historial';
+                        this.classList.add('active');
+                    } else {
+                        historySection.style.display = 'none';
+                        this.textContent = '📋 Ver Historial de Permisos';
+                        this.classList.remove('active');
+                    }
+                });
+            }
+        });
+
+        motivoSelect.addEventListener('change', function() {
+            if (this.value === 'Otro') {
+                otroMotivoGroup.style.display = 'block';
+                document.getElementById('otroMotivo').required = true;
+            } else {
+                otroMotivoGroup.style.display = 'none';
+                document.getElementById('otroMotivo').required = false;
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+
+            const fields = [
+                { id: 'nombreDocente', error: 'errorNombreDocente', msg: 'Seleccione su nombre' },
+                { id: 'cargo', error: 'errorCargo', msg: 'Seleccione su cargo' },
+                { id: 'docenteCubre', error: 'errorDocenteCubre', msg: 'Seleccione quién cubrirá' },
+                { id: 'motivo', error: 'errorMotivo', msg: 'Seleccione el motivo' },
+                { id: 'fecha', error: 'errorFecha', msg: 'Seleccione una fecha válida' },
+                { id: 'cantidadDias', error: 'errorCantidadDias', msg: 'Cantidad mínima 1 día' }
+            ];
+
+            fields.forEach(field => {
+                const el = document.getElementById(field.id);
+                if (!el.value.trim() || (field.id === 'cantidadDias' && el.value < 1)) {
+                    document.getElementById(field.error).textContent = field.msg;
+                    document.getElementById(field.error).style.display = 'block';
+                    isValid = false;
+                }
+            });
+
+            if (motivoSelect.value === 'Otro' && !document.getElementById('otroMotivo').value.trim()) {
+                document.getElementById('errorOtroMotivo').textContent = 'Especifique el motivo';
+                document.getElementById('errorOtroMotivo').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!document.getElementById('declaracion').checked) {
+                document.getElementById('errorDeclaracion').textContent = 'Debe aceptar el compromiso';
+                document.getElementById('errorDeclaracion').style.display = 'block';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function showSummary(data, fechasFormateadas) {
+            const motivoFinal = data.motivo === 'Otro' ? data.otroMotivo : data.motivo;
+            
+            let fechasHTML = '';
+            fechasFormateadas.forEach(fecha => fechasHTML += `<li>${fecha}</li>`);
+
+            summaryDiv.innerHTML = `
+                <h3>✅ Solicitud Generada</h3>
+                <div class="summary-item"><strong>Docente:</strong> <span>${data.nombreDocente}</span></div>
+                <div class="summary-item"><strong>Cargo:</strong> <span>${data.cargo}</span></div>
+                <div class="summary-item"><strong>Cubre:</strong> <span>${data.docenteCubre}</span></div>
+                <div class="summary-item"><strong>Motivo:</strong> <span>${motivoFinal}</span></div>
+                <div class="summary-item"><strong>Días:</strong> <span>${data.cantidadDias}</span></div>
+                <div class="fechas-list"><strong>Fechas:</strong>${fechasHTML}</div>
+            `;
+            summaryDiv.style.display = 'block';
+        }
+
+        function showPermissionPreview(data, fechasFormateadas) {
+            const motivoFinal = data.motivo === 'Otro' ? data.otroMotivo : data.motivo;
+            document.getElementById('previewFechaEmision').textContent = data.timestamp.split(',')[0];
+            document.getElementById('previewNombre').textContent = data.nombreDocente;
+            document.getElementById('previewCargo').textContent = data.cargo;
+            document.getElementById('previewMotivo').textContent = motivoFinal;
+            document.getElementById('previewCubre').textContent = data.docenteCubre;
+            document.getElementById('previewDias').textContent = data.cantidadDias;
+            document.getElementById('previewFechas').textContent = fechasFormateadas.join(', ');
+            document.getElementById('previewHorario').textContent = data.horarioAusencia || 'Todo el día';
+            
+            permissionPreview.style.display = 'block';
+        }
+
+        function abrirWhatsApp(numero, mensaje) {
+            try {
+                const encodedMessage = encodeURIComponent(mensaje);
+                const whatsappURL = `https://wa.me/${numero}?text=${encodedMessage}`;
+                const newWindow = window.open(whatsappURL, '_blank');
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    showMessage('⚠️ Pop-up bloqueado. Usa el botón de abajo.', 'info');
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.error('Error WhatsApp:', error);
+                return false;
+            }
+        }
+
+        function mostrarBotonWhatsApp(numero, mensaje) {
+            const encodedMessage = encodeURIComponent(mensaje);
+            const container = document.createElement('div');
+            container.className = 'whatsapp-container';
+            
+            const printBtn = document.createElement('a');
+            printBtn.href = '#';
+            printBtn.className = 'print-btn';
+            printBtn.innerHTML = '🖨️ Imprimir Oficio';
+            printBtn.onclick = (e) => { e.preventDefault(); window.print(); };
+            
+            const whatsappBtn = document.createElement('a');
+            whatsappBtn.href = `https://wa.me/${numero}?text=${encodedMessage}`;
+            whatsappBtn.target = '_blank';
+            whatsappBtn.className = 'whatsapp-btn';
+            whatsappBtn.innerHTML = '📱 Enviar a Dirección';
+            
+            container.appendChild(printBtn);
+            container.appendChild(whatsappBtn);
+            summaryDiv.parentNode.insertBefore(container, summaryDiv.nextSibling);
+        }
+        
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!validateForm()) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Procesando...';
+
+            const fechaOriginal = document.getElementById('fecha').value;
+            const cantidadDias = parseInt(document.getElementById('cantidadDias').value);
+            
+            // Usamos la función corregida
+            const fechas = getFechasConsecutivas(fechaOriginal, cantidadDias);
+            const fechasFormateadas = fechas;
+
+            const formData = {
+                nombreDocente: document.getElementById('nombreDocente').value.trim(),
+                cargo: document.getElementById('cargo').value.trim(),
+                docenteCubre: document.getElementById('docenteCubre').value.trim(),
+                motivo: document.getElementById('motivo').value,
+                otroMotivo: document.getElementById('otroMotivo').value.trim(),
+                horarioAusencia: document.getElementById('horarioAusencia').value,
+                comentarios: document.getElementById('comentarios').value.trim(),
+                cantidadDias: cantidadDias,
+                timestamp: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })
+            };
+
+            const motivoFinal = formData.motivo === 'Otro' ? formData.otroMotivo : formData.motivo;
+            let mensaje = `📝 *SOLICITUD DE PERMISO DOCENTE*
+
+👤 *Docente:* ${formData.nombreDocente}
+🏢 *Cargo:* ${formData.cargo}
+🔄 *Cubre:* ${formData.docenteCubre}
+
+📋 *Detalles:*
+🔹 Motivo: ${motivoFinal}
+🔹 Días: ${formData.cantidadDias}
+🔹 Fechas: ${fechasFormateadas.join(', ')}
+🔹 Horario: ${formData.horarioAusencia}
+
+💬 *Comentarios:* ${formData.comentarios || 'Ninguno'}
+
+📅 *Enviado:* ${formData.timestamp}
+--------------------------------------------------
+🏫 Secundaria Profr. Honorato Tlaseca Barrera`;
+
+            const numeroWhatsApp = '522751025480'; 
+
+            try {
+                let enviosExitosos = 0;
+                for (let i = 0; i < fechas.length; i++) {
+                    const formParams = new URLSearchParams();
+                    
+                    formParams.append('nombreDocente', formData.nombreDocente);
+                    formParams.append('cargo', formData.cargo);
+                    formParams.append('docenteCubrira', formData.docenteCubre);
+                    formParams.append('motivo', motivoFinal);
+                    formParams.append('descripcion', formData.otroMotivo);
+                    formParams.append('fecha', fechas[i]); 
+                    formParams.append('comentarios', formData.comentarios);
+
+                    await fetch(GOOGLE_SCRIPT_SUBMIT_URL, {
+                        method: 'POST',
+                        body: formParams,
+                        mode: 'no-cors'
+                    });
+                    enviosExitosos++;
+                }
+                
+                showMessage(`✅ Solicitud enviada correctamente (${enviosExitosos} días registrados).`, 'success');
+                showSummary(formData, fechasFormateadas);
+                showPermissionPreview(formData, fechasFormateadas);
+
+                const existingContainer = document.querySelector('.whatsapp-container');
+                if (existingContainer) existingContainer.remove();
+                
+                setTimeout(() => {
+                    if (!abrirWhatsApp(numeroWhatsApp, mensaje)) {
+                        mostrarBotonWhatsApp(numeroWhatsApp, mensaje);
+                    }
+                },1000);
+
+                if (!document.getElementById('resetBtn')) {
+                    const resetBtn = document.createElement('button');
+                    resetBtn.id = 'resetBtn';
+                    resetBtn.className = 'reset-btn';
+                    resetBtn.textContent = '🔄 Nueva Solicitud';
+                    submitBtn.parentNode.insertBefore(resetBtn, submitBtn.nextSibling);
+                    resetBtn.addEventListener('click', resetForm);
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = '✅ Enviado';
+
+            } catch (error) {
+                console.error('Error al enviar:', error);
+                showMessage('❌ Error al enviar. Verifica tu conexión.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Enviar Solicitud';
+            }
+        });
+    </script>
+</body>
+</html>

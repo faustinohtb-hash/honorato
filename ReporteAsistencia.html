@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Asistencia y Resumen Diario</title>
+  <style>
+    :root {
+      --primary: #667eea; --secondary: #764ba2; --success: #56ab2f; --danger: #f44336;
+      --warning: #ff9800; --info: #2196F3; --light: #f8f9fa; --border: #e1e5eb;
+      --suspendido: #9c27b0;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif; }
+    body { background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; min-height: 100vh; }
+    .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+    
+    /* --- HEADER --- */
+    .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 25px; text-align: center; position: relative; }
+    .header img { max-width: 90px; border-radius: 12px; margin-bottom: 15px; }
+    .header h1 { font-size: 28px; margin: 10px 0; }
+    .header p { font-size: 14px; opacity: 0.9; }
+    .btn-regresar, .btn-home {
+      position: absolute; top: 20px; right: 20px;
+      background: rgba(255,255,255,0.2); color: white;
+      padding: 8px 16px; border-radius: 8px; text-decoration: none;
+      font-weight: 600; transition: 0.3s; border: 2px solid rgba(255,255,255,0.3);
+      font-size: 14px; cursor: pointer; display: flex; align-items: center;
+    }
+    .btn-regresar:hover, .btn-home:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+    .btn-home::before { content: "←"; margin-right: 6px; font-weight: bold; }
+
+    /* --- SECCIÓN RESUMEN --- */
+    .dashboard-section { padding: 30px; border-bottom: 1px solid var(--border); }
+    .section-title { color: var(--primary); font-size: 20px; font-weight: 700; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+    
+    /* Contenedores de Resumen */
+    .resumen-container {
+      background: var(--light);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .resumen-title {
+      color: var(--primary);
+      font-size: 22px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Estilo Contador Central de Inasistencias */
+    .resumen-highlight {
+      background: white;
+      border: 2px solid var(--danger);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(244, 67, 54, 0.15);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .highlight-label {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #666;
+      font-weight: 700;
+    }
+    .highlight-number {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--danger);
+      line-height: 1.2;
+      margin: 5px 0;
+    }
+    .highlight-details {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .highlight-badge {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .badge-ausente { background-color: var(--danger); }
+    .badge-justificado { background-color: var(--info); }
+    .badge-suspendido { background-color: var(--suspendido); }
+
+    /* Estilos originales de Items de Gráfica */
+    .resumen-total {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .resumen-item {
+      text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      min-width: 120px;
+      margin: 5px;
+    }
+    .resumen-item .cantidad {
+      font-size: 16px;
+      color: #333;
+      margin-top: 5px;
+      font-weight: 600;
+    }
+    .resumen-item .porcentaje {
+      font-size: 14px;
+      color: #666;
+      margin-top: 3px;
+      font-weight: 600;
+    }
+    .resumen-item .label {
+      color: #666;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    
+    /* Gráficas Generales */
+    .chart-container {
+      height: 30px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      margin: 10px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .chart-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      position: relative;
+      min-width: 5px;
+    }
+
+    /* Gráficas por Grupo */
+    .resumen-grupos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .resumen-grupo {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .resumen-grupo h4 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: var(--primary);
+      font-size: 18px;
+      text-align: center;
+    }
+    .grupo-totales {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .grupo-item {
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--light);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      min-width: 80px;
+      flex: 1;
+      margin: 5px;
+    }
+    .grupo-item .cantidad {
+      font-size: 14px;
+      color: #333;
+      margin-top: 3px;
+      font-weight: 600;
+    }
+    .grupo-item .porcentaje {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+    .grupo-item .label {
+      color: #666;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+    .grupo-chart-container {
+      height: 20px;
+      background-color: #e9ecef;
+      border-radius: 3px;
+      margin: 8px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .grupo-chart-bar {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+      position: relative;
+      min-width: 3px;
+    }
+
+    /* --- SECCIÓN FORMULARIO --- */
+    .form-content { padding: 40px; }
+    .form-group { margin-bottom: 25px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
+    .required { color: var(--danger); }
+    input, select { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 16px; transition: 0.3s; }
+    input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(102,126,234,0.2); }
+    
+    /* Botones */
+    .btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 16px; font-size: 18px; font-weight: 600; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; transition: 0.3s; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-refresh { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; margin-left: 10px; width: auto; display: inline-block;}
+    .btn-refresh:hover { background: var(--secondary); }
+
+    /* Radio Buttons */
+    .radio-group { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
+    .radio-item { flex: 1; min-width: 100px; }
+    .radio-item input { position: absolute; opacity: 0; width: auto; }
+    .radio-label { display: block; padding: 12px; text-align: center; border-radius: 10px; background: var(--light); border: 2px solid var(--border); cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 14px; }
+    .radio-item input:checked + .radio-label { color: white; }
+    .presente:checked + .radio-label { background: var(--success); border-color: var(--success); }
+    .ausente:checked + .radio-label { background: var(--danger); border-color: var(--danger); }
+    .retardo:checked + .radio-label { background: var(--warning); border-color: var(--warning); }
+    .justificado:checked + .radio-label { background: var(--info); border-color: var(--info); }
+    .suspendido:checked + .radio-label { background: var(--suspendido); border-color: var(--suspendido); }
+
+    /* Listas de Alumnos */
+    .permisos-section { background-color: #f9f9f9; border-radius: 10px; padding: 15px; margin-bottom: 25px; border-left: 4px solid var(--info); }
+    .permisos-title { font-weight: 600; color: var(--info); margin-bottom: 10px; font-size: 18px; }
+    .permisos-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .permiso-item { background-color: white; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--border); font-size: 14px; color: #555; }
+    
+    .registrados-section { background-color: #f0f8ff; border-radius: 10px; padding: 15px; margin-bottom: 25px; border-left: 4px solid var(--success); }
+    .registrados-title { font-weight: 600; color: var(--success); margin-bottom: 10px; font-size: 18px; }
+    .registrados-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
+    .registrado-item { background-color: white; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; color: #333; display: flex; align-items: center; }
+    .registrado-item .checkmark { color: var(--success); margin-right: 10px; font-size: 18px; }
+    .registrado-item .alumno-nombre { flex-grow: 1; font-size: 15px; }
+    
+    /* Texto de estado coloreado */
+    .estado-label-texto {
+      margin-left: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    .txt-presente { color: var(--success); }
+    .txt-ausente { color: var(--danger); }
+    .txt-retardo { color: var(--warning); }
+    .txt-justificado { color: var(--info); }
+    .txt-suspendido { color: var(--suspendido); }
+
+    .alumnos-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; max-height: 300px; overflow-y: auto; border: 2px solid var(--border); border-radius: 10px; padding: 15px; }
+    .alumno-item { display: flex; align-items: center; padding: 10px; border-radius: 8px; background-color: var(--light); cursor: pointer; transition: background-color 0.3s; }
+    .alumno-item:hover { background-color: #e0e0e0; }
+    .alumno-item.seleccionado { background-color: #e8f5e9; border-left: 4px solid var(--success); }
+    .alumno-item input[type="checkbox"] { margin-right: 10px; width: auto; }
+
+    /* Generales */
+    .loading { display: none; text-align: center; margin: 20px 0; color: #666; font-size: 16px; }
+    .spinner { border: 4px solid #f0f0f0; border-top: 4px solid var(--primary); border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .notification { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 10px; color: white; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform: translateX(120%); transition: 0.4s; }
+    .notification.show { transform: translateX(0); }
+    .success { background: var(--success); }
+    .error { background: var(--danger); }
+    .empty-state { text-align: center; padding: 20px; color: #666; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header Unificado -->
+  <div class="header">
+    <a href="https://faustinohtb-hash.github.io/honorato/index.html" class="btn-home">Regresar a Inicio</a>
+    <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo">
+    <h1>Gestión de Asistencia</h1>
+    <p>Escuela Secundaria Profesor Honorato Tlaseca Barrera | Ciclo Escolar 2025-2026</p>
+  </div>
+
+  <!-- SECCIÓN 1: RESUMEN Y CONSULTA -->
+  <div class="dashboard-section">
+    <div class="section-title">Resumen y Consulta del Día</div>
+    
+    <div class="loading" id="loadingDashboard">
+      <div class="spinner"></div> Cargando resumen...
+    </div>
+
+    <div id="resumenContainer">
+      <!-- Aquí se inyecta el resumen dinámico (Gráficas) -->
+    </div>
+    
+    <!-- Contenedor vaciado intencionalmente para no mostrar nombres -->
+    <div id="resultadosDashboard"></div>
+  </div>
+
+  <!-- SECCIÓN 2: FORMULARIO DE REGISTRO -->
+  <div class="form-content">
+    <div class="section-title">Registro de Nueva Asistencia</div>
+    
+    <div class="form-group">
+      <label for="fecha">Fecha <span class="required">*</span></label>
+      <div style="display: flex; align-items: center;">
+        <input type="date" id="fecha" required style="flex-grow: 1;">
+        <!-- Botón para refrescar manualmente ambas secciones -->
+        <button type="button" class="btn-refresh" id="btnActualizarTodo" title="Actualizar datos">↻</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="docente">Docente <span class="required">*</span></label>
+      <select id="docente" required>
+        <option value="">Cargando docentes...</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="disciplina">Asignatura</label>
+      <select id="disciplina">
+        <option value="">Seleccione asignatura</option>
+        <option>Español</option>
+        <option>Inglés</option>
+        <option>Artes</option>
+        <option>Matemáticas</option>
+        <option>Biología</option>
+        <option>Física</option>
+        <option>Química</option>
+        <option>Geografía</option>
+        <option>Historia</option>
+        <option>Formación Civica y Ética</option>
+        <option>Tecnología</option>
+        <option>Educación Física</option>
+        <option>Tutoría</option>
+        <option>Integración Curricular</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="grado">Grado <span class="required">*</span></label>
+      <select id="grado" required>
+        <option value="">Seleccionar</option>
+        <option value="1">1°</option>
+        <option value="2">2°</option>
+        <option value="3">3°</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="grupo">Grupo <span class="required">*</span></label>
+      <select id="grupo" required>
+        <option value="">Seleccionar</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+      </select>
+    </div>
+
+    <!-- Sección de permisos (Contexto para el registro) -->
+    <div class="permisos-section">
+      <div class="permisos-title">Permisos previos (para esta fecha)</div>
+      <div id="permisos-container" class="permisos-list">
+        <p class="empty-state">Seleccione fecha, grado y grupo para ver permisos</p>
+      </div>
+    </div>
+
+    <!-- Sección de alumnos registrados en esta sesión -->
+    <div class="registrados-section">
+      <div class="registrados-title">Alumnos Agregados (Sesión Actual)</div>
+      <div id="registrados-container" class="registrados-list">
+        <p class="empty-state">No hay alumnos en la lista de registro</p>
+      </div>
+    </div>
+
+    <div class="form-group" role="radiogroup" aria-labelledby="estado-label">
+      <label id="estado-label">Estado de Asistencia <span class="required">*</span></label>
+      <div class="radio-group">
+        <div class="radio-item">
+          <input type="radio" name="estado" id="presente" value="presente" class="presente" checked>
+          <label for="presente" class="radio-label">Presente</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" name="estado" id="ausente" value="ausente" class="ausente">
+          <label for="ausente" class="radio-label">Ausente</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" name="estado" id="retardo" value="retardo" class="retardo">
+          <label for="retardo" class="radio-label">Retardo</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" name="estado" id="justificado" value="justificado" class="justificado">
+          <label for="justificado" class="radio-label">Justificado</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" name="estado" id="suspendido" value="suspendido" class="suspendido">
+          <label for="suspendido" class="radio-label">Suspendido</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Seleccionar Alumno(a) <span class="required">*</span></label>
+      <div id="alumnos-lista" class="alumnos-lista">
+        <p class="empty-state">Primero seleccione grado y grupo</p>
+      </div>
+    </div>
+
+    <div class="loading" id="loadingRegistro">
+      <div class="spinner"></div> Enviando a Google Sheets...
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button type="button" class="btn" id="btnAgregar" style="background: linear-gradient(135deg, var(--success), var(--info)); flex: 1;">Agregar a Lista</button>
+      <button type="button" class="btn" id="btnRegistrar" style="flex: 1;">Registrar Todo</button>
+    </div>
+  </div>
+</div>
+
+<div class="notification" id="notif"></div>
+
+<script>
+  // --- CONSTANTES Y URLs ---
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzm4o8Q8L5qC-VZHXiryxRKGXnerxP2BCH3P2N5EnIpvyqHlVdKck8TrrgipB9t2S9h/exec";
+  const ASISTENCIA_URL = "https://script.google.com/macros/s/AKfycbzm4o8Q8L5qC-VZHXiryxRKGXnerxP2BCH3P2N5EnIpvyqHlVdKck8TrrgipB9t2S9h/exec";
+  const ALUMNOS_URL = "https://script.google.com/macros/s/AKfycbwBl2pjwTOHVIfjmGERMBwE9_FlfQc3OF5KUYUjv8XAIF1o3LtYgj2TVb1a6fZg1eZ4/exec";
+  const DOCENTES_URL = "https://script.google.com/macros/s/AKfycbzPUWFLXhFAoC9w_Yqo5shO9TRyquOYYvzg8ovKB1mdFNh4dUhK7MKLOs1ITupLxb-hXQ/exec";
+  const PERMISOS_URL = "https://script.google.com/macros/s/AKfycbzbJPLzRuKgs5zyjOfamjMPH8yZcezVIAF9i6GLdR992o0cQcuoSCaz8zrQqDuq621Oaw/exec";
+
+  // Totales de alumnos para cálculos de porcentaje
+  const TOTALES_ALUMNOS = {
+    '1-A': 22, '1-B': 22,
+    '2-A': 34, '2-B': 35,
+    '3-A': 29, '3-B': 30
+  };
+  const TOTAL_GENERAL_ALUMNOS = 172;
+
+  // --- ESTADO GLOBAL ---
+  let todosLosAlumnos = [];
+  let alumnosRegistradosHoy = [];
+  let alumnosMarcados = [];
+  let permisosCargados = [];
+
+  // --- FUNCIONES DE UTILIDAD ---
+  function notificar(msg, error = false) {
+    const n = document.getElementById('notif');
+    n.textContent = msg;
+    n.className = `notification show ${error ? 'error' : 'success'}`;
+    setTimeout(() => n.className = 'notification', 5000);
+  }
+
+  // FUNCIÓN MEJORADA PARA NORMALIZAR FECHAS
+  function normalizarFecha(fecha) {
+    if (!fecha) return null;
+    let dateObj;
+
+    // 1. Si ya es un objeto Date
+    if (fecha instanceof Date) {
+      dateObj = fecha;
+    } 
+    // 2. Si es un string
+    else if (typeof fecha === 'string') {
+      // Caso A: Formato simple YYYY-MM-DD
+      if (/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+        // Forzar mediodía local para evitar cambios de zona horaria al parsear
+        dateObj = new Date(fecha + 'T12:00:00'); 
+      }
+      // Caso B: Formato DD/MM/YYYY (común en México/Latam Sheets)
+      else if (fecha.includes('/')) {
+        const partes = fecha.split('/');
+        if (partes.length === 3) {
+          dateObj = new Date(partes[2], partes[1] - 1, partes[0]);
+        }
+      }
+      // Caso C: Formato ISO con hora (ej: 2025-02-09T18:00:00.000Z)
+      // Google Apps Script suele enviar fechas así en JSON
+      else {
+        dateObj = new Date(fecha);
+      }
+    }
+
+    // Verificamos que sea válida
+    if (!dateObj || isNaN(dateObj.getTime())) return null;
+
+    // Usamos los métodos de fecha LOCAL para reconstruir YYYY-MM-DD
+    // Esto soluciona el problema donde UTC cambia el día
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  }
+
+  function normalizarTexto(texto) {
+    if (!texto) return '';
+    return texto.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  function compararNombres(nombre1, nombre2) {
+    const norm1 = normalizarTexto(nombre1);
+    const norm2 = normalizarTexto(nombre2);
+    if (norm1 === norm2) return true;
+    const palabras1 = norm1.split(' ');
+    const palabras2 = norm2.split(' ');
+    if (palabras1.length !== palabras2.length) return false;
+    const todasEn1 = palabras2.every(p => palabras1.includes(p));
+    const todasEn2 = palabras1.every(p => palabras2.includes(p));
+    return todasEn1 && todasEn2;
+  }
+
+  function fetchConManejoDeErrores(url, opciones = {}) {
+    return fetch(url, opciones)
+      .then(response => {
+        if (!response.ok) return response.text().then(t => { throw new Error(`Error ${response.status}: ${t}`); });
+        return response.json();
+      });
+  }
+
+  // --- LÓGICA DEL DASHBOARD (RESUMEN SOLAMENTE) ---
+  function calcularPorcentaje(valor, total) {
+    if (total === 0) return 0;
+    return ((valor / total) * 100).toFixed(2);
+  }
+
+  // Esta función es la integración del código solicitado
+  function generarResumen(datos) {
+    if (!datos || datos.length === 0) {
+      return '';
+    }
+
+    // Contar totales generales
+    const totales = {
+      retardo: 0,
+      ausente: 0,
+      justificado: 0,
+      suspendido: 0
+    };
+
+    // Agrupar por grado y grupo
+    const grupos = {};
+    
+    datos.forEach(asistencia => {
+      // Asumimos que los datos ya llegan normalizados a minúsculas desde cargarAsistencias
+      // Contar totales generales
+      if (asistencia.estado === 'retardo') totales.retardo++;
+      else if (asistencia.estado === 'ausente') totales.ausente++;
+      else if (asistencia.estado === 'justificado') totales.justificado++;
+      else if (asistencia.estado === 'suspendido') totales.suspendido++;
+      
+      // Agrupar por grado y grupo
+      const clave = `${asistencia.grado}-${asistencia.grupo}`;
+      if (!grupos[clave]) {
+        grupos[clave] = {
+          grado: asistencia.grado,
+          grupo: asistencia.grupo,
+          retardo: 0,
+          ausente: 0,
+          justificado: 0,
+          suspendido: 0
+        };
+      }
+      
+      if (asistencia.estado === 'retardo') grupos[clave].retardo++;
+      else if (asistencia.estado === 'ausente') grupos[clave].ausente++;
+      else if (asistencia.estado === 'justificado') grupos[clave].justificado++;
+      else if (asistencia.estado === 'suspendido') grupos[clave].suspendido++;
+    });
+
+    // Calcular porcentajes generales
+    const porcentajesGenerales = {
+      retardo: calcularPorcentaje(totales.retardo, TOTAL_GENERAL_ALUMNOS),
+      ausente: calcularPorcentaje(totales.ausente, TOTAL_GENERAL_ALUMNOS),
+      justificado: calcularPorcentaje(totales.justificado, TOTAL_GENERAL_ALUMNOS),
+      suspendido: calcularPorcentaje(totales.suspendido, TOTAL_GENERAL_ALUMNOS)
+    };
+
+    // Calcular total de inasistencias (Ausente + Justificado + Suspendido)
+    const totalInasistencias = totales.ausente + totales.justificado + totales.suspendido;
+
+    // Generar HTML del resumen
+    let html = `
+      <div class="resumen-container">
+        <h3 class="resumen-title">Resumen de Asistencias</h3>
+        
+        <!-- Contador Central -->
+        <div class="resumen-highlight">
+            <div class="highlight-label">Total Inasistencias</div>
+            <div class="highlight-number">${totalInasistencias}</div>
+            <div class="highlight-details">
+                <span class="highlight-badge badge-ausente">Ausente: ${totales.ausente}</span>
+                <span class="highlight-badge badge-justificado">Justificado: ${totales.justificado}</span>
+                <span class="highlight-badge badge-suspendido">Suspendido: ${totales.suspendido}</span>
+            </div>
+        </div>
+
+        <div class="resumen-total">
+          ${totales.retardo > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.retardo}%; background-color: var(--warning);"></div>
+              </div>
+              <div class="cantidad">${totales.retardo} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.retardo}%</div>
+              <div class="label">Retardos</div>
+            </div>
+          ` : ''}
+          
+          ${totales.ausente > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.ausente}%; background-color: var(--danger);"></div>
+              </div>
+              <div class="cantidad">${totales.ausente} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.ausente}%</div>
+              <div class="label">Inasistencias</div>
+            </div>
+          ` : ''}
+          
+          ${totales.justificado > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.justificado}%; background-color: var(--info);"></div>
+              </div>
+              <div class="cantidad">${totales.justificado} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.justificado}%</div>
+              <div class="label">Permisos</div>
+            </div>
+          ` : ''}
+          
+          ${totales.suspendido > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.suspendido}%; background-color: var(--suspendido);"></div>
+              </div>
+              <div class="cantidad">${totales.suspendido} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.suspendido}%</div>
+              <div class="label">Suspendidos</div>
+            </div>
+          ` : ''}
+        </div>
+        
+        <div class="resumen-grupos">
+    `;
+
+    // Generar HTML para cada grupo
+    Object.keys(grupos).sort().forEach(clave => {
+      const grupo = grupos[clave];
+      
+      // Obtener total de alumnos para este grupo
+      const totalAlumnosGrupo = TOTALES_ALUMNOS[clave] || 0;
+      
+      // Calcular porcentajes para este grupo
+      const porcentajesGrupo = {
+        retardo: calcularPorcentaje(grupo.retardo, totalAlumnosGrupo),
+        ausente: calcularPorcentaje(grupo.ausente, totalAlumnosGrupo),
+        justificado: calcularPorcentaje(grupo.justificado, totalAlumnosGrupo),
+        suspendido: calcularPorcentaje(grupo.suspendido, totalAlumnosGrupo)
+      };
+      
+      html += `
+        <div class="resumen-grupo">
+          <h4>${grupo.grado}° ${grupo.grupo}</h4>
+          <div class="grupo-totales">
+            ${grupo.retardo > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.retardo}%; background-color: var(--warning);"></div>
+                </div>
+                <div class="cantidad">${grupo.retardo} al</div>
+                <div class="porcentaje">${porcentajesGrupo.retardo}%</div>
+                <div class="label">Retardos</div>
+              </div>
+            ` : ''}
+            
+            ${grupo.ausente > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.ausente}%; background-color: var(--danger);"></div>
+                </div>
+                <div class="cantidad">${grupo.ausente} al</div>
+                <div class="porcentaje">${porcentajesGrupo.ausente}%</div>
+                <div class="label">Inasistencias</div>
+              </div>
+            ` : ''}
+            
+            ${grupo.justificado > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.justificado}%; background-color: var(--info);"></div>
+                </div>
+                <div class="cantidad">${grupo.justificado} al</div>
+                <div class="porcentaje">${porcentajesGrupo.justificado}%</div>
+                <div class="label">Permisos</div>
+              </div>
+            ` : ''}
+            
+            ${grupo.suspendido > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.suspendido}%; background-color: var(--suspendido);"></div>
+                </div>
+                <div class="cantidad">${grupo.suspendido} al</div>
+                <div class="porcentaje">${porcentajesGrupo.suspendido}%</div>
+                <div class="label">Suspendidos</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+
+    return html;
+  }
+
+  function cargarAsistencias() {
+    const fechaInput = document.getElementById('fecha').value;
+    if (!fechaInput) return;
+
+    // Validar fecha futura
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const fechaSel = new Date(fechaInput);
+    if (fechaSel > hoy) {
+       document.getElementById('resumenContainer').innerHTML = '<div class="empty-state">Fecha futura. No hay datos históricos.</div>';
+       document.getElementById('resultadosDashboard').innerHTML = '';
+       return;
+    }
+
+    const [y, m, d] = fechaInput.split('-');
+    const fechaFormateada = `${d}/${m}/${y}`;
+
+    document.getElementById('loadingDashboard').style.display = 'block';
+    
+    // Cache busting + case sensitivity fix logic
+    fetch(`${ASISTENCIA_URL}?fecha=${fechaFormateada}&accion=consultar&_ts=${Date.now()}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('loadingDashboard').style.display = 'none';
+        if (data.error) {
+           document.getElementById('resumenContainer').innerHTML = `<p class="empty-state" style="color:var(--danger)">${data.error}</p>`;
+           return;
+        }
+
+        if (Array.isArray(data)) {
+          // Normalizar estado a minúsculas para asegurar filtrado correcto
+          // Y normalizar fecha con la nueva función robusta
+          const datosFiltrados = data.map(item => ({
+            ...item,
+            estado: (item.estado || '').toLowerCase(),
+            fechaNormalizada: normalizarFecha(item.fecha)
+          })).filter(item => {
+             // Usamos la fechaNormalizada ya calculada para la comparación
+             return item.fechaNormalizada === fechaInput && ['retardo', 'ausente', 'justificado', 'suspendido'].includes(item.estado);
+          });
+
+          document.getElementById('resumenContainer').innerHTML = generarResumen(datosFiltrados);
+          
+          if (datosFiltrados.length === 0) {
+             document.getElementById('resultadosDashboard').innerHTML = '<div class="empty-state" style="margin-top: 20px;">No hay registros de inasistencias/retardos para esta fecha.</div>';
+          } else {
+             // NO mostramos la lista detallada de nombres como se solicitó
+             document.getElementById('resultadosDashboard').innerHTML = '';
+          }
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('loadingDashboard').style.display = 'none';
+        document.getElementById('resumenContainer').innerHTML = '<p class="empty-state" style="color:var(--danger)">Error al cargar el resumen.</p>';
+      });
+  }
+
+  // --- LÓGICA DEL FORMULARIO DE REGISTRO ---
+  
+  function cargarPermisos() {
+    const fechaInput = document.getElementById('fecha').value;
+    const gradoInput = document.getElementById('grado').value;
+    const grupoInput = document.getElementById('grupo').value;
+    const container = document.getElementById('permisos-container');
+    
+    if (!fechaInput || !gradoInput || !grupoInput) {
+      container.innerHTML = '<p class="empty-state">Seleccione fecha, grado y grupo para ver permisos</p>';
+      return;
+    }
+
+    container.innerHTML = '<p class="loading-text">Cargando permisos...</p>';
+
+    const fechaNormalizada = normalizarFecha(fechaInput);
+    const [y, m, d] = fechaNormalizada.split('-');
+    const fechaFormateada = `${d}/${m}/${y}`;
+    
+    fetchConManejoDeErrores(`${PERMISOS_URL}?fecha=${encodeURIComponent(fechaFormateada)}&_ts=${Date.now()}`)
+      .then(data => {
+        if (!Array.isArray(data)) {
+          container.innerHTML = '<p class="empty-state">No se encontraron permisos</p>';
+          return;
+        }
+        
+        const permisosFiltrados = data.filter(permiso => {
+          if (!permiso.fecha) return false;
+          const fPermiso = normalizarFecha(permiso.fecha);
+          if (fPermiso !== fechaNormalizada) return false;
+          const gPermiso = (permiso.grado || '').toString().replace(/[°°]/g, '');
+          const gSel = gradoInput.toString();
+          if (gPermiso !== gSel) return false;
+          const grPermiso = (permiso.grupo || '').toString().toUpperCase();
+          const grSel = grupoInput.toString().toUpperCase();
+          if (grPermiso !== grSel) return false;
+          return true;
+        });
+        
+        permisosCargados = permisosFiltrados;
+        
+        // Auto-agregar permisos a la lista de registro (solo si no están)
+        let nuevos = 0;
+        permisosFiltrados.forEach(permiso => {
+          let nombre = permiso.nombreEstudiante || permiso.nombre_alumno || permiso.alumno || permiso.nombre || '';
+          if(!nombre) return;
+
+          const alumnosFiltrados = todosLosAlumnos.filter(a => {
+            const ga = (a.grado||'').toString().replace(/[°°]/g, '');
+            return ga === gradoInput && (a.grupo||'').toString().toUpperCase() === grupoInput.toUpperCase();
+          });
+          
+          const alumno = alumnosFiltrados.find(a => compararNombres(a.nombre||'', nombre));
+          if (alumno) {
+            nombre = alumno.nombre;
+            const ya = alumnosRegistradosHoy.some(r => compararNombres(r.nombre, nombre) && r.grado === gradoInput && r.grupo === grupoInput);
+            if (!ya) {
+              alumnosRegistradosHoy.push({
+                nombre: nombre, grado: gradoInput, grupo: grupoInput, estado: 'justificado',
+                fecha: fechaInput, docente: document.getElementById('docente').value || "No especificado",
+                disciplina: document.getElementById('disciplina').value || "No especificada",
+                telTutor: permiso.telefono || permiso.tel || '', nombrePadre: permiso.nombrePadre || '', telefono: permiso.telefono || ''
+              });
+              nuevos++;
+            }
+          }
+        });
+        
+        if(nuevos > 0) {
+          actualizarListaRegistrados();
+          notificar(`${nuevos} permisos agregados a la lista de registro`, false);
+        }
+
+        const nombres = [...new Set(permisosFiltrados.map(p => p.nombreEstudiante || p.nombre_alumno || p.alumno || p.nombre || '').filter(n => n))];
+        container.innerHTML = nombres.length ? nombres.map(n => `<span class="permiso-item">${n}</span>`).join('') : '<p class="empty-state">Sin permisos para este grupo hoy</p>';
+      })
+      .catch(e => { container.innerHTML = '<p class="empty-state">Error cargando permisos</p>'; });
+  }
+
+  // FUNCIÓN CORREGIDA: Manejo robusto de datos de alumnos
+  function cargarTodosLosAlumnos() {
+    fetchConManejoDeErrores(ALUMNOS_URL)
+      .then(data => {
+        // Corrección: Intentar extraer el arreglo incluso si viene en un objeto
+        if (Array.isArray(data)) {
+          todosLosAlumnos = data;
+        } else if (data.alumnos && Array.isArray(data.alumnos)) {
+          todosLosAlumnos = data.alumnos;
+        } else if (data.data && Array.isArray(data.data)) {
+          todosLosAlumnos = data.data;
+        } else {
+          console.error("Formato de datos inesperado:", data);
+          todosLosAlumnos = [];
+          notificar('Error: Formato de datos de alumnos incorrecto', true);
+          return;
+        }
+        
+        // Una vez cargados, actualizar la lista si ya hay grado y grupo seleccionados
+        actualizarListaAlumnos();
+      })
+      .catch(e => {
+        console.error(e);
+        notificar('Error cargando alumnos', true);
+      });
+  }
+
+  // FUNCIÓN CORREGIDA: Validación antes de filtrar
+  function actualizarListaAlumnos() {
+    const grado = document.getElementById('grado').value;
+    const grupo = document.getElementById('grupo').value;
+    const container = document.getElementById('alumnos-lista');
+    
+    if (!grado || !grupo) {
+      container.innerHTML = '<p class="empty-state">Primero seleccione grado y grupo</p>';
+      return;
+    }
+
+    // Validación: Si la lista global está vacía o no es un arreglo, mostrar mensaje de carga
+    if (!Array.isArray(todosLosAlumnos) || todosLosAlumnos.length === 0) {
+        container.innerHTML = '<p class="empty-state">Cargando lista de alumnos...</p>';
+        // Intentar recargar si parece que falló la carga inicial
+        if(todosLosAlumnos.length === 0 && !window.cargandoAlumnosFlag) {
+            window.cargandoAlumnosFlag = true;
+            cargarTodosLosAlumnos();
+        }
+        return;
+    }
+    
+    // Limpiar flag de carga
+    window.cargandoAlumnosFlag = false;
+    
+    container.innerHTML = '<p class="loading-text">Filtrando lista...</p>';
+    
+    // Usamos setTimeout para permitir que el navegador renderice el mensaje de carga
+    setTimeout(() => {
+      const alumnosFiltrados = todosLosAlumnos.filter(alumno => {
+        if (!alumno) return false;
+        const ga = (alumno.grado || '').toString().replace(/[°°]/g, '');
+        return ga === grado.toString() && (alumno.grupo || '').toString().toUpperCase() === grupo.toUpperCase();
+      });
+      
+      if (alumnosFiltrados.length === 0) {
+        container.innerHTML = '<p class="empty-state">No hay alumnos para este grupo</p>';
+        return;
+      }
+
+      let html = '';
+      alumnosFiltrados.forEach(a => {
+        const nombre = a.nombre || 'Sin nombre';
+        const matricula = a.matricula || '';
+        
+        const yaRegistrado = alumnosRegistradosHoy.some(reg => compararNombres(reg.nombre, nombre) && reg.grado === grado && reg.grupo === grupo);
+        const estaMarcado = alumnosMarcados.some(m => compararNombres(m.nombre, nombre) && m.grado === grado && m.grupo === grupo);
+        
+        // Buscar datos extra si hay permiso
+        const permiso = permisosCargados.find(p => {
+           if(matricula && p.matricula && p.matricula.toString() === matricula.toString()) return true;
+           return compararNombres(p.nombreEstudiante || p.nombre_alumno || p.alumno || p.nombre || '', nombre);
+        });
+        const extraPadre = permiso ? (permiso.nombrePadre || '') : '';
+        const extraTel = permiso ? (permiso.telefono || permiso.tel || '') : '';
+
+        const estadoClase = yaRegistrado || estaMarcado ? 'seleccionado' : '';
+        const checked = yaRegistrado || estaMarcado ? 'checked' : '';
+        
+        html += `
+          <div class="alumno-item ${estadoClase}" 
+               data-nombre="${nombre}" data-grado="${grado}" data-grupo="${grupo}" 
+               data-matricula="${matricula}" data-celular="${a.celular_tutor || ''}"
+               data-nombre-padre="${extraPadre}" data-telefono="${extraTel}">
+            <input type="checkbox" id="alumno-${matricula || nombre.replace(/\s+/g, '-')}" ${checked}>
+            <label for="alumno-${matricula || nombre.replace(/\s+/g, '-')}">${nombre}</label>
+          </div>`;
+      });
+      container.innerHTML = html;
+
+      container.querySelectorAll('.alumno-item input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', function() {
+          const item = this.closest('.alumno-item');
+          if(this.checked) item.classList.add('seleccionado');
+          else item.classList.remove('seleccionado');
+        });
+      });
+    }, 100);
+  }
+
+  function cargarDocentes() {
+    const sel = document.getElementById('docente');
+    fetchConManejoDeErrores(DOCENTES_URL)
+      .then(data => {
+        sel.innerHTML = '<option value="">Seleccione docente</option>';
+        // Similar robust check for docentes
+        const listaDocentes = Array.isArray(data) ? data : (data.docentes || data.data || []);
+        listaDocentes.forEach(d => sel.add(new Option(d.nombre || d.nombre_completo || 'Sin nombre', d.nombre || d.nombre_completo)));
+      });
+  }
+
+  // FUNCIÓN ACTUALIZADA: Agregar estado con color al final del nombre
+  function actualizarListaRegistrados() {
+    const container = document.getElementById('registrados-container');
+    if (alumnosRegistradosHoy.length === 0) {
+      container.innerHTML = '<p class="empty-state">No hay alumnos en la lista de registro</p>';
+      return;
+    }
+    
+    let html = `<p style="margin-bottom: 10px; font-weight: 600;">Total: ${alumnosRegistradosHoy.length} alumno(s)</p>`;
+    html += alumnosRegistradosHoy.map(reg => {
+      // Capitalizar estado para mostrar
+      const estadoTexto = reg.estado.charAt(0).toUpperCase() + reg.estado.slice(1);
+      
+      // Clase CSS para el color según el estado
+      const claseColor = `txt-${reg.estado}`;
+      
+      return `
+        <div class="registrado-item">
+          <span class="checkmark">✓</span>
+          <span class="alumno-nombre">
+            ${reg.nombre} 
+            <span class="estado-label-texto ${claseColor}">- ${estadoTexto}</span>
+          </span>
+        </div>`;
+    }).join('');
+    container.innerHTML = html;
+  }
+
+  // --- EVENTOS ---
+  
+  // Control unificado de cambios en Fecha
+  document.getElementById('fecha').addEventListener('change', () => {
+    cargarAsistencias();
+    cargarPermisos();
+    alumnosRegistradosHoy = [];
+    actualizarListaRegistrados();
+  });
+
+  document.getElementById('btnActualizarTodo').addEventListener('click', () => {
+    cargarAsistencias();
+    cargarPermisos();
+    notificar("Datos actualizados");
+  });
+
+  document.getElementById('grado').addEventListener('change', () => {
+    actualizarListaAlumnos();
+    cargarPermisos();
+    alumnosRegistradosHoy = [];
+    actualizarListaRegistrados();
+  });
+  
+  document.getElementById('grupo').addEventListener('change', () => {
+    actualizarListaAlumnos();
+    cargarPermisos();
+    alumnosRegistradosHoy = [];
+    actualizarListaRegistrados();
+  });
+
+  // Agregar a la lista de registro
+  document.getElementById('btnAgregar').addEventListener('click', () => {
+    const estado = document.querySelector('input[name="estado"]:checked');
+    if (!estado) return notificar('Seleccione estado', true);
+    
+    const checkboxes = document.querySelectorAll('#alumnos-lista input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) return notificar('Seleccione alumno(s)', true);
+
+    let agregados = 0;
+    checkboxes.forEach(cb => {
+      const item = cb.closest('.alumno-item');
+      const nombre = item.dataset.nombre;
+      const grado = item.dataset.grado;
+      const grupo = item.dataset.grupo;
+      
+      const ya = alumnosRegistradosHoy.some(r => compararNombres(r.nombre, nombre) && r.grado === grado && r.grupo === grupo);
+      if(ya) return;
+
+      alumnosRegistradosHoy.push({
+        nombre: nombre.trim(), grado: grado, grupo: grupo, estado: estado.value,
+        fecha: document.getElementById('fecha').value,
+        docente: document.getElementById('docente').value,
+        disciplina: document.getElementById('disciplina').value,
+        telTutor: item.dataset.celular ? item.dataset.celular.replace(/\D/g,'') : "",
+        nombrePadre: item.dataset.nombrePadre,
+        telefono: item.dataset.telefono
+      });
+      agregados++;
+      item.classList.add('seleccionado');
+    });
+    
+    if(agregados > 0) {
+      actualizarListaRegistrados();
+      notificar(`${agregados} alumnos agregados`);
+    } else {
+      notificar('Los alumnos ya están en la lista', true);
+    }
+  });
+
+  // Registrar todo (Enviar a Google Sheets)
+  document.getElementById('btnRegistrar').addEventListener('click', () => {
+    if (alumnosRegistradosHoy.length === 0) return notificar('Lista vacía', true);
+
+    const loading = document.getElementById('loadingRegistro');
+    loading.style.display = 'block';
+    document.getElementById('btnRegistrar').disabled = true;
+
+    let enviados = 0;
+    let errores = 0;
+    let total = alumnosRegistradosHoy.length;
+
+    function enviarSiguiente(i) {
+      if (i >= total) {
+        loading.style.display = 'none';
+        document.getElementById('btnRegistrar').disabled = false;
+        if (errores === 0) {
+          notificar(`¡Registro exitoso de ${enviados} alumnos!`);
+          alumnosRegistradosHoy = [];
+          actualizarListaRegistrados();
+          document.querySelectorAll('#alumnos-lista .alumno-item').forEach(it => {
+            it.classList.remove('seleccionado');
+            it.querySelector('input').checked = false;
+          });
+          // Refrescar dashboard para ver los nuevos datos
+          cargarAsistencias();
+        } else {
+          notificar(`Completado con ${errores} errores de ${total}`, true);
+        }
+        return;
+      }
+
+      const reg = alumnosRegistradosHoy[i];
+      const [y, m, d] = reg.fecha.split('-');
+      const payload = {
+        fecha: `${d}/${m}/${y}`,
+        docente: reg.docente, disciplina: reg.disciplina,
+        grado: reg.grado, grupo: reg.grupo,
+        alumno: reg.nombre, estado: reg.estado,
+        telTutor: reg.telTutor, nombrePadre: reg.nombrePadre, telefono: reg.telefono
+      };
+
+      fetch(SCRIPT_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(() => { enviados++; enviarSiguiente(i+1); })
+      .catch(() => { errores++; enviarSiguiente(i+1); });
+    }
+    
+    enviarSiguiente(0);
+  });
+
+  // --- INICIALIZACIÓN ---
+  document.addEventListener('DOMContentLoaded', () => {
+    // Establecer fecha hoy
+    const hoy = new Date();
+    const fStr = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+    document.getElementById('fecha').value = fStr;
+
+    cargarDocentes();
+    cargarTodosLosAlumnos();
+    cargarAsistencias(); 
+  });
+</script>
+</body>
+</html>

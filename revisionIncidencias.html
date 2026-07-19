@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Incidencias Estudiantiles</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        .logo {
+            max-width: 120px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin: 0;
+            font-size: 28px;
+        }
+        .search-container {
+            display: flex;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+        .search-label {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn-buscar {
+            background-color: #3498db;
+        }
+        .btn-buscar:hover {
+            background-color: #2980b9;
+        }
+        .btn-reiniciar {
+            background-color: #e74c3c;
+        }
+        .btn-reiniciar:hover {
+            background-color: #c0392b;
+        }
+        .btn-menu {
+            background-color: #27ae60;
+        }
+        .btn-menu:hover {
+            background-color: #219653;
+        }
+        .results {
+            margin-top: 20px;
+            flex: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #3498db;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 15px;
+            background-color: #fadbd8;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .student-info {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .student-info h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .school-name {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .fecha-column {
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .ciclo-column {
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        /* Estilos para tabla responsiva */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .student-info p {
+                display: flex;
+                justify-content: space-between;
+                margin: 5px 0;
+            }
+            
+            .student-info p strong::after {
+                content: ":";
+                margin-right: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela Secundaria Profesor Honorato Tlaseca Barrera" class="logo">
+            <div>
+                <div class="school-name">Escuela Secundaria Profesor Honorato Tlaseca Barrera</div>
+                <h1>Consulta de Incidencias Estudiantiles</h1>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <label for="nombreAlumno" class="search-label">Nombre del alumno</label>
+            <input type="text" id="nombreAlumno" placeholder="Ingrese el nombre del alumno" aria-label="Nombre del alumno">
+            <button id="buscarBtn" class="btn-buscar" aria-label="Buscar incidencias">Buscar Incidencias</button>
+            <button id="reiniciarBtn" class="btn-reiniciar" aria-label="Reiniciar búsqueda">Reiniciar</button>
+            <button id="menuBtn" class="btn-menu" aria-label="Regresar al menú principal">Menú Principal</button>
+        </div>
+        
+        <div id="loadingMessage" class="loading" style="display: none;" role="status" aria-live="polite">Cargando datos...</div>
+        <div id="errorMessage" class="error" style="display: none;" role="alert"></div>
+        
+        <div id="resultados" class="results" aria-live="polite"></div>
+        
+        <div class="footer">
+            © 2025-2026 Sistema de Gestión Escolar | Escuela Secundaria Profesor Honorato Tlaseca Barrera | Todos los derechos reservados
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nombreInput = document.getElementById('nombreAlumno');
+            const buscarBtn = document.getElementById('buscarBtn');
+            const reiniciarBtn = document.getElementById('reiniciarBtn');
+            const menuBtn = document.getElementById('menuBtn');
+            const resultadosDiv = document.getElementById('resultados');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // URL de tu script de Google Apps
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbz58020ujulDxPvE7KSuB0e5SPoQc43w3cVLhzJL33ctC6uqtYs_YjVxkwnTBmJrOk/exec';
+            
+            // Variable para almacenar los datos cargados
+            let datosCargados = null;
+            
+            // Variable para el debounce
+            let debounceTimer;
+            
+            // Event listener para el botón de menú principal
+            menuBtn.addEventListener('click', function() {
+                window.location.href = 'hhttps://faustinohtb-hash.github.io/honorato/index.html';
+            });
+            
+            buscarBtn.addEventListener('click', function() {
+                const nombre = nombreInput.value.trim();
+                if (!nombre) {
+                    showError('Por favor ingrese un nombre de alumno');
+                    return;
+                }
+                
+                // Cancelar cualquier búsqueda pendiente
+                clearTimeout(debounceTimer);
+                
+                // Establecer un nuevo debounce
+                debounceTimer = setTimeout(() => {
+                    buscarIncidencias(nombre);
+                }, 300);
+            });
+            
+            // Event listener para el botón de reinicio
+            reiniciarBtn.addEventListener('click', function() {
+                // Limpiar el campo de texto
+                nombreInput.value = '';
+                
+                // Ocultar resultados, mensajes de error y carga
+                resultadosDiv.innerHTML = '';
+                errorMessage.style.display = 'none';
+                loadingMessage.style.display = 'none';
+                
+                // Enfocar el campo de texto para una nueva búsqueda
+                nombreInput.focus();
+            });
+            
+            nombreInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    buscarBtn.click();
+                }
+            });
+            
+            // Función para formatear fecha correctamente
+            function formatearFecha(fechaValue) {
+                if (!fechaValue) return '';
+                
+                // Si ya es una fecha formateada (dd/mm/yyyy o similar), devolverla tal cual
+                if (typeof fechaValue === 'string' && fechaValue.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+                    return fechaValue;
+                }
+                
+                // Si es una fecha en formato ISO o timestamp
+                try {
+                    const fecha = new Date(fechaValue);
+                    if (!isNaN(fecha.getTime())) {
+                        const dia = String(fecha.getDate()).padStart(2, '0');
+                        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+                        const anio = fecha.getFullYear();
+                        return `${dia}/${mes}/${anio}`;
+                    }
+                } catch (e) {
+                    console.error('Error al formatear fecha:', e);
+                }
+                
+                // Si no se puede convertir, devolver el valor original
+                return fechaValue;
+            }
+            
+            // Función para convertir fecha a objeto Date para comparación
+            function parseDate(fechaValue) {
+                if (!fechaValue) return new Date(0); // Fecha mínima si no hay valor
+                
+                // Si ya es una fecha formateada (dd/mm/yyyy)
+                if (typeof fechaValue === 'string' && fechaValue.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+                    const partes = fechaValue.split('/');
+                    return new Date(partes[2], partes[1] - 1, partes[0]);
+                }
+                
+                // Si es una fecha en formato ISO o timestamp
+                try {
+                    const fecha = new Date(fechaValue);
+                    if (!isNaN(fecha.getTime())) {
+                        return fecha;
+                    }
+                } catch (e) {
+                    console.error('Error al parsear fecha:', e);
+                }
+                
+                // Si no se puede convertir, devolver fecha mínima
+                return new Date(0);
+            }
+            
+            function buscarIncidencias(nombre) {
+                // Mostrar indicador de carga
+                loadingMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                resultadosDiv.innerHTML = '';
+                
+                // Si ya tenemos los datos cargados, usarlos
+                if (datosCargados) {
+                    procesarDatos(datosCargados, nombre);
+                    return;
+                }
+                
+                // Obtener datos del Google Sheet
+                fetch(scriptURL)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al obtener los datos');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Validar que los datos sean un array
+                        if (!Array.isArray(data)) {
+                            throw new Error('Los datos recibidos no tienen el formato esperado');
+                        }
+                        
+                        // Almacenar los datos para futuras búsquedas
+                        datosCargados = data;
+                        
+                        procesarDatos(data, nombre);
+                    })
+                    .catch(error => {
+                        showError('Error al cargar los datos: ' + error.message);
+                    })
+                    .finally(() => {
+                        loadingMessage.style.display = 'none';
+                    });
+            }
+            
+            function procesarDatos(data, nombre) {
+                console.log('Datos recibidos:', data); // Para debug
+                
+                // Filtrar incidencias por nombre de alumno
+                const incidenciasFiltradas = data.filter(incidencia => 
+                    incidencia.nombreAlumno && 
+                    incidencia.nombreAlumno.toLowerCase().includes(nombre.toLowerCase())
+                );
+                
+                // Mostrar resultados
+                mostrarResultados(incidenciasFiltradas, nombre);
+            }
+            
+            function mostrarResultados(incidencias, nombreBusqueda) {
+                resultadosDiv.innerHTML = '';
+                
+                if (incidencias.length === 0) {
+                    resultadosDiv.innerHTML = `<div class="no-results">No se encontraron incidencias para el alumno: <strong>${nombreBusqueda}</strong></div>`;
+                    return;
+                }
+                
+                // Función para obtener el valor de una propiedad ignorando mayúsculas/minúsculas
+                function getProp(obj, propName) {
+                    // Convertir a minúsculas para comparación
+                    const propNameLower = propName.toLowerCase();
+                    
+                    // Buscar propiedad exacta primero
+                    if (obj[propName] !== undefined) {
+                        return obj[propName] || '';
+                    }
+                    
+                    // Si no se encuentra, buscar en minúsculas
+                    for (let key in obj) {
+                        if (key.toLowerCase() === propNameLower) {
+                            return obj[key] || '';
+                        }
+                    }
+                    return '';
+                }
+                
+                // Ordenar incidencias por fecha (de la más actual a la más anterior)
+                incidencias.sort((a, b) => {
+                    const fechaA = getProp(a, 'fecha');
+                    const fechaB = getProp(b, 'fecha');
+                    
+                    const dateA = parseDate(fechaA);
+                    const dateB = parseDate(fechaB);
+                    
+                    // Orden descendente: de la más reciente a la más antigua
+                    return dateB.getTime() - dateA.getTime();
+                });
+                
+                // Agrupar por alumno para mostrar información general
+                const alumnoInfo = {
+                    nombre: getProp(incidencias[0], 'nombreAlumno'),
+                    // Usar matriculacompleta en lugar de matricula
+                    matricula: getProp(incidencias[0], 'matriculacompleta'),
+                    matriculaCompleta: getProp(incidencias[0], 'matriculacompleta'),
+                    // Obtener ciclo escolar del campo "ciclo" sin valor por defecto
+                    ciclo: getProp(incidencias[0], 'ciclo'),
+                    grado: getProp(incidencias[0], 'grado'),
+                    grupo: getProp(incidencias[0], 'grupo')
+                };
+                
+                // Mostrar información del alumno
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'student-info';
+                infoDiv.innerHTML = `
+                    <h3>Información del Alumno</h3>
+                    <p><strong>Nombre:</strong> <span>${alumnoInfo.nombre}</span></p>
+                    <p><strong>Matrícula:</strong> <span>${alumnoInfo.matricula}</span></p>
+                    <p><strong>Ciclo:</strong> <span>${alumnoInfo.ciclo}</span></p>
+                    <p><strong>Grado y Grupo:</strong> <span>${alumnoInfo.grado} ${alumnoInfo.grupo}</span></p>
+                    <p><strong>Total de Incidencias:</strong> <span>${incidencias.length}</span></p>
+                `;
+                resultadosDiv.appendChild(infoDiv);
+                
+                // Crear tabla de incidencias
+                const tabla = document.createElement('table');
+                tabla.setAttribute('role', 'table');
+                
+                // Encabezados de tabla - Cambiados según solicitud
+                const encabezados = ['Fecha', 'Ciclo Escolar', 'Docente', 'Tipo de Indisciplina', 'Nivel de Gravedad', 'Descripción de la Falta'];
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                
+                encabezados.forEach(texto => {
+                    const th = document.createElement('th');
+                    th.setAttribute('scope', 'col');
+                    th.textContent = texto;
+                    headerRow.appendChild(th);
+                });
+                
+                thead.appendChild(headerRow);
+                tabla.appendChild(thead);
+                
+                // Cuerpo de la tabla
+                const tbody = document.createElement('tbody');
+                
+                incidencias.forEach(incidencia => {
+                    const fila = document.createElement('tr');
+                    
+                    // Obtener valores usando la función helper para manejar mayúsculas/minúsculas
+                    const fechaRaw = getProp(incidencia, 'fecha');
+                    const fecha = formatearFecha(fechaRaw);
+                    // Obtener ciclo escolar del campo "ciclo" sin valor por defecto
+                    const cicloEscolar = getProp(incidencia, 'ciclo');
+                    const docente = getProp(incidencia, 'docente');
+                    const descripcionFalta = getProp(incidencia, 'descripcionFalta');
+                    const nivelGravedad = getProp(incidencia, 'nivelGravedad');
+                    const observaciones = getProp(incidencia, 'observaciones');
+                    
+                    // Crear celdas en el orden correcto - Con los nuevos títulos
+                    const celdas = [
+                        { valor: fecha, clase: 'fecha-column' },
+                        { valor: cicloEscolar, clase: 'ciclo-column' }, // Ciclo escolar del campo "ciclo"
+                        { valor: docente, clase: '' },
+                        { valor: descripcionFalta, clase: '' }, // Ahora es "Tipo de Indisciplina"
+                        { valor: nivelGravedad, clase: '' },
+                        { valor: observaciones, clase: '' } // Ahora es "Descripción de la Falta"
+                    ];
+                    
+                    celdas.forEach(celda => {
+                        const td = document.createElement('td');
+                        td.textContent = celda.valor;
+                        if (celda.clase) {
+                            td.className = celda.clase;
+                        }
+                        fila.appendChild(td);
+                    });
+                    
+                    tbody.appendChild(fila);
+                });
+                
+                tabla.appendChild(tbody);
+                resultadosDiv.appendChild(tabla);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

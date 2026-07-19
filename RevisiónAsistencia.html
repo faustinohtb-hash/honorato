@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Permisos, Retardos e Inasistencias del Día</title>
+  <style>
+    :root {
+      --primary: #667eea; --secondary: #764ba2; --success: #56ab2f; --danger: #f44336;
+      --warning: #ff9800; --info: #2196F3; --light: #f8f9fa; --border: #e1e5eb; --suspendido: #9c27b0;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif; }
+    body { background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; min-height: 100vh; }
+    .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+    .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 25px; text-align: center; position: relative; }
+    .header img { max-width: 90px; border-radius: 12px; margin-bottom: 15px; }
+    .header h1 { font-size: 28px; margin: 10px 0; }
+    .btn-home {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .btn-home:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .btn-home::before {
+      content: "←";
+      margin-right: 6px;
+      font-weight: bold;
+    }
+    .content { padding: 30px; }
+    .date-selector { margin-bottom: 25px; text-align: center; }
+    .date-selector input { padding: 10px; border-radius: 8px; border: 2px solid var(--border); font-size: 16px; }
+    .btn-refresh { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-left: 10px; font-size: 16px; }
+    .btn-refresh:hover { background: var(--secondary); }
+    .btn-refresh:disabled { background: #cccccc; cursor: not-allowed; }
+    .loading { display: none; text-align: center; margin: 20px 0; color: #666; font-size: 16px; }
+    .spinner { border: 4px solid #f0f0f0; border-top: 4px solid var(--primary); border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    /* Estilos para el resumen */
+    .resumen-container {
+      background: var(--light);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .resumen-title {
+      color: var(--primary);
+      font-size: 22px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .resumen-total {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .resumen-item {
+      text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      min-width: 120px;
+      margin: 5px;
+    }
+    .resumen-item .cantidad {
+      font-size: 16px;
+      color: #333;
+      margin-top: 5px;
+      font-weight: 600;
+    }
+    .resumen-item .porcentaje {
+      font-size: 14px;
+      color: #666;
+      margin-top: 3px;
+      font-weight: 600;
+    }
+    .resumen-item .label {
+      color: #666;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .chart-container {
+      height: 30px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      margin: 10px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .chart-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      position: relative;
+      min-width: 5px;
+    }
+    .resumen-grupos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .resumen-grupo {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .resumen-grupo h4 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: var(--primary);
+      font-size: 18px;
+      text-align: center;
+    }
+    .grupo-totales {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .grupo-item {
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--light);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      min-width: 80px;
+      flex: 1;
+      margin: 5px;
+    }
+    .grupo-item .cantidad {
+      font-size: 14px;
+      color: #333;
+      margin-top: 3px;
+      font-weight: 600;
+    }
+    .grupo-item .porcentaje {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+    .grupo-item .label {
+      color: #666;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+    .grupo-chart-container {
+      height: 20px;
+      background-color: #e9ecef;
+      border-radius: 3px;
+      margin: 8px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .grupo-chart-bar {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+      position: relative;
+      min-width: 3px;
+    }
+    
+    .grupo-seccion { margin-bottom: 30px; }
+    .grupo-header { background: var(--light); padding: 15px; border-radius: 10px 10px 0 0; border-bottom: 2px solid var(--border); }
+    .grupo-header h2 { color: var(--primary); margin: 0; font-size: 22px; }
+    .alumno-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .alumno-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .alumno-nombre { font-weight: 600; font-size: 18px; color: #333; }
+    .estado-badge { padding: 5px 12px; border-radius: 20px; color: white; font-weight: 600; font-size: 14px; }
+    .retardo { background: var(--warning); }
+    .ausente { background: var(--danger); }
+    .justificado { background: var(--info); }
+    .suspendido { background: var(--suspendido); }
+    .alumno-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .info-item { display: flex; align-items: center; }
+    .info-label { font-weight: 600; margin-right: 8px; color: #555; }
+    .info-value { color: #333; }
+    .whatsapp-btn { background: #25d366; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 14px; display: flex; align-items: center; }
+    .whatsapp-btn:hover { background: #128C7E; }
+    .notification { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 10px; color: white; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform: translateX(120%); transition: 0.4s; }
+    .notification.show { transform: translateX(0); }
+    .success { background: var(--success); }
+    .error { background: var(--danger); }
+    .empty-state { text-align: center; padding: 40px; color: #666; }
+    .empty-state img { max-width: 150px; opacity: 0.5; margin-bottom: 20px; }
+    .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; border-top: 1px solid var(--border); margin-top: 30px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="https://faustinohtb-hash.github.io/honorato/index.html" class="btn-home">Regresar a Inicio</a>
+    <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo">
+    <h1>Permisos, Retardos e Inasistencias del Día</h1>
+    <p>Escuela Secundaria Profesor Honorato Tlaseca Barrera</p>
+  </div>
+
+  <div class="content">
+    <div class="date-selector">
+      <input type="date" id="fechaConsulta">
+      <button class="btn-refresh" id="btnActualizar">Actualizar</button>
+    </div>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div> Cargando datos...
+    </div>
+
+    <div id="resumenContainer"></div>
+    
+    <div id="resultados">
+      <div class="empty-state">
+        <p>Seleccione una fecha y presione "Actualizar" para ver los permisos, retardos e inasistencias.</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025-2026 Sistema de Gestión Escolar | Escuela Secundaria Profesor Honorato Tlaseca Barrera | Todos los derechos reservados
+    </div>
+  </div>
+</div>
+
+<div class="notification" id="notif"></div>
+
+<script>
+  // URL para obtener los datos de asistencia
+  const ASISTENCIA_URL = "https://script.google.com/macros/s/AKfycbzm4o8Q8L5qC-VZHXiryxRKGXnerxP2BCH3P2N5EnIpvyqHlVdKck8TrrgipB9t2S9h/exec";
+
+  // Totales de alumnos por grupo
+  const TOTALES_ALUMNOS = {
+    '1-A': 22,
+    '1-B': 22,
+    '2-A': 34,
+    '2-B': 35,
+    '3-A': 29,
+    '3-B': 30
+  };
+  
+  // Total general de alumnos
+  const TOTAL_GENERAL_ALUMNOS = 172;
+
+  function notificar(msg, error = false) {
+    const n = document.getElementById('notif');
+    n.textContent = msg;
+    n.className = `notification show ${error ? 'error' : 'success'}`;
+    setTimeout(() => n.className = 'notification', 5000);
+  }
+
+  // Establecer fecha actual
+  function setFechaActual() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    document.getElementById('fechaConsulta').value = `${year}-${month}-${day}`;
+  }
+
+  // Función para formatear fecha de ISO a YYYY-MM-DD
+  function formatearFechaISO(fechaISO) {
+    if (!fechaISO) return null;
+    const fecha = new Date(fechaISO);
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Función para calcular porcentaje
+  function calcularPorcentaje(valor, total) {
+    if (total === 0) return 0;
+    return ((valor / total) * 100).toFixed(2);
+  }
+
+  // Función para generar el resumen de asistencias
+  function generarResumen(datos) {
+    if (!datos || datos.length === 0) {
+      return '';
+    }
+
+    // Contar totales generales
+    const totales = {
+      retardo: 0,
+      ausente: 0,
+      justificado: 0,
+      suspendido: 0
+    };
+
+    // Agrupar por grado y grupo
+    const grupos = {};
+    
+    datos.forEach(asistencia => {
+      // Contar totales generales
+      if (asistencia.estado === 'retardo') totales.retardo++;
+      else if (asistencia.estado === 'ausente') totales.ausente++;
+      else if (asistencia.estado === 'justificado') totales.justificado++;
+      else if (asistencia.estado === 'suspendido') totales.suspendido++;
+      
+      // Agrupar por grado y grupo
+      const clave = `${asistencia.grado}-${asistencia.grupo}`;
+      if (!grupos[clave]) {
+        grupos[clave] = {
+          grado: asistencia.grado,
+          grupo: asistencia.grupo,
+          retardo: 0,
+          ausente: 0,
+          justificado: 0,
+          suspendido: 0
+        };
+      }
+      
+      if (asistencia.estado === 'retardo') grupos[clave].retardo++;
+      else if (asistencia.estado === 'ausente') grupos[clave].ausente++;
+      else if (asistencia.estado === 'justificado') grupos[clave].justificado++;
+      else if (asistencia.estado === 'suspendido') grupos[clave].suspendido++;
+    });
+
+    // Calcular porcentajes generales
+    const porcentajesGenerales = {
+      retardo: calcularPorcentaje(totales.retardo, TOTAL_GENERAL_ALUMNOS),
+      ausente: calcularPorcentaje(totales.ausente, TOTAL_GENERAL_ALUMNOS),
+      justificado: calcularPorcentaje(totales.justificado, TOTAL_GENERAL_ALUMNOS),
+      suspendido: calcularPorcentaje(totales.suspendido, TOTAL_GENERAL_ALUMNOS)
+    };
+
+    // Generar HTML del resumen
+    let html = `
+      <div class="resumen-container">
+        <h3 class="resumen-title">Resumen de Asistencias</h3>
+        
+        <div class="resumen-total">
+          ${totales.retardo > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.retardo}%; background-color: var(--warning);"></div>
+              </div>
+              <div class="cantidad">${totales.retardo} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.retardo}%</div>
+              <div class="label">Retardos</div>
+            </div>
+          ` : ''}
+          
+          ${totales.ausente > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.ausente}%; background-color: var(--danger);"></div>
+              </div>
+              <div class="cantidad">${totales.ausente} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.ausente}%</div>
+              <div class="label">Inasistencias</div>
+            </div>
+          ` : ''}
+          
+          ${totales.justificado > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.justificado}%; background-color: var(--info);"></div>
+              </div>
+              <div class="cantidad">${totales.justificado} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.justificado}%</div>
+              <div class="label">Permisos</div>
+            </div>
+          ` : ''}
+          
+          ${totales.suspendido > 0 ? `
+            <div class="resumen-item">
+              <div class="chart-container">
+                <div class="chart-bar" style="width: ${porcentajesGenerales.suspendido}%; background-color: var(--suspendido);"></div>
+              </div>
+              <div class="cantidad">${totales.suspendido} alumnos</div>
+              <div class="porcentaje">${porcentajesGenerales.suspendido}%</div>
+              <div class="label">Suspendidos</div>
+            </div>
+          ` : ''}
+        </div>
+        
+        <div class="resumen-grupos">
+    `;
+
+    // Generar HTML para cada grupo
+    Object.keys(grupos).sort().forEach(clave => {
+      const grupo = grupos[clave];
+      
+      // Obtener total de alumnos para este grupo
+      const totalAlumnosGrupo = TOTALES_ALUMNOS[clave] || 0;
+      
+      // Calcular porcentajes para este grupo
+      const porcentajesGrupo = {
+        retardo: calcularPorcentaje(grupo.retardo, totalAlumnosGrupo),
+        ausente: calcularPorcentaje(grupo.ausente, totalAlumnosGrupo),
+        justificado: calcularPorcentaje(grupo.justificado, totalAlumnosGrupo),
+        suspendido: calcularPorcentaje(grupo.suspendido, totalAlumnosGrupo)
+      };
+      
+      html += `
+        <div class="resumen-grupo">
+          <h4>${grupo.grado}° ${grupo.grupo}</h4>
+          <div class="grupo-totales">
+            ${grupo.retardo > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.retardo}%; background-color: var(--warning);"></div>
+                </div>
+                <div class="cantidad">${grupo.retardo} alumnos</div>
+                <div class="porcentaje">${porcentajesGrupo.retardo}%</div>
+                <div class="label">Retardos</div>
+              </div>
+            ` : ''}
+            
+            ${grupo.ausente > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.ausente}%; background-color: var(--danger);"></div>
+                </div>
+                <div class="cantidad">${grupo.ausente} alumnos</div>
+                <div class="porcentaje">${porcentajesGrupo.ausente}%</div>
+                <div class="label">Inasistencias</div>
+              </div>
+            ` : ''}
+            
+            ${grupo.justificado > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.justificado}%; background-color: var(--info);"></div>
+                </div>
+                <div class="cantidad">${grupo.justificado} alumnos</div>
+                <div class="porcentaje">${porcentajesGrupo.justificado}%</div>
+                <div class="label">Permisos</div>
+              </div>
+            ` : ''}
+            
+            ${grupo.suspendido > 0 ? `
+              <div class="grupo-item">
+                <div class="grupo-chart-container">
+                  <div class="grupo-chart-bar" style="width: ${porcentajesGrupo.suspendido}%; background-color: var(--suspendido);"></div>
+                </div>
+                <div class="cantidad">${grupo.suspendido} alumnos</div>
+                <div class="porcentaje">${porcentajesGrupo.suspendido}%</div>
+                <div class="label">Suspendidos</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+
+    return html;
+  }
+
+  // Función para cargar los datos de asistencia
+  function cargarAsistencias() {
+    const fecha = document.getElementById('fechaConsulta').value;
+    if (!fecha) {
+      notificar('Seleccione una fecha', true);
+      return;
+    }
+
+    // Validar que la fecha no sea futura
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const fechaSeleccionada = new Date(fecha);
+    if (fechaSeleccionada > hoy) {
+      notificar('No se puede consultar una fecha futura', true);
+      return;
+    }
+
+    // Formatear fecha
+    const [y, m, d] = fecha.split('-');
+    const fechaFormateada = `${d}/${m}/${y}`;
+
+    // Mostrar indicador de carga y deshabilitar botón
+    const loading = document.getElementById('loading');
+    const btnActualizar = document.getElementById('btnActualizar');
+    loading.style.display = 'block';
+    btnActualizar.disabled = true;
+    document.getElementById('resultados').innerHTML = '';
+    document.getElementById('resumenContainer').innerHTML = '';
+
+    // Obtener datos de asistencia
+    const url = `${ASISTENCIA_URL}?fecha=${fechaFormateada}&accion=consultar`;
+    
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+        }
+        
+        return response.text().then(text => {
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            throw new Error('La respuesta no es un JSON válido');
+          }
+        });
+      })
+      .then(data => {
+        loading.style.display = 'none';
+        btnActualizar.disabled = false;
+        
+        if (data.error) {
+          notificar(data.error, true);
+          return;
+        }
+
+        // Si data es un array, procedemos
+        if (Array.isArray(data)) {
+          // Filtrar por fecha seleccionada y estados deseados
+          const datosFiltrados = data.filter(item => {
+            // Convertir la fecha del item al formato YYYY-MM-DD para comparar
+            if (item.fecha) {
+              const fechaItem = formatearFechaISO(item.fecha);
+              // Solo incluir estados: retardo, ausente, justificado, suspendido
+              return fechaItem === fecha && ['retardo', 'ausente', 'justificado', 'suspendido'].includes(item.estado);
+            }
+            return false;
+          });
+
+          // Generar y mostrar el resumen
+          const resumenHTML = generarResumen(datosFiltrados);
+          document.getElementById('resumenContainer').innerHTML = resumenHTML;
+
+          if (datosFiltrados.length === 0) {
+            document.getElementById('resultados').innerHTML = `
+              <div class="empty-state">
+                <p>No hay permisos, retardos, inasistencias o suspensiones registrados para esta fecha.</p>
+              </div>
+            `;
+            return;
+          }
+
+          // Agrupar por grado y grupo
+          const grupos = {};
+          datosFiltrados.forEach(asistencia => {
+            const clave = `${asistencia.grado}-${asistencia.grupo}`;
+            if (!grupos[clave]) {
+              grupos[clave] = {
+                grado: asistencia.grado,
+                grupo: asistencia.grupo,
+                asistencias: []
+              };
+            }
+            grupos[clave].asistencias.push(asistencia);
+          });
+
+          // Generar HTML para cada grupo
+          let html = '';
+          Object.keys(grupos).sort().forEach(clave => {
+            const grupo = grupos[clave];
+            
+            // Ordenar alfabéticamente por nombre del alumno
+            grupo.asistencias.sort((a, b) => {
+              return a.alumno.localeCompare(b.alumno, 'es', { sensitivity: 'base' });
+            });
+            
+            html += `
+              <div class="grupo-seccion">
+                <div class="grupo-header">
+                  <h2>${grupo.grado}° ${grupo.grupo}</h2>
+                </div>
+            `;
+
+            // Generar HTML para cada alumno
+            grupo.asistencias.forEach(asistencia => {
+              let estadoClass = '';
+              let estadoText = '';
+              
+              if (asistencia.estado === 'retardo') {
+                estadoClass = 'retardo';
+                estadoText = 'Retardo';
+              } else if (asistencia.estado === 'ausente') {
+                estadoClass = 'ausente';
+                estadoText = 'Inasistencia';
+              } else if (asistencia.estado === 'justificado') {
+                estadoClass = 'justificado';
+                estadoText = 'Permiso';
+              } else if (asistencia.estado === 'suspendido') {
+                estadoClass = 'suspendido';
+                estadoText = 'Suspendido';
+              } else {
+                estadoClass = 'ausente';
+                estadoText = asistencia.estado || 'Inasistencia';
+              }
+              
+              html += `
+                <div class="alumno-card">
+                  <div class="alumno-header">
+                    <div class="alumno-nombre">${asistencia.alumno}</div>
+                    <div class="estado-badge ${estadoClass}">${estadoText}</div>
+                  </div>
+                  <div class="alumno-info">
+                    <div class="info-item">
+                      <span class="info-label">Teléfono Tutor:</span>
+                      <span class="info-value">${asistencia.telTutor || 'No registrado'}</span>
+                    </div>
+                    <div class="info-item">
+                      <span class="info-label">Docente:</span>
+                      <span class="info-value">${asistencia.docente || 'No especificado'}</span>
+                    </div>
+                    <div class="info-item">
+                      <span class="info-label">Asignatura:</span>
+                      <span class="info-value">${asistencia.disciplina || 'No especificada'}</span>
+                    </div>
+                    <div class="info-item">
+                      ${asistencia.telTutor ? `
+                        <button class="whatsapp-btn" onclick="enviarWhatsApp('${asistencia.alumno}', '${asistencia.grado}', '${asistencia.grupo}', '${asistencia.estado}', '${asistencia.telTutor}')">
+                          Enviar WhatsApp
+                        </button>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+
+            html += '</div>';
+          });
+
+          document.getElementById('resultados').innerHTML = html;
+        } else {
+          // Si no es un array, mostrar error
+          notificar('La respuesta del servidor no tiene el formato esperado', true);
+          console.error('Respuesta no es un array:', data);
+        }
+      })
+      .catch(error => {
+        console.error('Error al cargar datos:', error);
+        loading.style.display = 'none';
+        btnActualizar.disabled = false;
+        notificar(`Error al cargar los datos de asistencia: ${error.message}`, true);
+      });
+  }
+
+  // Función para enviar mensaje por WhatsApp
+  function enviarWhatsApp(nombreAlumno, grado, grupo, estado, telefono) {
+    try {
+      let tel = telefono.replace(/\D/g, '');
+      
+      if (!tel || tel.length < 10) {
+        notificar('Número de teléfono no válido', true);
+        return;
+      }
+      
+      if (!tel.startsWith('52')) tel = '52' + tel;
+
+      let textoEstado = '';
+      if (estado === 'retardo') {
+        textoEstado = 'con retardo';
+      } else if (estado === 'ausente') {
+        textoEstado = 'AUSENTE';
+      } else if (estado === 'justificado') {
+        textoEstado = 'con permiso justificado';
+      } else if (estado === 'suspendido') {
+        textoEstado = 'SUSPENDIDO';
+      } else {
+        textoEstado = 'con inasistencia';
+      }
+      
+      const mensaje = `*REPORTE DE ASISTENCIA*\n\nEstimado tutor(a):\n\nSu hijo(a) *${nombreAlumno}* del grupo *${grado}° ${grupo}* hoy se reportó como *${textoEstado.toUpperCase()}*.\n\nGracias por su atención.\n\nEscuela Secundaria Prof. Honorato Tlaseca Barrera`;
+
+      window.open(`https://wa.me/${tel}?text=${encodeURIComponent(mensaje)}`, '_blank');
+    } catch (error) {
+      console.error('Error al enviar WhatsApp:', error);
+      notificar('Error al enviar mensaje de WhatsApp', true);
+    }
+  }
+
+  // Event listeners
+  document.getElementById('btnActualizar').addEventListener('click', cargarAsistencias);
+  document.getElementById('fechaConsulta').addEventListener('change', cargarAsistencias);
+
+  // Cargar datos al iniciar la página
+  window.addEventListener('load', () => {
+    setFechaActual();
+    cargarAsistencias();
+  });
+</script>
+</body>
+</html>

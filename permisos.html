@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Metaetiquetas Open Graph para WhatsApp -->
+    <meta property="og:title" content="Solicitud de Permiso Escolar - Secundaria Honorato Tlaseca Barrera">
+    <meta property="og:description" content="Formulario oficial para solicitar permisos escolares en la Secundaria Profr. Honorato Tlaseca Barrera">
+    <meta property="og:image" content="https://faustinohtb-hash.github.io/honorato/SP.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="URL_DEL_FORMULARIO">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Secundaria Profr. Honorato Tlaseca Barrera">
+    
+    <!-- Metaetiquetas adicionales para mejor compatibilidad -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Solicitud de Permiso Escolar">
+    <meta name="twitter:description" content="Formulario oficial para solicitar permisos escolares">
+    <meta name="twitter:image" content="https://faustinohtb-hash.github.io/honorato/SP.png">
+    
+    <title>Solicitud de Permiso Escolar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 30px 30px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo-container {
+            width: 220px;
+            max-width: 80%;
+            height: auto;
+            margin: 0 auto 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .form-content {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label span {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Poppins', Arial, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .new-request-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .new-request-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.4);
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .summary h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .summary-item {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .summary-item strong {
+            color: #2a5298;
+        }
+
+        .whatsapp-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .form-content {
+                padding: 30px 20px;
+            }
+
+            .logo-container {
+                width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Secundaria HTB" class="logo">
+            </div>
+            <h1>📋 Solicitud de Permiso Escolar</h1>
+            <p>Este formulario permite a los padres o tutores solicitar permiso para que sus hijos falten a clases o participen en actividades especiales.</p>
+        </div>
+
+        <div class="form-content">
+            <div class="message" id="message"></div>
+            <div class="summary" id="summary"></div>
+            
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Enviando solicitudes...</div>
+            </div>
+
+            <form id="permisoForm">
+                <div class="form-group">
+                    <label>Nombre completo del padre o tutor <span>*</span></label>
+                    <input type="text" id="nombrePadre" required>
+                    <div class="error-message" id="errorNombrePadre"></div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Teléfono de contacto <span>*</span></label>
+                        <input type="tel" id="telefono" required>
+                        <div class="error-message" id="errorTelefono"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" id="email">
+                        <div class="error-message" id="errorEmail"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre completo del estudiante <span>*</span></label>
+                    <input type="text" id="nombreEstudiante" required>
+                    <div class="error-message" id="errorNombreEstudiante"></div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Grado <span>*</span></label>
+                        <select id="grado" required>
+                            <option value="">Seleccione...</option>
+                            <option value="1°">1°</option>
+                            <option value="2°">2°</option>
+                            <option value="3°">3°</option>
+                        </select>
+                        <div class="error-message" id="errorGrado"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Grupo <span>*</span></label>
+                        <select id="grupo" required>
+                            <option value="">Seleccione...</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                        </select>
+                        <div class="error-message" id="errorGrupo"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Motivo del permiso <span>*</span></label>
+                    <select id="motivo" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Cita médica">Cita médica</option>
+                        <option value="Asunto familiar">Asunto familiar</option>
+                        <option value="Actividad deportiva o cultural">Actividad deportiva o cultural</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <div class="error-message" id="errorMotivo"></div>
+                </div>
+
+                <div class="form-group" id="otroMotivoGroup" style="display: none;">
+                    <label>Especifique el motivo <span>*</span></label>
+                    <input type="text" id="otroMotivo">
+                    <div class="error-message" id="errorOtroMotivo"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha inicial del permiso <span>*</span></label>
+                    <input type="date" id="fecha" required>
+                    <div class="error-message" id="errorFecha"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cantidad de días de permiso <span>*</span></label>
+                    <input type="number" id="cantidadDias" min="1" max="5" value="1" required>
+                    <div class="error-message" id="errorCantidadDias"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Comentarios adicionales</label>
+                    <textarea id="comentarios" placeholder="Agregue cualquier información adicional que considere relevante..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="declaracion" required>
+                        <label for="declaracion">Declaro que la información proporcionada es verídica y autorizo el permiso. <span>*</span></label>
+                    </div>
+                    <div class="error-message" id="errorDeclaracion"></div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    📤 Enviar solicitud
+                </button>
+                
+                <button type="button" class="new-request-btn" id="newRequestBtn">
+                    🔄 Nueva solicitud
+                </button>
+            </form>
+        </div>
+
+        <div class="footer">
+            Formulario elaborado para la Secundaria Profr. Honorato Tlaseca Barrera<br>
+            Huehuetlán el Chico, Puebla. Edición 2025.
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('permisoForm');
+        const motivoSelect = document.getElementById('motivo');
+        const otroMotivoGroup = document.getElementById('otroMotivoGroup');
+        const submitBtn = document.getElementById('submitBtn');
+        const newRequestBtn = document.getElementById('newRequestBtn');
+        const messageDiv = document.getElementById('message');
+        const summaryDiv = document.getElementById('summary');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        // Variable para controlar el estado del envío
+        let isSubmitting = false;
+
+        // Función para establecer la fecha mínima como hoy
+        function setMinDate() {
+            const fechaInput = document.getElementById('fecha');
+            const today = new Date();
+            // Formatear la fecha actual como YYYY-MM-DD (formato requerido por input[type="date"])
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedToday = `${year}-${month}-${day}`;
+            
+            // Establecer el atributo min para permitir desde hoy en adelante
+            fechaInput.setAttribute('min', formattedToday);
+            
+            // Establecer hoy como valor por defecto
+            fechaInput.value = formattedToday;
+        }
+
+        // Llama a la función cuando se cargue la página
+        document.addEventListener('DOMContentLoaded', setMinDate);
+
+        motivoSelect.addEventListener('change', function() {
+            if (this.value === 'Otro') {
+                otroMotivoGroup.style.display = 'block';
+                document.getElementById('otroMotivo').required = true;
+            } else {
+                otroMotivoGroup.style.display = 'none';
+                document.getElementById('otroMotivo').required = false;
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+
+            const nombrePadre = document.getElementById('nombrePadre');
+            if (!nombrePadre.value.trim()) {
+                showError('errorNombrePadre', 'Este campo es obligatorio');
+                isValid = false;
+            }
+
+            const telefono = document.getElementById('telefono');
+            if (!telefono.value.trim()) {
+                showError('errorTelefono', 'Este campo es obligatorio');
+                isValid = false;
+            }
+
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value.trim() && !emailRegex.test(email.value)) {
+                showError('errorEmail', 'Ingrese un correo electrónico válido');
+                isValid = false;
+            }
+
+            const nombreEstudiante = document.getElementById('nombreEstudiante');
+            if (!nombreEstudiante.value.trim()) {
+                showError('errorNombreEstudiante', 'Este campo es obligatorio');
+                isValid = false;
+            }
+
+            const grado = document.getElementById('grado');
+            if (!grado.value) {
+                showError('errorGrado', 'Seleccione un grado');
+                isValid = false;
+            }
+
+            const grupo = document.getElementById('grupo');
+            if (!grupo.value) {
+                showError('errorGrupo', 'Seleccione un grupo');
+                isValid = false;
+            }
+
+            const motivo = document.getElementById('motivo');
+            if (!motivo.value) {
+                showError('errorMotivo', 'Seleccione un motivo');
+                isValid = false;
+            }
+
+            if (motivo.value === 'Otro') {
+                const otroMotivo = document.getElementById('otroMotivo');
+                if (!otroMotivo.value.trim()) {
+                    showError('errorOtroMotivo', 'Especifique el motivo');
+                    isValid = false;
+                }
+            }
+
+            const fecha = document.getElementById('fecha');
+            if (!fecha.value) {
+                showError('errorFecha', 'Seleccione una fecha');
+                isValid = false;
+            } else {
+                // Validar que la fecha no sea anterior a hoy
+                const [year, month, day] = fecha.value.split('-').map(Number);
+                const selectedDate = new Date(year, month - 1, day);
+                
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    showError('errorFecha', 'La fecha no puede ser anterior a hoy');
+                    isValid = false;
+                }
+                
+                // Validar que no sea fin de semana
+                const dayOfWeek = selectedDate.getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                    showError('errorFecha', 'La fecha no puede ser fin de semana');
+                    isValid = false;
+                }
+            }
+
+            const cantidadDias = document.getElementById('cantidadDias');
+            if (!cantidadDias.value || cantidadDias.value < 1 || cantidadDias.value > 5) {
+                showError('errorCantidadDias', 'Seleccione una cantidad válida (1-5 días)');
+                isValid = false;
+            }
+
+            const declaracion = document.getElementById('declaracion');
+            if (!declaracion.checked) {
+                showError('errorDeclaracion', 'Debe aceptar la declaración');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showSummary(data) {
+            const motivo = data.motivo === 'Otro' ? data.otroMotivo : data.motivo;
+            
+            let fechasHtml = '';
+            data.fechas.forEach((fecha, index) => {
+                fechasHtml += `<div class="summary-item"><strong>Día ${index + 1}:</strong> ${fecha}</div>`;
+            });
+            
+            summaryDiv.innerHTML = `
+                <h3>✅ Resumen de la solicitud enviada:</h3>
+                <div class="summary-item"><strong>Padre/Tutor:</strong> ${data.nombrePadre}</div>
+                <div class="summary-item"><strong>Teléfono:</strong> ${data.telefono}</div>
+                ${data.email && data.email !== 'N/A' ? `<div class="summary-item"><strong>Correo:</strong> ${data.email}</div>` : ''}
+                <div class="summary-item"><strong>Estudiante:</strong> ${data.nombreEstudiante}</div>
+                <div class="summary-item"><strong>Grado:</strong> ${data.grado}</div>
+                <div class="summary-item"><strong>Grupo:</strong> ${data.grupo}</div>
+                <div class="summary-item"><strong>Motivo:</strong> ${motivo}</div>
+                <div class="summary-item"><strong>Fechas de permiso:</strong></div>
+                ${fechasHtml}
+                ${data.comentarios && data.comentarios !== 'N/A' ? `<div class="summary-item"><strong>Comentarios:</strong> ${data.comentarios}</div>` : ''}
+            `;
+            summaryDiv.style.display = 'block';
+            summaryDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Función para formatear la fecha a DD/MM/YYYY sin problemas de zona horaria
+        function formatearFecha(fechaString) {
+            // Dividir la cadena en partes [año, mes, día]
+            const partes = fechaString.split('-');
+            // Reordenar a día/mes/año
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        // Función para calcular fechas consecutivas saltando fines de semana
+        function calcularFechas(fechaInicial, cantidadDias) {
+            const fechas = [];
+            
+            // Convertir la fecha inicial a objeto Date
+            const [year, month, day] = fechaInicial.split('-').map(Number);
+            let fechaActual = new Date(year, month - 1, day);
+            
+            for (let i = 0; i < cantidadDias; i++) {
+                // Para el primer día, usar la fecha inicial
+                // Para los días siguientes, sumar un día a la fecha anterior
+                if (i > 0) {
+                    fechaActual = new Date(fechaActual);
+                    fechaActual.setDate(fechaActual.getDate() + 1);
+                }
+                
+                // Verificar si es fin de semana
+                const diaSemana = fechaActual.getDay();
+                if (diaSemana === 6) { // Sábado
+                    // Saltar al lunes (sumar 2 días)
+                    fechaActual.setDate(fechaActual.getDate() + 2);
+                } else if (diaSemana === 0) { // Domingo
+                    // Saltar al lunes (sumar 1 día)
+                    fechaActual.setDate(fechaActual.getDate() + 1);
+                }
+                
+                // Formatear la fecha
+                const yearFormateado = fechaActual.getFullYear();
+                const monthFormateado = String(fechaActual.getMonth() + 1).padStart(2, '0');
+                const dayFormateado = String(fechaActual.getDate()).padStart(2, '0');
+                const fechaFormateada = `${dayFormateado}/${monthFormateado}/${yearFormateado}`;
+                
+                fechas.push(fechaFormateada);
+            }
+            
+            return fechas;
+        }
+
+        // Función para abrir WhatsApp con manejo de errores mejorado
+        function abrirWhatsApp(numero, mensaje) {
+            try {
+                // Codificar el mensaje para URL
+                const encodedMessage = encodeURIComponent(mensaje);
+                
+                // Construir la URL de WhatsApp
+                const whatsappURL = `https://wa.me/${numero}?text=${encodedMessage}`;
+                
+                console.log('URL de WhatsApp generada:', whatsappURL);
+                
+                // Intentar abrir en una nueva ventana/pestaña
+                const newWindow = window.open(whatsappURL, '_blank', 'noopener,noreferrer');
+                
+                // Si no se pudo abrir (bloqueador de ventanas emergentes)
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    console.log('No se pudo abrir WhatsApp en nueva ventana, mostrando botón manual');
+                    return false;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error al abrir WhatsApp:', error);
+                return false;
+            }
+        }
+
+        // Función para mostrar el botón de WhatsApp manual
+        function mostrarBotonWhatsApp(numero, mensaje) {
+            // Codificar el mensaje para URL
+            const encodedMessage = encodeURIComponent(mensaje);
+            
+            // Construir la URL de WhatsApp
+            const whatsappURL = `https://wa.me/${numero}?text=${encodedMessage}`;
+            
+            // Crear contenedor para el botón
+            const container = document.createElement('div');
+            container.className = 'whatsapp-container';
+            
+            // Crear el botón
+            const boton = document.createElement('a');
+            boton.href = whatsappURL;
+            boton.target = '_blank';
+            boton.rel = 'noopener noreferrer';
+            boton.className = 'whatsapp-btn';
+            boton.innerHTML = '📱 Enviar por WhatsApp';
+            
+            // Añadir el botón al contenedor
+            container.appendChild(boton);
+            
+            // Añadir el contenedor después del resumen
+            summaryDiv.parentNode.insertBefore(container, summaryDiv.nextSibling);
+        }
+
+        // Función para resetear el formulario
+        function resetForm() {
+            form.reset();
+            otroMotivoGroup.style.display = 'none';
+            setMinDate();
+            messageDiv.style.display = 'none';
+            summaryDiv.style.display = 'none';
+            progressContainer.style.display = 'none';
+            
+            // Eliminar botones de WhatsApp si existen
+            document.querySelectorAll('.whatsapp-container').forEach(el => el.remove());
+            
+            // Mostrar botón de envío y ocultar botón de nueva solicitud
+            submitBtn.style.display = 'block';
+            newRequestBtn.style.display = 'none';
+            
+            // Resetear estado de envío
+            isSubmitting = false;
+        }
+
+        // Event listener para el botón de nueva solicitud
+        newRequestBtn.addEventListener('click', resetForm);
+
+        form.addEventListener('submit', async function(e) {
+            // Prevenir el envío tradicional del formulario
+            e.preventDefault();
+            
+            // Evitar múltiples envíos
+            if (isSubmitting) return;
+            
+            isSubmitting = true;
+            
+            if (!validateForm()) {
+                isSubmitting = false;
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Enviando...';
+            
+            // Mostrar contenedor de progreso
+            progressContainer.style.display = 'block';
+            progressFill.style.width = '0%';
+            progressText.textContent = 'Preparando envío...';
+
+            const fechaOriginal = document.getElementById('fecha').value;
+            const cantidadDias = parseInt(document.getElementById('cantidadDias').value);
+            
+            // Calcular todas las fechas
+            const fechas = calcularFechas(fechaOriginal, cantidadDias);
+
+            // Crear objeto con los datos del formulario
+            let formData = {
+                nombrePadre: document.getElementById('nombrePadre').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                nombreEstudiante: document.getElementById('nombreEstudiante').value.trim(),
+                grado: document.getElementById('grado').value,
+                grupo: document.getElementById('grupo').value,
+                motivo: document.getElementById('motivo').value,
+                otroMotivo: document.getElementById('otroMotivo').value.trim(),
+                fechaInicial: fechaOriginal,
+                fechas: fechas,
+                comentarios: document.getElementById('comentarios').value.trim(),
+                timestamp: new Date().toLocaleString('es-MX', { 
+                    timeZone: 'America/Mexico_City',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                })
+            };
+
+            // Reemplazar campos vacíos con "N/A"
+            for (const key in formData) {
+                if (typeof formData[key] === 'string' && formData[key].trim() === '') {
+                    formData[key] = 'N/A';
+                }
+            }
+
+            // Preparar el mensaje de WhatsApp
+            const motivoFinal = formData.motivo === 'Otro' ? formData.otroMotivo : formData.motivo;
+            
+            // Construir el mensaje para WhatsApp
+            let fechasMensaje = '';
+            formData.fechas.forEach((fecha, index) => {
+                fechasMensaje += `\n📅 Día ${index + 1}: ${fecha}`;
+            });
+            
+            const mensaje = `📋 *SOLICITUD DE PERMISO ESCOLAR*
+
+*Datos del Padre/Tutor:*
+👤 Nombre: ${formData.nombrePadre}
+📞 Teléfono: ${formData.telefono}
+ ${formData.email && formData.email !== 'N/A' ? `📧 Email: ${formData.email}` : ''}
+
+*Datos del Estudiante:*
+👨‍🎓 Nombre: ${formData.nombreEstudiante}
+📚 Grado: ${formData.grado}
+🏫 Grupo: ${formData.grupo}
+
+*Detalles del Permiso:*
+📝 Motivo: ${motivoFinal}
+📅 Fechas de permiso: ${fechasMensaje}
+ ${formData.comentarios && formData.comentarios !== 'N/A' ? `💬 Comentarios: ${formData.comentarios}` : ''}
+
+✅ _Declaro que la información es verídica y autorizo el permiso._
+
+🏫 Secundaria Profr. Honorato Tlaseca Barrera`;
+
+            // Mostrar el mensaje en la consola para depuración
+            console.log("Mensaje para WhatsApp:", mensaje);
+
+            // Número de teléfono para WhatsApp (formato internacional sin + ni espacios)
+            const numeroWhatsApp = '522751025480';
+
+            try {
+                // Enviar datos a Google Sheets en segundo plano
+                const googleScriptURL = 'https://script.google.com/macros/s/AKfycbzeE814VSS2YJsNF-sa2LaxRaS9maXo3DKyoYCMJIeA7T3obLFGZklq5S0fCf6UJ3oiAA/exec';
+                
+                // Array para almacenar los resultados de cada envío
+                const resultados = [];
+                
+                // Enviar cada fecha por separado
+                for (let i = 0; i < formData.fechas.length; i++) {
+                    const fechaActual = formData.fechas[i];
+                    
+                    // Actualizar progreso
+                    const progreso = ((i + 1) / formData.fechas.length) * 100;
+                    progressFill.style.width = `${progreso}%`;
+                    progressText.textContent = `Enviando día ${i + 1} de ${formData.fechas.length}...`;
+                    
+                    // Crear objeto para esta fecha específica
+                    const formDataDia = {
+                        ...formData,
+                        fecha: fechaActual,
+                        diaPermiso: i + 1
+                    };
+                    
+                    // Método 1: POST con FormData
+                    console.log(`Enviando día ${i + 1} con método POST...`);
+                    
+                    const formGoogle = new FormData();
+                    for (const key in formDataDia) {
+                        formGoogle.append(key, formDataDia[key]);
+                    }
+                    
+                    const response = await fetch(googleScriptURL, {
+                        method: 'POST',
+                        body: formGoogle,
+                        mode: 'no-cors'
+                    });
+                    
+                    console.log(`Respuesta POST para día ${i + 1}:`, response);
+                    
+                    // Método 2: GET con URLSearchParams (como respaldo)
+                    console.log(`Enviando día ${i + 1} con método GET...`);
+                    
+                    const params = new URLSearchParams();
+                    for (const key in formDataDia) {
+                        params.append(key, formDataDia[key]);
+                    }
+                    
+                    const altURL = `${googleScriptURL}?${params.toString()}`;
+                    
+                    // Usar fetch en lugar de iframe para evitar redirecciones
+                    await fetch(altURL, {
+                        method: 'GET',
+                        mode: 'no-cors'
+                    });
+                    
+                    // Guardar resultado
+                    resultados.push({
+                        dia: i + 1,
+                        fecha: fechaActual,
+                        exito: true
+                    });
+                }
+                
+                // Completar progreso
+                progressFill.style.width = '100%';
+                progressText.textContent = '¡Envío completado!';
+                
+                // Esperar un momento antes de ocultar el progreso
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Ocultar contenedor de progreso
+                progressContainer.style.display = 'none';
+                
+                // Mostrar mensaje de éxito sin mencionar Google Sheets
+                showMessage(`✅ ¡${resultados.length} solicitud(es) enviada(s) correctamente!`, 'success');
+                
+                // Mostrar resumen
+                showSummary(formData);
+                
+                // Abrir WhatsApp después de un pequeño retraso
+                setTimeout(() => {
+                    try {
+                        const resultado = abrirWhatsApp(numeroWhatsApp, mensaje);
+                        
+                        if (!resultado) {
+                            console.log('No se pudo abrir WhatsApp automáticamente, mostrando botón manual');
+                            showMessage('⚠️ No se pudo abrir WhatsApp automáticamente. Por favor, usa el botón de abajo.', 'info');
+                            
+                            // Mostrar el botón manual de WhatsApp
+                            mostrarBotonWhatsApp(numeroWhatsApp, mensaje);
+                        }
+                    } catch (error) {
+                        console.error('Error al abrir WhatsApp:', error);
+                        showMessage('⚠️ Error al abrir WhatsApp. Por favor, usa el botón de abajo.', 'error');
+                        
+                        // Mostrar el botón manual de WhatsApp
+                        mostrarBotonWhatsApp(numeroWhatsApp, mensaje);
+                    }
+                }, 1000);
+                
+                // Mostrar botón de nueva solicitud y ocultar botón de envío
+                submitBtn.style.display = 'none';
+                newRequestBtn.style.display = 'block';
+                
+            } catch (error) {
+                console.error('❌ Error al enviar a Google Sheets:', error);
+                showMessage('❌ Error al enviar la solicitud. Por favor, intenta nuevamente.', 'error');
+                
+                // Ocultar contenedor de progreso en caso de error
+                progressContainer.style.display = 'none';
+                
+                // Mostrar botón de nueva solicitud y ocultar botón de envío
+                submitBtn.style.display = 'none';
+                newRequestBtn.style.display = 'block';
+            } finally {
+                // No resetear el formulario aquí, solo habilitar el botón
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Enviar solicitud';
+                isSubmitting = false;
+            }
+        });
+    </script>
+</body>
+</html>

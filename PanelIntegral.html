@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta property="og:title" content="Panel Integral - Permisos, Proyectos, Asistencias y Reportes">
+    <meta property="og:description" content="Control completo de la escuela.">
+    <meta property="og:image" content="https://faustinohtb-hash.github.io/honorato/SP.png">
+    <meta property="og:type" content="website">
+    
+    <title>Panel Integral de Control</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Librería para Gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 30px 30px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .logo-container {
+            width: 220px;
+            max-width: 80%;
+            height: auto;
+            margin: 0 auto 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-content {
+            padding: 40px 30px;
+        }
+
+        /* --- Estilos Generales de Secciones --- */
+        .stats-section {
+            background: #f0f4f8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Tema DOCENTES (Azul) */
+        .teacher-section {
+            border-top: 4px solid #2a5298;
+        }
+        .teacher-section .toggle-details-btn { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
+        .teacher-section .date-list-item { border-left: 4px solid #2a5298; }
+        .teacher-section .count-badge { background: #2a5298; }
+        .teacher-section .teacher-badge { background: #eef2f7; color: #2a5298; }
+
+        /* Tema PROYECTOS (Verde) */
+        .project-section {
+            border-top: 4px solid #2ecc71;
+        }
+        .project-section .toggle-details-btn { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); }
+        .project-section .count-badge { background: #27ae60; }
+        
+        /* Estilos para Barras de Progreso */
+        .group-header-grade {
+            background-color: #e8f8f5;
+            color: #27ae60;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            border: 1px solid #2ecc71;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(39, 174, 96, 0.1);
+        }
+        .group-header-field {
+            font-size: 15px;
+            color: #555;
+            margin: 15px 0 10px 5px;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+        .progress-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .progress-label {
+            font-weight: 600;
+            color: #333;
+        }
+        .progress-value {
+            color: #2a5298;
+            font-weight: 600;
+        }
+        .progress-track {
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #3498db; /* Azul */
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        /* Tema ASISTENCIA (Naranja) */
+        .absent-section {
+            border-top: 4px solid #e67e22;
+        }
+        .absent-section .toggle-details-btn { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); }
+        .absent-section .date-list-item { border-left: 4px solid #e67e22; }
+        .absent-section .count-badge { background: #e67e22; }
+        .absent-section .absent-badge { background: #fdf2e9; color: #e67e22; }
+
+        /* Tema REPORTES (Rojo) */
+        .student-section {
+            border-top: 4px solid #c0392b;
+        }
+        .student-section .toggle-details-btn { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); }
+        .student-section .date-list-item { border-left: 4px solid #c0392b; }
+        .student-section .count-badge { background: #c0392b; }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stats-header h3 {
+            color: #1e3c72;
+            font-size: 18px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+
+        .toggle-details-btn {
+            width: 100%;
+            padding: 12px;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-details-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .date-list {
+            list-style: none;
+            display: none; /* Oculto por defecto */
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .date-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .date-list::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .date-list::-webkit-scrollbar-thumb {
+            background: #ccc; 
+            border-radius: 3px;
+        }
+
+        .date-list-item {
+            background: white;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .date-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .date-title {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 15px;
+        }
+
+        .count-badge {
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .list-item-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 5px;
+            background: #fdfdfd;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+        .item-name { font-weight: 500; color: #333; font-size: 14px; }
+
+        .teachers-list, .students-badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .teacher-badge, .absent-badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: default;
+        }
+
+        .student-group { font-size: 12px; color: #e74c3c; font-weight: 600; background: #fceceb; padding: 2px 6px; border-radius: 4px; }
+
+        .refresh-btn {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            color: #2a5298;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        .refresh-btn:hover { background: #2a5298; color: white; border-color: #2a5298; }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+            position: relative;
+        }
+        .footer-home-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 24px; }
+            .chart-container { height: 250px; }
+            .footer-home-btn { position: static; margin-top: 15px; width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="https://faustinohtb-hash.github.io/honorato/index.html" class="home-btn">
+                <span>🏠</span>
+                <span>Inicio</span>
+            </a>
+            
+            <div class="logo-container">
+                <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Secundaria HTB" class="logo">
+            </div>
+            <h1>Panel Integral de Control</h1>
+            <p>Permisos, Proyectos, Asistencias y Reportes</p>
+        </div>
+
+        <div class="form-content">
+            
+            <!-- ================= 1. SECCIÓN DOCENTES (AZUL) ================= -->
+            <div class="stats-section teacher-section" id="teacherStatsSection" style="display:none;">
+                <div class="stats-header">
+                    <h3>👩‍🏫 Personal Docente Ausente</h3>
+                    <button id="refreshTeacherBtn" class="refresh-btn">🔄 Actualizar</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="teacherChart"></canvas>
+                </div>
+                <button id="toggleTeacherDetailsBtn" class="toggle-details-btn">📅 Ver Detalles de Permisos</button>
+                <ul class="date-list" id="teacherDateList"></ul>
+            </div>
+
+            <!-- ================= 2. SECCIÓN PROYECTOS (VERDE) ================= -->
+            <div class="stats-section project-section" id="projectStatsSection" style="display:none;">
+                <div class="stats-header">
+                    <h3>🚀 Estado de Proyectos</h3>
+                    <button id="refreshProjectBtn" class="refresh-btn">🔄 Actualizar</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="projectChart"></canvas>
+                </div>
+                <button id="toggleProjectDetailsBtn" class="toggle-details-btn">📋 Ver Detalles de Proyectos</button>
+                <ul class="date-list" id="projectDateList"></ul>
+            </div>
+
+            <!-- ================= 3. SECCIÓN ASISTENCIA ALUMNOS (NARANJA) ================= -->
+            <div class="stats-section absent-section" id="absentStatsSection" style="display:none;">
+                <div class="stats-header">
+                    <h3>📝 Total Alumnos Ausentes</h3>
+                    <button id="refreshAbsentBtn" class="refresh-btn">🔄 Actualizar</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="absentChart"></canvas>
+                </div>
+                <button id="toggleAbsentDetailsBtn" class="toggle-details-btn">👁 Ver Detalles de Asistencias</button>
+                <ul class="date-list" id="absentDateList"></ul>
+            </div>
+
+            <!-- ================= 4. SECCIÓN REPORTES (ROJO) ================= -->
+            <div class="stats-section student-section" id="studentStatsSection" style="display:none;">
+                <div class="stats-header">
+                    <h3>🧑‍🎓 Reportes de Alumnos</h3>
+                    <button id="refreshStudentBtn" class="refresh-btn">🔄 Actualizar</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="studentChart"></canvas>
+                </div>
+                <button id="toggleStudentDetailsBtn" class="toggle-details-btn">📋 Ver Detalles de Reportes</button>
+                <ul class="date-list" id="studentDateList"></ul>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Panel elaborado para la Secundaria Profr. Honorato Tlaseca Barrera<br>
+            Huehuetlán el Chico, Puebla. Edición 2025.
+            <a href="https://faustinohtb-hash.github.io/honorato/index.html" class="footer-home-btn">
+                <span>🏠</span>
+                <span>Regresar al inicio</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // URLs de los Scripts
+        const TEACHER_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw28oRV_Fi8yc7OpDnTP8ODfcWuhLYCJo7UPYmydYVxL1__NCvaPrmIh13Gdel8sN67/exec';
+        const PROJECT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFhSyL3mXHXkP1L5neI2dPPq2qwsxv3HGqf4NtUBkcgnoZ-8AjPqXIjp54RkUgIStm5w/exec';
+        const ABSENT_STUDENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzm4o8Q8L5qC-VZHXiryxRKGXnerxP2BCH3P2N5EnIpvyqHlVdKck8TrrgipB9t2S9h/exec';
+        const STUDENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz58020ujulDxPvE7KSuB0e5SPoQc43w3cVLhzJL33ctC6uqtYs_YjVxkwnTBmJrOk/exec';
+
+        // Variables globales para las gráficas
+        let teacherChartInstance = null;
+        let projectChartInstance = null;
+        let absentChartInstance = null;
+        let studentChartInstance = null;
+
+        // ================= CÁLCULO AUTOMÁTICO DEL CICLO ESCOLAR =================
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
+
+        let cicloInicioYear, cicloFinYear;
+
+        if (currentMonth >= 7) {
+            cicloInicioYear = currentYear;
+            cicloFinYear = currentYear + 1;
+        } else {
+            cicloInicioYear = currentYear - 1;
+            cicloFinYear = currentYear;
+        }
+
+        const fechaInicioCiclo = new Date(cicloInicioYear, 8, 1);
+        const fechaFinCiclo = new Date(cicloFinYear, 6, 31);
+        // =================================================================
+
+        // --- Función auxiliar para parsear fechas ---
+        function parseDateFromSheet(dateString) {
+            if (!dateString) return null;
+            let dateObj = new Date(dateString);
+            if (!isNaN(dateObj.getTime())) return dateObj;
+
+            let parts, day, month, year;
+            if (dateString.includes('/')) parts = dateString.split('/');
+            else if (dateString.includes('-')) parts = dateString.split('-');
+            else return null;
+
+            if (parts.length === 3) {
+                const p0 = parseInt(parts[0]);
+                const p1 = parseInt(parts[1]);
+                const p2 = parseInt(parts[2]);
+                if (isNaN(p0) || isNaN(p1) || isNaN(p2)) return null;
+
+                if (p0 > 31) { year = p0; month = p1 - 1; day = p2; }
+                else { day = p0; month = p1 - 1; year = p2; }
+                dateObj = new Date(year, month, day);
+                if (!isNaN(dateObj.getTime())) return dateObj;
+            }
+            return null;
+        }
+
+        // Función auxiliar robusta para buscar campos en JSON sin importar mayúsculas/minúsculas o espacios
+        function getFieldValue(row, possibleKeys, defaultValue) {
+            if (!row) return defaultValue;
+            for (let key of possibleKeys) {
+                if (row[key] !== undefined && row[key] !== null && row[key] !== '') {
+                    return String(row[key]).trim();
+                }
+            }
+            return defaultValue;
+        }
+
+        // ================= LÓGICA DOCENTES =================
+        async function loadTeacherStats() {
+            const refreshBtn = document.getElementById('refreshTeacherBtn');
+            if(refreshBtn) refreshBtn.disabled = true;
+            try {
+                const response = await fetch(TEACHER_SCRIPT_URL);
+                if (!response.ok) return;
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    document.getElementById('teacherStatsSection').style.display = 'block';
+                    processTeacherData(data);
+                }
+            } catch (error) { console.error("Error docentes:", error); }
+            finally { if(refreshBtn) refreshBtn.disabled = false; }
+        }
+
+        function processTeacherData(data) {
+            const dateListElement = document.getElementById('teacherDateList');
+            const ctx = document.getElementById('teacherChart').getContext('2d');
+            const dateGroups = {};
+
+            data.forEach(item => {
+                let dateObj = parseDateFromSheet(item.fecha);
+                if (!dateObj) return;
+                if (dateObj < fechaInicioCiclo || dateObj > fechaFinCiclo) return;
+
+                const dateKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+                if (!dateGroups[dateKey]) { dateGroups[dateKey] = { dateObj: dateObj, count: 0, names: [] }; }
+                dateGroups[dateKey].count++;
+                const nombre = item.nombreDocente || item.nombre || 'Desconocido';
+                if (!dateGroups[dateKey].names.includes(nombre)) dateGroups[dateKey].names.push(nombre);
+            });
+
+            const sortedDates = Object.keys(dateGroups).sort((a, b) => dateGroups[b].dateObj - dateGroups[a].dateObj);
+            const labels = sortedDates.map(k => dateGroups[k].dateObj.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}));
+            const counts = sortedDates.map(k => dateGroups[k].count);
+
+            if (teacherChartInstance) teacherChartInstance.destroy();
+            teacherChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: 'Ausencias', data: counts, backgroundColor: 'rgba(30, 60, 114, 0.7)', borderColor: 'rgba(30, 60, 114, 1)', borderWidth: 1, borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize:1} } }, plugins: {legend:{display:false}} }
+            });
+
+            dateListElement.innerHTML = '';
+            sortedDates.forEach(dateKey => {
+                const info = dateGroups[dateKey];
+                const dateFormatted = info.dateObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                const li = document.createElement('li');
+                li.className = 'date-list-item';
+                li.innerHTML = `
+                    <div class="date-header">
+                        <span class="date-title">${dateFormatted.charAt(0).toUpperCase() + dateFormatted.slice(1)}</span>
+                        <span class="count-badge">${info.count} Ausente(s)</span>
+                    </div>
+                    <div class="teachers-list">
+                        ${info.names.map(n => `<span class="teacher-badge">${n}</span>`).join('')}
+                    </div>
+                `;
+                dateListElement.appendChild(li);
+            });
+        }
+
+        // ================= LÓGICA PROYECTOS (CON FILTRO ESTRICTO Y ORDENAMIENTO) =================
+        async function loadProjectStats() {
+            const refreshBtn = document.getElementById('refreshProjectBtn');
+            if(refreshBtn) refreshBtn.disabled = true;
+            try {
+                const response = await fetch(PROJECT_SCRIPT_URL);
+                if (!response.ok) return;
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    document.getElementById('projectStatsSection').style.display = 'block';
+                    processProjectData(data);
+                }
+            } catch (error) { console.error("Error proyectos:", error); }
+            finally { if(refreshBtn) refreshBtn.disabled = false; }
+        }
+
+        // Definición del orden de campos solicitado
+        const customFieldOrder = [
+            "Lenguajes",
+            "Saberes y pensamiento científico",
+            "Etica, Naturaleza y Sociedades",
+            "De lo humano y lo comunitario"
+        ];
+
+        function getCustomFieldIndex(fieldValue) {
+            const normalizedValue = fieldValue.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            for (let i = 0; i < customFieldOrder.length; i++) {
+                const target = customFieldOrder[i].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                if (normalizedValue.includes(target) || target.includes(normalizedValue)) {
+                    return i;
+                }
+            }
+            return 999; 
+        }
+
+        function processProjectData(data) {
+            const dateListElement = document.getElementById('projectDateList');
+            const ctx = document.getElementById('projectChart').getContext('2d');
+            
+            // Contadores globales
+            let totalProjects = 0;
+            let totalDone = 0;
+            let totalActive = 0;
+
+            // Estructura de datos: { Grado: { Campo: { Disciplina: { total: 0, done: 0 } } } }
+            const groupedData = {};
+
+            data.forEach(item => {
+                // Filtro de fechas
+                let dateObj = parseDateFromSheet(item.fecha);
+                if (!dateObj) dateObj = new Date(); 
+                if (dateObj < fechaInicioCiclo || dateObj > fechaFinCiclo) return;
+
+                // === LECTURA Y VALIDACIÓN DE CAMPOS OBLIGATORIOS ===
+                
+                // 1. Obtener valores crudos (sin defaults) para verificar existencia
+                const gradoRaw = getFieldValue(item, ['grado', 'Grado', 'GRADO'], '').trim();
+                
+                const rawCampo = getFieldValue(item, 
+                    ['campoformativo', 'campo formativo', 'campoforamtivo', 'CampoFormativo', 'Campo Formativo', 'Campo', 'Campo Formativo '], 
+                    ''
+                ).trim();
+                
+                const rawDisciplina = getFieldValue(item, ['disciplina', 'Disciplina', 'DISCIPLINA', 'asignatura', 'Asignatura'], ''
+                ).trim();
+
+                // 2. NUEVO FILTRO: Si NO tiene grado, O NO tiene campo, O NO tiene disciplina, ignorar
+                if (!gradoRaw || !rawCampo || !rawDisciplina) {
+                    return; 
+                }
+
+                // 3. Como pasaron el filtro, usamos los valores reales
+                const grado = gradoRaw;
+                const campo = rawCampo;
+                const disciplina = rawDisciplina;
+
+                const rawProyecto = getFieldValue(item, ['proyectoactivo', 'proyectoActivo', 'ProyectoActivo', 'Proyecto', 'activoproyecto'], '');
+                const valProyecto = rawProyecto.toLowerCase();
+                
+                const isDone = (valProyecto === 'no');
+                const isActive = (valProyecto === 'si');
+
+                // --- ACTUALIZAR CONTADORES ---
+                totalProjects++;
+                if (isDone) totalDone++;
+                else if (isActive) totalActive++;
+                else {
+                    totalActive++;
+                }
+
+                // --- ALMACENAR EN ESTRUCTURA JERÁRQUICA ---
+                if (!groupedData[grado]) groupedData[grado] = {};
+                if (!groupedData[grado][campo]) groupedData[grado][campo] = {};
+                if (!groupedData[grado][campo][disciplina]) groupedData[grado][campo][disciplina] = { total: 0, done: 0, active: 0 };
+
+                groupedData[grado][campo][disciplina].total++;
+                if (isDone) groupedData[grado][campo][disciplina].done++;
+                else groupedData[grado][campo][disciplina].active++;
+            });
+
+            // --- Renderizar Gráfica General ---
+            const labels = ['Pendientes', 'Realizados']; // Eliminados (Si) y (No)
+            const counts = [totalActive, totalDone];
+
+            if (projectChartInstance) projectChartInstance.destroy();
+            projectChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { 
+                    labels: labels, 
+                    datasets: [{ label: 'Proyectos', data: counts, backgroundColor: ['rgba(46, 204, 113, 0.7)', 'rgba(52, 152, 219, 0.7)'], borderColor: ['rgba(46, 204, 113, 1)', 'rgba(52, 152, 219, 1)'], borderWidth: 1, borderRadius: 4 }] 
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize:1} } }, plugins: {legend:{display:false}} }
+            });
+
+            // --- Renderizar Lista Detallada ---
+            dateListElement.innerHTML = '';
+
+            const sortedGrades = Object.keys(groupedData).sort((a, b) => {
+                const numA = parseInt(a.replace(/\D/g,'')) || 999;
+                const numB = parseInt(b.replace(/\D/g,'')) || 999;
+                return numA - numB;
+            });
+
+            sortedGrades.forEach(grado => {
+                const divGrado = document.createElement('div');
+                divGrado.className = 'group-header-grade';
+                divGrado.textContent = `Grado ${grado}`;
+                dateListElement.appendChild(divGrado);
+
+                // Ordenamiento Personalizado de Campos
+                const campos = Object.keys(groupedData[grado]).sort((a, b) => {
+                    const idxA = getCustomFieldIndex(a);
+                    const idxB = getCustomFieldIndex(b);
+                    if (idxA !== idxB) return idxA - idxB;
+                    return a.localeCompare(b);
+                });
+
+                campos.forEach(campo => {
+                    const divCampo = document.createElement('div');
+                    divCampo.className = 'group-header-field';
+                    divCampo.textContent = campo;
+                    dateListElement.appendChild(divCampo);
+
+                    const disciplinas = Object.keys(groupedData[grado][campo]).sort();
+
+                    disciplinas.forEach(disciplina => {
+                        const stats = groupedData[grado][campo][disciplina];
+                        const percentage = stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0;
+                        
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'progress-item';
+                        
+                        itemDiv.innerHTML = `
+                            <div class="progress-info">
+                                <span class="progress-label">${disciplina}</span>
+                                <span class="progress-value">${percentage}% (${stats.done}/${stats.total})</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        `;
+                        dateListElement.appendChild(itemDiv);
+                    });
+                });
+            });
+        }
+
+        // ================= LÓGICA ASISTENCIA ALUMNOS =================
+        async function loadAbsentStats() {
+            const refreshBtn = document.getElementById('refreshAbsentBtn');
+            if(refreshBtn) refreshBtn.disabled = true;
+            try {
+                const response = await fetch(ABSENT_STUDENT_SCRIPT_URL);
+                if (!response.ok) return;
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    document.getElementById('absentStatsSection').style.display = 'block';
+                    processAbsentData(data);
+                }
+            } catch (error) { console.error("Error asistencias:", error); }
+            finally { if(refreshBtn) refreshBtn.disabled = false; }
+        }
+
+        function processAbsentData(data) {
+            const dateListElement = document.getElementById('absentDateList');
+            const ctx = document.getElementById('absentChart').getContext('2d');
+            const dateGroups = {};
+
+            data.forEach(item => {
+                let dateObj = parseDateFromSheet(item.fecha);
+                if (!dateObj) return;
+                if (dateObj < fechaInicioCiclo || dateObj > fechaFinCiclo) return;
+
+                const possibleStatusFields = ['estado', 'asistencia', 'situacion'];
+                let isPresent = false;
+                for (let field of possibleStatusFields) {
+                    if (item[field]) {
+                        const val = item[field].toString().toLowerCase().trim();
+                        if (val === 'presente' || val.includes('presente')) { isPresent = true; break; }
+                    }
+                }
+                if (isPresent) return;
+
+                const dateKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+                if (!dateGroups[dateKey]) { dateGroups[dateKey] = { dateObj: dateObj, count: 0, names: [] }; }
+                dateGroups[dateKey].count++;
+                const nombre = item.alumno || item.nombreAlumno || item.nombre || 'Desconocido';
+                dateGroups[dateKey].names.push(nombre);
+            });
+
+            const sortedDates = Object.keys(dateGroups).sort((a, b) => dateGroups[b].dateObj - dateGroups[a].dateObj);
+            const labels = sortedDates.map(k => dateGroups[k].dateObj.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}));
+            const counts = sortedDates.map(k => dateGroups[k].count);
+
+            if (absentChartInstance) absentChartInstance.destroy();
+            absentChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: 'Ausentes', data: counts, backgroundColor: 'rgba(230, 126, 34, 0.7)', borderColor: 'rgba(230, 126, 34, 1)', borderWidth: 1, borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize:1} } }, plugins: {legend:{display:false}} }
+            });
+
+            dateListElement.innerHTML = '';
+            sortedDates.forEach(dateKey => {
+                const info = dateGroups[dateKey];
+                const dateFormatted = info.dateObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                const li = document.createElement('li');
+                li.className = 'date-list-item';
+                
+                li.innerHTML = `
+                    <div class="date-header">
+                        <span class="date-title">${dateFormatted.charAt(0).toUpperCase() + dateFormatted.slice(1)}</span>
+                        <span class="count-badge">${info.count} Ausente(s)</span>
+                    </div>
+                    <div class="students-badges-container">
+                        ${info.names.map(n => `<span class="absent-badge">${n}</span>`).join('')}
+                    </div>
+                `;
+                dateListElement.appendChild(li);
+            });
+        }
+
+        // ================= LÓGICA REPORTES =================
+        async function loadStudentStats() {
+            const refreshBtn = document.getElementById('refreshStudentBtn');
+            if(refreshBtn) refreshBtn.disabled = true;
+            try {
+                const response = await fetch(STUDENT_SCRIPT_URL);
+                if (!response.ok) return;
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    document.getElementById('studentStatsSection').style.display = 'block';
+                    processStudentData(data);
+                }
+            } catch (error) { console.error("Error alumnos:", error); }
+            finally { if(refreshBtn) refreshBtn.disabled = false; }
+        }
+
+        function processStudentData(data) {
+            const dateListElement = document.getElementById('studentDateList');
+            const ctx = document.getElementById('studentChart').getContext('2d');
+            const dateGroups = {};
+
+            data.forEach(item => {
+                let dateObj = parseDateFromSheet(item.fecha);
+                if (!dateObj) return;
+                if (dateObj < fechaInicioCiclo || dateObj > fechaFinCiclo) return;
+
+                const dateKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+                if (!dateGroups[dateKey]) { dateGroups[dateKey] = { dateObj: dateObj, count: 0, students: [] }; }
+                dateGroups[dateKey].count++;
+                
+                const nombre = item.nombreAlumno || item.nombre || 'Desconocido';
+                const grado = item.grado || 'N/A';
+                const grupo = item.grupo || 'N/A';
+                
+                dateGroups[dateKey].students.push({ nombre, grado, grupo });
+            });
+
+            const sortedDates = Object.keys(dateGroups).sort((a, b) => dateGroups[b].dateObj - dateGroups[a].dateObj);
+            const labels = sortedDates.map(k => dateGroups[k].dateObj.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}));
+            const counts = sortedDates.map(k => dateGroups[k].count);
+
+            if (studentChartInstance) studentChartInstance.destroy();
+            studentChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: 'Reportes', data: counts, backgroundColor: 'rgba(231,76, 60, 0.7)', borderColor: 'rgba(231, 76, 60, 1)', borderWidth: 1, borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize:1} } }, plugins: {legend:{display:false}} }
+            });
+
+            dateListElement.innerHTML = '';
+            sortedDates.forEach(dateKey => {
+                const info = dateGroups[dateKey];
+                const dateFormatted = info.dateObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                
+                let studentsHTML = '';
+                info.students.forEach(s => {
+                    studentsHTML += `
+                        <div class="list-item-detail">
+                            <span class="item-name">${s.nombre}</span>
+                            <span class="student-group">${s.grado}° ${s.grupo}</span>
+                        </div>
+                    `;
+                });
+
+                const li = document.createElement('li');
+                li.className = 'date-list-item';
+                li.innerHTML = `
+                    <div class="date-header">
+                        <span class="date-title">${dateFormatted.charAt(0).toUpperCase() + dateFormatted.slice(1)}</span>
+                        <span class="count-badge">${info.count} Reporte(s)</span>
+                    </div>
+                    <div class="students-list">${studentsHTML}</div>
+                `;
+                dateListElement.appendChild(li);
+            });
+        }
+
+        // ================= INICIALIZACIÓN =================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeacherStats();
+            loadProjectStats();
+            loadAbsentStats();
+            loadStudentStats();
+
+            document.getElementById('refreshTeacherBtn').addEventListener('click', loadTeacherStats);
+            document.getElementById('refreshProjectBtn').addEventListener('click', loadProjectStats);
+            document.getElementById('refreshAbsentBtn').addEventListener('click', loadAbsentStats);
+            document.getElementById('refreshStudentBtn').addEventListener('click', loadStudentStats);
+
+            setupToggle('toggleTeacherDetailsBtn', 'teacherDateList', '📅 Ver Detalles de Permisos', '📂 Ocultar Detalles de Permisos');
+            setupToggle('toggleProjectDetailsBtn', 'projectDateList', '📋 Ver Detalles de Proyectos', '📂 Ocultar Detalles de Proyectos');
+            setupToggle('toggleAbsentDetailsBtn', 'absentDateList', '👁 Ver Detalles de Asistencias', '📂 Ocultar Detalles de Asistencias');
+            setupToggle('toggleStudentDetailsBtn', 'studentDateList', '📋 Ver Detalles de Reportes', '📂 Ocultar Detalles de Reportes');
+        });
+
+        function setupToggle(btnId, listId, textShow, textHide) {
+            const btn = document.getElementById(btnId);
+            const list = document.getElementById(listId);
+            if(btn && list) {
+                btn.addEventListener('click', function() {
+                    if(list.style.display === 'none') {
+                        list.style.display = 'block';
+                        this.innerHTML = textHide;
+                    } else {
+                        list.style.display = 'none';
+                        this.innerHTML = textShow;
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
