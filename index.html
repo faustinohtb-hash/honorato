@@ -4,318 +4,354 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión Escolar — Secundaria Profr. Honorato Tlaseca Barrera</title>
-    <link rel="icon" type="image/png" href="imagenes/ico_escuela.png" sizes="64x38">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuración de Tailwind para personalizar colores -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'school-blue': '#1e40af',
-                        'school-light-blue': '#3b82f6',
-                        'school-gray': '#f3f4f6',
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Estilos personalizados para accesibilidad e impresión */
-        /* Enfoque visible para accesibilidad */
-        *:focus {
-            outline: 3px solid #3b82f6;
-            outline-offset: 2px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        /* Estilos para impresión */
-        @media print {
-            /* Ocultar elementos innecesarios al imprimir */
-            .no-print {
-                display: none !important;
-            }
-            
-            /* Ajustar el contenido para impresión */
-            .print-content {
-                width: 100%;
-                margin: 0;
-                padding: 15px;
-            }
-            
-            /* Asegurar que el texto sea legible en papel */
-            body {
-                font-size: 12pt;
-                line-height: 1.4;
-                color: #000;
-            }
-            
-            /* Evitar saltos de página no deseados */
-            .print-break-avoid {
-                page-break-inside: avoid;
-            }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        
-        /* Transiciones suaves para interacciones */
-        .menu-button {
-            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+
+        header {
+            text-align: center;
+            padding: 30px 20px 10px;
+            color: #fff;
         }
-        
-        /* Estilo para enlaces que parecen botones */
-        .menu-button:hover {
+
+        header img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        header h2 {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+            padding: 30px 20px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .menu-container a {
+            display: block;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a2a6c;
             text-decoration: none;
+            padding: 18px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .menu-container a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: #fff;
+        }
+
+        .menu-container a.locked {
+            position: relative;
+        }
+
+        .menu-container a.locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 1rem;
+        }
+
+        .welcome {
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            max-width: 700px;
+        }
+
+        .welcome h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            opacity: 0.85;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Modal de contraseña */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 35px 30px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-box h3 {
+            color: #1a2a6c;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .modal-box .icon-lock {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-box p.subtitle {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .modal-box input:focus {
+            border-color: #1a2a6c;
+        }
+
+        .modal-box .btn-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-box button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-box .btn-enter {
+            background: #1a2a6c;
+            color: #fff;
+        }
+
+        .modal-box .btn-enter:hover {
+            background: #2a3a8c;
+        }
+
+        .modal-box .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-box .btn-cancel:hover {
+            background: #ccc;
+        }
+
+        .error-msg {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: #ffe0e0;
+            border: 1px solid #ff4d4d;
+            border-radius: 8px;
+            color: #b30000;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .error-msg.visible {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
     </style>
-    
-    <!-- Open Graph para WhatsApp y redes sociales -->
-    <meta property="og:title" content="Sistema de Gestión Escolar">
-    <meta property="og:description" content="Secundaria Profr. Honorato Tlaseca Barrera">
-    <meta property="og:image" content="https://faustinohtb-hash.github.io/honorato/SGE.png">
-    <meta property="og:url" content="https://faustinohtb-hash.github.io/honorato/index.html">
-    <meta property="og:type" content="website">
-    <meta property="og:image:width" content="300">
-    <meta property="og:image:height" content="300">
-    <meta property="og:image:alt" content="Imagen del Sistema de Gestión Escolar">
-
-    <!-- WhatsApp recomienda tamaño mínimo 300x300 -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Sistema de Gestión Escolar">
-    <meta name="twitter:description" content="Secundaria Profr. Honorato Tlaseca Barrera">
-    <meta name="twitter:image" content="https://faustinohtb-hash.github.io/honorato/SGE.png">
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-    <!-- Cabecera -->
-    <header class="bg-school-blue text-white shadow-md">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex flex-col md:flex-row items-center justify-center md:justify-start">
-                <!-- Logotipo de la escuela -->
-                <div class="mb-4 md:mb-0 md:mr-6">
-                    <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logotipo de la Secundaria Profr. Honorato Tlaseca Barrera" class="h-20 w-auto">
-                </div>
-                <!-- Títulos -->
-                <div class="text-center md:text-left">
-                    <h1 class="text-2xl md:text-3xl font-bold">Sistema de Gestión Escolar</h1>
-                    <h2 class="text-lg md:text-xl font-light mt-1">Secundaria Profr. Honorato Tlaseca Barrera</h2>
-                </div>
-            </div>
-        </div>
+<body>
+
+    <header>
+        <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela">
+        <h1>Sistema de Gestión Escolar</h1>
+        <h2>Secundaria Profr. Honorato Tlaseca Barrera</h2>
     </header>
 
-    <!-- Navegación principal -->
-    <nav class="bg-white shadow-sm" aria-label="Menú principal">
-        <div class="container mx-auto px-4 py-4">
-            <ul class="flex flex-wrap justify-center gap-4 md:gap-6">
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/Gpermisosdocentes.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Generar Permiso Alumno por Docente">
-                        <!-- Ícono SVG para Generar Permiso -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Generar Permiso Alumno por Docente</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/permisosdeldia.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Permisos del Día">
-                        <!-- Ícono SVG para Permisos -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Permisos del Día</span>
-                    </a>
-                </li>
-                <!-- Botón: Permisos de Docentes -->
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/PermisoDocentes.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Permisos de Docentes">
-                        <!-- Ícono SVG para Permisos de Docentes (Credencial) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Permisos de Docentes</span>
-                    </a>
-                </li>
-                <li>
-                 <a href="https://faustinohtb-hash.github.io/honorato/formularioIncidencias.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Incidencias">
-                        <!-- Ícono SVG para Incidencias -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Incidencias</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/incidenciafecha.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Impresión de Incidencias">
-                        <!-- Ícono SVG para Impresión -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Impresión de Incidencias</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/revisionIncidencias.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Revisión de Incidencias">
-                        <!-- Ícono SVG para Revisión -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Revisión de Incidencias</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/ReporteAsistencia.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Registrar Retardo e Inasistencias">
-                        <!-- Ícono SVG para Retardos e Inasistencias -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Retardos/Inasistencias</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/RevisionAsistencia.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Revisión de Asistencia">
-                        <!-- Ícono SVG para Revisión de Asistencia -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Revisión de Asistencia</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/SiATECCE.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="SiATECCE">
-                        <!-- Ícono SVG para SiATECCE -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">SiATECCE</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/registro_asistencia.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Registro de Asistencia">
-                        <!-- Ícono SVG para Registro de Asistencia -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Registro de Asistencia</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/regularizacion.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Alumnos en Trayecto de Regularización 1° Periodo">
-                        <!-- Ícono SVG para Regularización -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Alumnos en Trayecto de Regularización 1° Periodo</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/calificaciones.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Calificaciones del Primer Periodo">
-                        <!-- Ícono SVG para Calificaciones -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Calificaciones del Primer Periodo</span>
-                    </a>
-                </li>
-                <!-- Botón: Planeaciones -->
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/planodidactico.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Planeaciones">
-                        <!-- Ícono SVG para Planeaciones -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Planeaciones</span>
-                    </a>
-                </li>
-                <!-- Botón: Monitoreo del Avance en los PDA -->
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/AvancePDA.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Monitoreo del Avance en los PDA">
-                        <!-- Ícono SVG para Gráficas/Monitoreo -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Monitoreo del Avance en los PDA</span>
-                    </a>
-                </li>
-                <!-- Botón: Resultados del Proceso de Regularización 1° Periodo -->
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/RegularizacionE1P.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Resultados del Proceso de Regularización 1° Periodo">
-                        <!-- Ícono SVG para Lista de Verificación -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Resultados del Proceso de Regularización 1° Periodo</span>
-                    </a>
-                </li>
-                <!-- Botón: Panel Integral de Control -->
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/PanelIntegral.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Panel Integral de Control">
-                        <!-- Ícono SVG para Panel de Control (Cuadrícula/Dashboard) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Panel Integral de Control</span>
-                    </a>
-                </li>
-                <!-- Nuevo Botón: Visualización de Rendimiento Académico 1° Periodo -->
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/GraficasCalPrimerT.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Visualización de Rendimiento Académico 1° Periodo">
-                        <!-- Ícono SVG para Gráficas/Rendimiento (Gráfico de líneas ascendente) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Visualización de Rendimiento Académico 1° Periodo</span>
-                    </a>
-                </li>
-                
-                <!-- INICIO: NUEVO BOTÓN AGREGADO -->
-                <li>
-                    <a href="https://faustinohtb-hash.github.io/honorato/CartadeC.html" class="menu-button flex flex-col items-center justify-center p-3 rounded-lg bg-school-gray hover:bg-school-light-blue hover:text-white transition-colors w-32 h-32 md:w-40 md:h-40 focus:ring-2 focus:ring-school-blue focus:ring-opacity-50" aria-label="Cartas de Convivencia">
-                        <!-- Ícono SVG para Grupo/Convivencia -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        <span class="text-sm md:text-base font-medium text-center">Cartas de Convivencia</span>
-                    </a>
-                </li>
-                <!-- FIN: NUEVO BOTÓN AGREGADO -->
-
-            </ul>
-        </div>
+    <nav class="menu-container">
+        <a href="https://faustinohtb-hash.github.io/honorato/Gpermisosdocentes.html">Generar Permiso Alumno por Docente</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/permisosdeldia.html">Permisos del Día</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/PermisoDocentes.html" class="locked" onclick="return solicitarPassword(event, this.href)">Permisos de Docentes</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/formularioIncidencias.html">Incidencias</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/incidenciafecha.html">Impresión de Incidencias</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/revisionIncidencias.html">Revisión de Incidencias</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/ReporteAsistencia.html">Retardos/Inasistencias</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/RevisionAsistencia.html">Revisión de Asistencia</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/SiATECCE.html">SiATECCE</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/registro_asistencia.html">Registro de Asistencia</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/regularizacion.html">Alumnos en Trayecto de Regularización 1° Periodo</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/calificaciones.html">Calificaciones del Primer Periodo</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/planodidactico.html">Planeaciones</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/AvancePDA.html">Monitoreo del Avance en los PDA</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/RegularizacionE1P.html">Resultados del Proceso de Regularización 1° Periodo</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/PanelIntegral.html" class="locked" onclick="return solicitarPassword(event, this.href)">Panel Integral de Control</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/GraficasCalPrimerT.html">Visualización de Rendimiento Académico 1° Periodo</a>
+        <a href="https://faustinohtb-hash.github.io/honorato/CartadeC.html">Cartas de Convivencia</a>
     </nav>
 
-    <!-- Contenido principal -->
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-bold mb-4 text-school-blue text-center">Bienvenido al Sistema de Gestión Escolar</h2>
-            <p class="text-gray-700 text-center">
-                Seleccione una de las opciones del menú para comenzar a trabajar con el sistema.
-            </p>
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-500">
-                    Secundaria Profr. Honorato Tlaseca Barrera - Todos los derechos reservados.
-                </p>
-            </div>
-        </div>
-    </main>
+    <div class="welcome">
+        <h3>Bienvenido al Sistema de Gestión Escolar</h3>
+        <p>Seleccione una de las opciones del menú para comenzar a trabajar con el sistema.</p>
+    </div>
 
-    <!-- Pie de página -->
-    <footer class="bg-school-blue text-white py-6 no-print">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-2">Secundaria Profr. Honorato Tlaseca Barrera</p>
-            <p class="text-sm">Carretera Puebla-Chiautla No.1, Huehuetlán el Chico, Pue. CP. 74720</p>
-            <p class="text-sm mt-2">© <span id="currentYear">2025</span> Todos los derechos reservados.</p>
-        </div>
+    <footer>
+        <p>Secundaria Profr. Honorato Tlaseca Barrera</p>
+        <p>Carretera Puebla-Chiautla No.1, Huehuetlán el Chico, Pue. CP. 74720</p>
+        <p>© 2025 Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Script para actualizar automáticamente el año en el footer -->
+    <!-- Modal de Contraseña -->
+    <div class="modal-overlay" id="modalPassword">
+        <div class="modal-box">
+            <div class="icon-lock">🔐</div>
+            <h3>Acceso Restringido</h3>
+            <p class="subtitle">Ingrese la contraseña de acceso</p>
+            <input type="password" id="inputPassword" placeholder="Contraseña" autocomplete="off">
+            <div class="btn-group">
+                <button class="btn-enter" onclick="verificarPassword()">Ingresar</button>
+                <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+            </div>
+            <div class="error-msg" id="errorMsg">
+                ⚠️ Solo tienen acceso Autoridades Educativas y personal autorizado.
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const yearElement = document.getElementById('currentYear');
-            const currentYear = new Date().getFullYear();
-            if (yearElement) {
-                yearElement.textContent = currentYear;
+        let urlDestino = '';
+
+        function solicitarPassword(event, url) {
+            event.preventDefault();
+            urlDestino = url;
+            document.getElementById('modalPassword').classList.add('active');
+            document.getElementById('inputPassword').value = '';
+            document.getElementById('errorMsg').classList.remove('visible');
+            setTimeout(() => {
+                document.getElementById('inputPassword').focus();
+            }, 300);
+            return false;
+        }
+
+        function verificarPassword() {
+            const input = document.getElementById('inputPassword').value.trim();
+            const anio = new Date().getFullYear().toString(); // Año dinámico (2026)
+
+            // Contraseñas válidas: primera letra mayúscula o minúscula + año
+            const prefijos = ['D', 'J', 'L', 'F', 'FDJ', 'N', 'ns', 'g', 'in'];
+            const passwordsValidas = [];
+
+            prefijos.forEach(prefijo => {
+                // Versión con primera letra mayúscula
+                passwordsValidas.push(prefijo.charAt(0).toUpperCase() + prefijo.slice(1) + anio);
+                // Versión con primera letra minúscula
+                passwordsValidas.push(prefijo.charAt(0).toLowerCase() + prefijo.slice(1) + anio);
+            });
+
+            if (passwordsValidas.includes(input)) {
+                window.location.href = urlDestino;
+            } else {
+                document.getElementById('errorMsg').classList.add('visible');
+                document.getElementById('inputPassword').value = '';
+                document.getElementById('inputPassword').focus();
+            }
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalPassword').classList.remove('active');
+            urlDestino = '';
+        }
+
+        // Permitir ingresar con Enter
+        document.getElementById('inputPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                verificarPassword();
+            }
+            if (e.key === 'Escape') {
+                cerrarModal();
+            }
+        });
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modalPassword').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModal();
             }
         });
     </script>
+
 </body>
 </html>
