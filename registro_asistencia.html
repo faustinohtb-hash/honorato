@@ -12,19 +12,37 @@
             color: #000;
         }
         .header { 
-            text-align: center; 
             margin-bottom: 15px; 
+            width: 100%;
         }
-        .header img { 
-            height: 70px; 
-            margin: 5px 15px; 
-            vertical-align: middle;
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .header-logo-left img {
+            height: 60px; /* Un poco más pequeño como solicitaste */
+            width: auto;
+        }
+        .header-center {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 15px;
         }
         .school-info { 
-            text-align: center; 
             font-weight: bold; 
-            margin: 10px 0; 
-            line-height: 1.4;
+            line-height: 1.3;
+            font-size: 12px;
+        }
+        .header-center h2 {
+            margin: 8px 0 0 0;
+            text-decoration: underline;
+            font-size: 16px;
+        }
+        .header-logo-right img {
+            height: 70px;
+            width: auto;
         }
         .controls { 
             margin: 15px 0; 
@@ -38,7 +56,7 @@
             align-items: center; 
             justify-content: center;
         }
-        .controls select, .controls input, .controls button { 
+        .controls select, .controls button { 
             padding: 6px 10px; 
             border: 1px solid #ccc; 
             border-radius: 4px; 
@@ -54,6 +72,15 @@
         .controls button:hover { background-color: #004494; }
         .controls button.print-btn { background-color: #28a745; }
         .controls button.print-btn:hover { background-color: #218838; }
+        
+        .ciclo-display {
+            background-color: #0056b3;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }
         
         table { 
             border-collapse: collapse; 
@@ -74,6 +101,7 @@
             text-align: left; 
             min-width: 180px; 
             padding-left: 5px;
+            font-size: 9px;
         }
         .weekend { 
             background-color: #dcdde1; 
@@ -86,7 +114,7 @@
             min-width: 22px;
         }
         /* Colores para los estados de asistencia */
-        .presente { color: #28a745; font-weight: bold; }
+        .presente { color: #006400; font-weight: bold; }
         .retardo { color: #fd7e14; font-weight: bold; }
         .falta { color: #dc3545; font-weight: bold; }
         .justificado { color: #007bff; font-weight: bold; }
@@ -113,9 +141,20 @@
         }
         .legend {
             text-align: left;
-            font-size: 10px;
+            font-size: 8px;
             margin: 10px 0;
             font-style: italic;
+            line-height: 1.3;
+        }
+        .nota-info {
+            font-size: 8px;
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.3;
         }
         .signatures { 
             display: flex; 
@@ -165,33 +204,60 @@
         }
         .back-link:hover { text-decoration: underline; }
 
+        /* TRUCO PARA MINIMIZAR ENCABEZADOS Y PIES DE PÁGINA DEL NAVEGADOR */
         @media print {
+            @page {
+                margin: 0; 
+            }
             .controls, .no-print, .back-link { display: none !important; }
-            body { margin: 10px; font-size: 9px; }
+            body { 
+                margin: 0; 
+                padding: 1cm; 
+                font-size: 9px; 
+            }
+            .header-logo-left img { height: 50px; }
+            .header-logo-right img { height: 60px; }
+            .school-info { font-size: 11px; }
+            .header-center h2 { font-size: 14px; }
             th, td { padding: 2px 1px; }
-            .header img { height: 60px; }
             table { page-break-inside: auto; }
             tr { page-break-inside: avoid; page-break-after: auto; }
             .info-bar { font-size: 11px; padding: 5px; }
+            .student-name { font-size: 8px; }
+            .legend { font-size: 7px; }
+            .nota-info { font-size: 7px; }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela">
-        <img src="https://faustinohtb-hash.github.io/honorato/imagenes/lsep.png" alt="Logo SEP">
-        <div class="school-info">
-            SECRETARÍA DE EDUCACIÓN PÚBLICA<br>
-            SUBSECRETARÍA DE EDUCACIÓN BÁSICA Y MEDIA SUPERIOR<br>
-            DIRECCIÓN DE SECUNDARIAS GENERALES<br>
-            ESCUELA SECUNDARIA GENERAL "PROFR. HONORATO TLASECA BARRERA"<br>
-            CLAVE: 21EES0265J
+        <div class="header-content">
+            <!-- Logo Izquierdo (SEP) - Un poco más pequeño -->
+            <div class="header-logo-left">
+                <img src="https://faustinohtb-hash.github.io/honorato/imagenes/lsep.png" alt="Logo SEP">
+            </div>
+            
+            <!-- Texto Centrado -->
+            <div class="header-center">
+                <div class="school-info">
+                    SECRETARÍA DE EDUCACIÓN PÚBLICA<br>
+                    SUBSECRETARÍA DE EDUCACIÓN BÁSICA Y MEDIA SUPERIOR<br>
+                    DIRECCIÓN DE SECUNDARIAS GENERALES<br>
+                    ESCUELA SECUNDARIA GENERAL "PROFR. HONORATO TLASECA BARRERA"<br>
+                    CLAVE: 21EES0265J
+                </div>
+                <h2>REGISTRO DE ASISTENCIA</h2>
+            </div>
+            
+            <!-- Logo Derecho (Escuela) -->
+            <div class="header-logo-right">
+                <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela">
+            </div>
         </div>
-        <h2 style="margin: 10px 0; text-decoration: underline;">REGISTRO DE ASISTENCIA</h2>
     </div>
 
     <div class="controls no-print">
-        <label><strong>Ciclo Escolar:</strong> 2025-2026</label>
+        <label><strong>Ciclo Escolar:</strong> <span id="cicloDisplay" class="ciclo-display">2025-2026</span></label>
         <label>Grado:
             <select id="gradoSelect">
                 <option value="1">1°</option>
@@ -240,7 +306,22 @@
             </select>
         </label>
         <label>Docente:
-            <input type="text" id="docenteInput" placeholder="Nombre del docente" style="width: 180px;">
+            <select id="docenteSelect">
+                <option value="">Seleccionar docente</option>
+                <option value="JOSEFINA SAYAZ ORTIZ">JOSEFINA SAYAZ ORTIZ</option>
+                <option value="LAURA CHOLULA RIVERA" selected>LAURA CHOLULA RIVERA</option>
+                <option value="INGRID NAHOMI CHIN AVILA">INGRID NAHOMI CHIN AVILA</option>
+                <option value="NANCY SUGEY ARENAS MONTELLANO">NANCY SUGEY ARENAS MONTELLANO</option>
+                <option value="ULISES ALONSO RAMIREZ">ULISES ALONSO RAMIREZ</option>
+                <option value="GERARDO HERNANDEZ ROSAS">GERARDO HERNANDEZ ROSAS</option>
+                <option value="NOE CORONEL VERGARA">NOE CORONEL VERGARA</option>
+                <option value="FELIPE DE JESUS CARIDAD SANCHEZ">FELIPE DE JESUS CARIDAD SANCHEZ</option>
+                <option value="FAUSTINO TLASECA HUESCA">FAUSTINO TLASECA HUESCA</option>
+                <option value="CRISTOBAL SANTOS AGUIRRE">CRISTOBAL SANTOS AGUIRRE</option>
+                <option value="GUILLERMINA SANDOVAL AGUILAR">GUILLERMINA SANDOVAL AGUILAR</option>
+                <option value="LORENA JIMENEZ SANCHEZ">LORENA JIMENEZ SANCHEZ</option>
+                <option value="DAVID RAMIREZ COLEXCUA">DAVID RAMIREZ COLEXCUA</option>
+            </select>
         </label>
         <button onclick="generarRegistro()">🔄 Actualizar Registro</button>
         <button class="print-btn" onclick="window.print()">🖨️ Imprimir Registro</button>
@@ -248,7 +329,7 @@
 
     <div id="attendanceTableContainer">
         <div class="loading">
-            ⏳ Cargando lista maestra de alumnos y registros de asistencia en tiempo real...<br>
+            ⏳ Cargando lista maestra de alumnos y registros de asistencia...<br>
             <small style="font-weight: normal; color: #555;">Por favor, espere un momento.</small>
         </div>
     </div>
@@ -259,7 +340,7 @@
             <strong>Estados:</strong> A = Asistencia, R = Retardo, F = Falta/Ausente, J = Justificado/Permiso, S = Suspendido.<br>
             Las celdas sombreadas en gris corresponden a <strong>días inhábiles</strong> (fin de semana).
         </div>
-        <p style="margin-top: 15px; font-weight: bold; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <p class="nota-info">
             NOTA:<br>
             A) CERRAR EL REGISTRO HASTA EL ÚLTIMO DÍA HÁBIL DEL MES O FECHA DE CORTE.<br>
             B) REPORTAR EL NÚMERO TOTAL DE ASISTENCIAS, RETARDOS, FALTAS Y DÍAS DE CLASE DEL MES.
@@ -293,6 +374,29 @@
         let estudiantesData = [];
         let asistenciaData = [];
 
+        function calcularCicloEscolar(mes) {
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            let añoInicio, añoFin, añoRealMes;
+            
+            if (mes >= 8) {
+                añoInicio = currentYear;
+                añoFin = currentYear + 1;
+                añoRealMes = currentYear;
+            } else {
+                añoInicio = currentYear - 1;
+                añoFin = currentYear;
+                añoRealMes = currentYear;
+            }
+            
+            return {
+                ciclo: `${añoInicio}-${añoFin}`,
+                añoInicio: añoInicio,
+                añoFin: añoFin,
+                añoRealMes: añoRealMes
+            };
+        }
+
         async function inicializar() {
             const container = document.getElementById('attendanceTableContainer');
             try {
@@ -309,6 +413,10 @@
                 
                 const rawAsistencia = await asistenciaRes.json();
                 asistenciaData = Array.isArray(rawAsistencia) ? rawAsistencia : (rawAsistencia.data || []);
+                
+                const mesInicial = parseInt(document.getElementById('mesSelect').value);
+                const cicloInfo = calcularCicloEscolar(mesInicial);
+                document.getElementById('cicloDisplay').textContent = cicloInfo.ciclo;
                 
                 generarRegistro();
             } catch (error) {
@@ -333,25 +441,28 @@
             const grupo = document.getElementById('grupoSelect').value;
             const mes = parseInt(document.getElementById('mesSelect').value);
             const asignatura = document.getElementById('asignaturaSelect').value;
-            const docente = document.getElementById('docenteInput').value || "DOCENTE DEL GRUPO";
+            const docente = document.getElementById('docenteSelect').value || "DOCENTE DEL GRUPO";
             
             document.getElementById('firmaDocente').textContent = docente.toUpperCase();
 
-            const year = mes >= 8 ? 2025 : 2026;
+            const cicloInfo = calcularCicloEscolar(mes);
+            document.getElementById('cicloDisplay').textContent = cicloInfo.ciclo;
+
+            const year = cicloInfo.añoRealMes;
             const monthNames = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
             const monthName = monthNames[mes - 1];
             const daysInMonth = new Date(year, mes, 0).getDate();
             
-            // Función para normalizar texto (quitar acentos y minúsculas para comparaciones seguras)
             const normalizeStr = (str) => str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() : "";
             const selAsignatura = normalizeStr(asignatura);
             
-            // 1. OBTENER TODOS LOS ALUMNOS DEL GRADO Y GRUPO (No solo los que tienen faltas)
             const filteredStudents = estudiantesData
                 .filter(e => e.grado == grado && e.grupo == grupo)
                 .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
             
             let html = `<div class="info-bar">
+                <span>CICLO ESCOLAR: ${cicloInfo.ciclo}</span>
+                <span>|</span>
                 <span>GRADO: ${grado}°</span>
                 <span>|</span>
                 <span>GRUPO: ${grupo}</span>
@@ -359,8 +470,6 @@
                 <span>MES: ${monthName} ${year}</span>
                 <span>|</span>
                 <span>ASIGNATURA: ${asignatura.toUpperCase()}</span>
-                <span>|</span>
-                <span style="color: #28a745; font-size: 10px;">✅ Datos en tiempo real</span>
             </div>`;
             
             html += `<table><thead><tr>
@@ -388,7 +497,6 @@
                 html += `<tr><td colspan="${daysInMonth + 8}" style="text-align:center; padding: 20px; font-weight: bold;">No hay alumnos registrados en este grado y grupo.</td></tr>`;
             } else {
                 filteredStudents.forEach((est, index) => {
-                    // 2. BUSCAR INCIDENTES ESPECÍFICOS PARA ESTE ALUMNO
                     const studentRecords = asistenciaData.filter(r => {
                         const rGrado = parseInt(r.grado, 10);
                         const rGrupo = r.grupo ? r.grupo.toString().trim() : "";
@@ -402,7 +510,6 @@
                     });
                     
                     const dayStatus = {};
-                    // Prioridad en caso de múltiples registros el mismo día: Suspendido > Falta > Retardo > Justificado > Asistencia
                     const priority = { 'S': 5, 'F': 4, 'R': 3, 'J': 2, 'A': 1 };
                     
                     studentRecords.forEach(r => {
@@ -445,7 +552,6 @@
                         const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
                         const className = isWeekend ? 'weekend' : '';
                         
-                        // Si es fin de semana, mostrar 'X'. Si no, mostrar el estado o 'A' por defecto.
                         let content = isWeekend ? 'X' : (dayStatus[d] || 'A');
                         
                         if (content === 'A') countA++;
@@ -472,7 +578,6 @@
                 });
             }
             
-            // Fila de totales de días hábiles
             let diasHabiles = 0;
             for (let d = 1; d <= daysInMonth; d++) {
                 const date = new Date(year, mes - 1, d);
@@ -496,6 +601,12 @@
 
             document.getElementById('attendanceTableContainer').innerHTML = html;
         }
+
+        document.getElementById('mesSelect').addEventListener('change', function() {
+            const mes = parseInt(this.value);
+            const cicloInfo = calcularCicloEscolar(mes);
+            document.getElementById('cicloDisplay').textContent = cicloInfo.ciclo;
+        });
 
         window.onload = inicializar;
     </script>
