@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cédula de Registro - Profr. Honorato Tlaseca Barrera</title>
+    <!-- Librerías para generar el PDF con formato visual -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background-color: white; padding: 30px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        
+        /* === ESTILO DEL ENCABEZADO === */
+        .pdf-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #800000; /* Línea guinda */
+            padding-bottom: 15px;
+        }
+        .pdf-header h1 { color: #800000; font-size: 22px; margin-bottom: 5px; }
+        .pdf-header h2 { color: #333; font-size: 14px; font-weight: normal; }
+        
+        /* Ocultar el encabezado de la página 2 en pantalla */
+        #pdfPage2 .pdf-header { display: none; }
+
+        .section { margin-bottom: 30px; border: 2px solid #800000; border-radius: 5px; overflow: hidden; }
+        .section-header { background-color: #800000; color: white; padding: 10px 15px; font-weight: bold; font-size: 16px; }
+        .section-content { padding: 20px; }
+        .form-row { display: flex; flex-wrap: wrap; margin-bottom: 15px; gap: 15px; }
+        .form-group { flex: 1; min-width: 200px; }
+        .form-group.full-width { flex-basis: 100%; }
+        .form-group.half { flex: 0 1 calc(50% - 10px); }
+        .form-group.third { flex: 0 1 calc(33.333% - 10px); }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 12px; }
+        input[type="text"], input[type="date"], input[type="email"], input[type="tel"], select, textarea {
+            width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; text-transform: uppercase; background-color: #fff;
+        }
+        input[readonly] { background-color: #e9ecef; cursor: not-allowed; color: #495057; font-weight: bold; }
+        input[type="text"]:focus, input[type="date"]:focus, input[type="email"]:focus, input[type="tel"]:focus, textarea:focus {
+            outline: none; border-color: #800000; box-shadow: 0 0 5px rgba(128,0,0,0.3);
+        }
+        .checkbox-group, .radio-group { display: flex; gap: 20px; align-items: center; margin-top: 5px; }
+        .checkbox-item, .radio-item { display: flex; align-items: center; gap: 5px; }
+        .document-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .document-option { border: 1px solid #ddd; padding: 10px; border-radius: 4px; }
+        
+        /* Contenedor y estilos de los botones */
+        .btn-container { display: flex; gap: 15px; justify-content: center; align-items: center; margin: 30px 0; flex-wrap: wrap; }
+        .btn-submit { background-color: #800000; color: white; padding: 15px 40px; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+        .btn-submit:hover { background-color: #600000; }
+        .btn-submit:disabled { background-color: #ccc; cursor: not-allowed; }
+        .btn-pdf { background-color: #007bff; color: white; padding: 15px 40px; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+        .btn-pdf:hover { background-color: #0056b3; }
+        .btn-pdf:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        .alert { padding: 20px; border-radius: 4px; margin-bottom: 20px; display: none; text-align: center; font-weight: bold; font-size: 16px; }
+        .alert-success { background-color: #d4edda; color: #155724; border: 2px solid #28a745; }
+        .alert-error { background-color: #f8d7da; color: #721c24; border: 2px solid #dc3545; }
+        .required::after { content: " *"; color: red; }
+        .optional { font-size: 11px; color: #666; font-weight: normal; }
+
+        /* Estilos para las firmas */
+        .signatures { display: flex; justify-content: space-around; margin-top: 120px; text-align: center; flex-wrap: wrap; gap: 20px;}
+        .signature-box { width: 300px; padding-top: 60px; }
+        .signature-line { border-top: 1px solid #000; margin-bottom: 5px; }
+        .signature-label { font-weight: bold; font-size: 14px; text-transform: uppercase; }
+        
+        @media (max-width: 768px) { .form-group.half, .form-group.third { flex-basis: 100%; } }
+
+        /* === ESTILOS DE COMPRESIÓN PARA EL PDF === */
+        .pdf-mode body { padding: 0 !important; }
+        .pdf-mode .container { padding: 15px !important; box-shadow: none !important; width: 1000px !important; }
+        
+        /* Compresión del Encabezado */
+        .pdf-mode .pdf-header { margin-bottom: 10px !important; padding-bottom: 5px !important; border-bottom-width: 2px !important; }
+        .pdf-mode .pdf-header h1 { font-size: 16px !important; margin-bottom: 2px !important; }
+        .pdf-mode .pdf-header h2 { font-size: 11px !important; }
+        .pdf-mode #pdfPage2 .pdf-header { display: block !important; } /* Forzar visibilidad en pág 2 */
+
+        .pdf-mode .section { margin-bottom: 8px !important; border-width: 1px !important; border-radius: 3px !important; }
+        .pdf-mode .section-header { padding: 3px 8px !important; font-size: 11px !important; }
+        .pdf-mode .section-content { padding: 8px !important; }
+        .pdf-mode .form-row { margin-bottom: 6px !important; gap: 8px !important; }
+        .pdf-mode label { font-size: 9px !important; margin-bottom: 1px !important; }
+        
+        .pdf-mode input[type="text"], 
+        .pdf-mode input[type="email"], 
+        .pdf-mode input[type="tel"], 
+        .pdf-mode input[type="date"],
+        .pdf-mode textarea {
+            padding: 2px 4px !important; 
+            font-size: 10px !important; 
+            border-radius: 2px !important;
+            height: 16px !important; 
+            line-height: 12px !important; 
+            border: 1px solid #aaa !important; 
+            background-color: #ffffff !important;
+            color: #000 !important; 
+            -webkit-text-fill-color: #000 !important;
+            opacity: 1 !important;
+            box-sizing: border-box !important;
+        }
+        .pdf-mode textarea {
+            height: auto !important;
+            min-height: 24px !important;
+        }
+        
+        /* === CLASE QUE REEMPLAZA LOS INPUTS POR TEXTO PLANO PARA LA CAPTURA === */
+        .pdf-mode .pdf-replaced-input {
+            width: 100%;
+            padding: 2px 4px !important;
+            font-size: 10px !important;
+            border: 1px solid #aaa !important;
+            border-radius: 2px !important;
+            min-height: 16px !important;
+            height: 16px !important;
+            line-height: 12px !important;
+            background-color: #ffffff !important;
+            color: #000 !important;
+            box-sizing: border-box !important;
+            text-transform: uppercase;
+            overflow: hidden;
+            white-space: nowrap;
+            display: block;
+        }
+        .pdf-mode .pdf-replaced-input.textarea-replaced {
+            height: auto !important;
+            min-height: 24px !important;
+            white-space: pre-wrap;
+            overflow-y: hidden;
+        }
+
+        .pdf-mode h3 { margin: 8px 0 4px 0 !important; font-size: 10px !important; }
+        
+        /* Espacio para firmas en el PDF */
+        .pdf-mode .signatures { margin-top: 60px !important; }
+        .pdf-mode .signature-box { padding-top: 40px !important; }
+        .pdf-mode .signature-line { margin-bottom: 2px !important; }
+        .pdf-mode .signature-label { font-size: 11px !important; }
+        
+        .pdf-mode .document-grid { gap: 8px !important; margin-top: 5px !important; }
+        .pdf-mode .document-option { padding: 6px !important; border: 1px solid #aaa !important; }
+        .pdf-mode .checkbox-group, .pdf-mode .radio-group { gap: 10px !important; margin-top: 1px !important; }
+        .pdf-mode .checkbox-item label, .pdf-mode .radio-item label { font-size: 9px !important; }
+    </style>
+</head>
+<body>
+    <div class="container" id="formContainer">
+        <div id="alert" class="alert"></div>
+        
+        <form id="registrationForm">
+            <!-- DIV PARA LA PÁGINA 1 DEL PDF -->
+            <div id="pdfPage1">
+                <!-- ENCABEZADO PÁGINA 1 -->
+                <div class="pdf-header">
+                    <h1>GOBIERNO DEL ESTADO DE PUEBLA</h1>
+                    <h2>CÉDULA DE REGISTRO Y ACTUALIZACIÓN DE DATOS</h2>
+                </div>
+
+                <!-- CICLO ESCOLAR Y FECHA -->
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label class="required">CICLO ESCOLAR</label>
+                        <input type="text" name="CICLO ESCOLAR" id="cicloEscolar" required>
+                    </div>
+                    <div class="form-group half">
+                        <label class="required">FECHA</label>
+                        <input type="date" name="FECHA" id="fechaActual" readonly required>
+                    </div>
+                </div>
+                
+                <!-- DATOS GENERALES DEL ALUMNO -->
+                <div class="section">
+                    <div class="section-header">DATOS GENERALES DEL ALUMNO(A)</div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">NIA</label>
+                                <input type="text" name="NIA:" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">APELLIDO PATERNO</label>
+                                <input type="text" name="APELLIDO PATERNO:" required>
+                            </div>
+                            <div class="form-group">
+                                <label>APELLIDO MATERNO</label>
+                                <input type="text" name="APELLIDO MATERNO:">
+                            </div>
+                            <div class="form-group">
+                                <label class="required">NOMBRE</label>
+                                <input type="text" name="NOMBRE:" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label class="required">CURP</label>
+                                <input type="text" name="CURP:" required>
+                            </div>
+                            <div class="form-group half">
+                                <label class="required">FECHA DE NACIMIENTO</label>
+                                <input type="date" name="FECHA DE NACIMIENTO:" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label class="required">PAÍS DE NACIMIENTO</label>
+                                <input type="text" name="PAIS DE NACIMIENTO:" value="MÉXICO" required>
+                            </div>
+                            <div class="form-group half">
+                                <label>ENTIDAD DE NACIMIENTO</label>
+                                <input type="text" name="ENTIDAD DE NACIMIENTO:" value="PUEBLA">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">GÉNERO</label>
+                                <div class="radio-group">
+                                    <div class="radio-item"><input type="radio" name="GENERO:" value="H" required><label>H</label></div>
+                                    <div class="radio-item"><input type="radio" name="GENERO:" value="M" required><label>M</label></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>DISCAPACIDAD / APTITUD DIFERENCIADA</label>
+                                <input type="text" name="DISCAPACIDAD/APTITUD DIFERENCIADA:">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label>TIPO DE SANGRE</label>
+                                <input type="text" name="TIPO DE SANGRE:">
+                            </div>
+                            <div class="form-group half">
+                                <label>LENGUA MATERNA</label>
+                                <input type="text" name="LENGUA MATERNA:" value="ESPAÑOL">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DATOS DEL PADRE -->
+                <div class="section">
+                    <div class="section-header">DATOS DEL PADRE</div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group"><label>APELLIDO PATERNO</label><input type="text" name="APELLIDO PATERNO P:"></div>
+                            <div class="form-group"><label>APELLIDO MATERNO</label><input type="text" name="APELLIDO MATERNO P:"></div>
+                            <div class="form-group"><label>NOMBRE</label><input type="text" name="APELLIDO NOMBRE P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>CURP</label><input type="text" name="CURP P:"></div>
+                            <div class="form-group half"><label>FECHA DE NACIMIENTO</label><input type="date" name="FECHA DE NACIMIENTO P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>PAÍS DE NACIMIENTO</label><input type="text" name="PAÍS DE NACIMIENTO  P:"></div>
+                            <div class="form-group half"><label>NIVEL DE ESTUDIOS</label><input type="text" name="NIVEL DE ESTUDIOS P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>VIVE CON EL ALUMNO</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item"><input type="checkbox" name="VIVE CON EL ALUMNO P:" value="SI"><label>SÍ</label></div>
+                                    <div class="checkbox-item"><input type="checkbox" name="VIVE CON EL ALUMNO P:" value="NO"><label>NO</label></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ES EL TUTOR</label>
+                                <div class="checkbox-group"><div class="checkbox-item"><input type="checkbox" name="ES EL TUTOR P:" value="SI"><label>SÍ</label></div></div>
+                            </div>
+                            <div class="form-group">
+                                <label>ES FINADO</label>
+                                <div class="checkbox-group"><div class="checkbox-item"><input type="checkbox" name="ES FINADO P:" value="SI"><label>SÍ</label></div></div>
+                            </div>
+                        </div>
+                        <h3 style="margin: 20px 0 10px 0; color: #800000;">DIRECCIÓN</h3>
+                        <div class="form-row">
+                            <div class="form-group half"><label>PAÍS DE RESIDENCIA</label><input type="text" name="PAÍS DE RESIDENCIA P:" value="MÉXICO"></div>
+                            <div class="form-group half"><label>ENTIDAD</label><input type="text" name="ENTIDAD  P:" value="PUEBLA"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>MUNICIPIO</label><input type="text" name="MUNICIPIO P:"></div>
+                            <div class="form-group half"><label>LOCALIDAD</label><input type="text" name="LOCALIDAD P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>CP</label><input type="text" name="CP  P:"></div>
+                            <div class="form-group"><label>COLONIA</label><input type="text" name="COLONIA P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>CALLE</label><input type="text" name="CALLE P:"></div>
+                            <div class="form-group third"><label>NÚM. EXT.</label><input type="text" name="NÚM. EXT P:"></div>
+                            <div class="form-group third"><label>NÚM. INT.</label><input type="text" name="NÚM. INT P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>TEL. FIJO</label><input type="tel" name="TEL. FIJO P:"></div>
+                            <div class="form-group third"><label>TEL. CELULAR</label><input type="tel" name="TEL. CELULAR P:"></div>
+                            <div class="form-group third"><label>E-MAIL <span class="optional">(opcional)</span></label><input type="email" name="E-MAIL P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>OCUPACIÓN</label><input type="text" name="OCUPACIÓN P:"></div>
+                            <div class="form-group half"><label>HORARIO</label><input type="text" name="HORARIO P:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>TEL. TRABAJO</label><input type="tel" name="TEL. TRABAJO P:"></div>
+                            <div class="form-group third"><label>EXT.</label><input type="text" name="EXT P:"></div>
+                            <div class="form-group third"><label>E-MAIL TRABAJO <span class="optional">(opcional)</span></label><input type="email" name="E-MAIL TRABAJO P:"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DATOS DE LA MADRE -->
+                <div class="section">
+                    <div class="section-header">DATOS DE LA MADRE</div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group"><label>APELLIDO PATERNO</label><input type="text" name="APELLIDO PATERNO M:"></div>
+                            <div class="form-group"><label>APELLIDO MATERNO</label><input type="text" name="APELLIDO MATERNO M:"></div>
+                            <div class="form-group"><label>NOMBRE</label><input type="text" name="APELLIDO NOMBRE M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>CURP</label><input type="text" name="CURP M:"></div>
+                            <div class="form-group half"><label>FECHA DE NACIMIENTO</label><input type="date" name="FECHA DE NACIMIENTO M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>PAÍS DE NACIMIENTO</label><input type="text" name="PAÍS DE NACIMIENTO M:"></div>
+                            <div class="form-group half"><label>NIVEL DE ESTUDIOS</label><input type="text" name="NIVEL DE ESTUDIOS M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>VIVE CON EL ALUMNO</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item"><input type="checkbox" name="VIVE CON EL ALUMNO M:" value="SI"><label>SÍ</label></div>
+                                    <div class="checkbox-item"><input type="checkbox" name="VIVE CON EL ALUMNO M:" value="NO"><label>NO</label></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ES EL TUTOR</label>
+                                <div class="checkbox-group"><div class="checkbox-item"><input type="checkbox" name="ES EL TUTOR M:" value="SI"><label>SÍ</label></div></div>
+                            </div>
+                            <div class="form-group">
+                                <label>ES FINADO</label>
+                                <div class="checkbox-group"><div class="checkbox-item"><input type="checkbox" name="ES FINADO M:" value="SI"><label>SÍ</label></div></div>
+                            </div>
+                        </div>
+                        <h3 style="margin: 20px 0 10px 0; color: #800000;">DIRECCIÓN</h3>
+                        <div class="form-row">
+                            <div class="form-group half"><label>PAÍS DE RESIDENCIA</label><input type="text" name="PAÍS DE RESIDENCIA M:" value="MÉXICO"></div>
+                            <div class="form-group half"><label>ENTIDAD</label><input type="text" name="ENTIDAD M:" value="PUEBLA"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>MUNICIPIO</label><input type="text" name="MUNICIPIO M:"></div>
+                            <div class="form-group half"><label>LOCALIDAD</label><input type="text" name="LOCALIDAD M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>CP</label><input type="text" name="CP M:"></div>
+                            <div class="form-group"><label>COLONIA</label><input type="text" name="COLONIA M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>CALLE</label><input type="text" name="CALLE M:"></div>
+                            <div class="form-group third"><label>NÚM. EXT.</label><input type="text" name="NÚM. EXT M:"></div>
+                            <div class="form-group third"><label>NÚM. INT.</label><input type="text" name="NÚM. INT M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>TEL. FIJO</label><input type="tel" name="TEL. FIJO M:"></div>
+                            <div class="form-group third"><label>TEL. CELULAR</label><input type="tel" name="TEL. CELULAR M:"></div>
+                            <div class="form-group third"><label>E-MAIL <span class="optional">(opcional)</span></label><input type="email" name="E-MAIL M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>OCUPACIÓN</label><input type="text" name="OCUPACIÓN M:"></div>
+                            <div class="form-group half"><label>HORARIO</label><input type="text" name="HORARIO M:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>TEL. TRABAJO</label><input type="tel" name="TEL. TRABAJO M:"></div>
+                            <div class="form-group third"><label>EXT.</label><input type="text" name="EXT M:"></div>
+                            <div class="form-group third"><label>E-MAIL TRABAJO <span class="optional">(opcional)</span></label><input type="email" name="E-MAIL TRABAJO M:"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIV PARA LA PÁGINA 2 DEL PDF -->
+            <div id="pdfPage2">
+                <!-- ENCABEZADO PÁGINA 2 (Oculto en pantalla, visible en PDF) -->
+                <div class="pdf-header">
+                    <h1>GOBIERNO DEL ESTADO DE PUEBLA</h1>
+                    <h2>CÉDULA DE REGISTRO Y ACTUALIZACIÓN DE DATOS</h2>
+                </div>
+
+                <!-- DATOS DEL TUTOR -->
+                <div class="section">
+                    <div class="section-header">DATOS DEL TUTOR (Solo si es diferente al padre o madre)</div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group"><label>PARENTESCO</label><input type="text" name="PARENTESCO T"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>APELLIDO PATERNO</label><input type="text" name="APELLIDO PATERNO T:"></div>
+                            <div class="form-group"><label>APELLIDO MATERNO</label><input type="text" name="APELLIDO MATERNO T:"></div>
+                            <div class="form-group"><label>NOMBRE</label><input type="text" name="APELLIDO NOMBRE T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>CURP</label><input type="text" name="CURP T:"></div>
+                            <div class="form-group half"><label>FECHA DE NACIMIENTO</label><input type="date" name="FECHA DE NACIMIENTO T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>PAÍS DE NACIMIENTO</label><input type="text" name="PAÍS DE NACIMIENTO T:"></div>
+                            <div class="form-group half"><label>NIVEL DE ESTUDIOS</label><input type="text" name="NIVEL DE ESTUDIOS T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>VIVE CON EL ALUMNO</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item"><input type="checkbox" name="VIVE CON EL ALUMNO T:" value="SI"><label>SÍ</label></div>
+                                    <div class="checkbox-item"><input type="checkbox" name="VIVE CON EL ALUMNO T:" value="NO"><label>NO</label></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>¿ES TUTOR LEGAL?</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item"><input type="checkbox" name="ES TUTOR LEGAL T:" value="SI"><label>SÍ</label></div>
+                                    <div class="checkbox-item"><input type="checkbox" name="ES TUTOR LEGAL T:" value="NO"><label>NO</label></div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 style="margin: 20px 0 10px 0; color: #800000;">DIRECCIÓN</h3>
+                        <div class="form-row">
+                            <div class="form-group half"><label>PAÍS DE RESIDENCIA</label><input type="text" name="PAÍS DE RESIDENCIA T:" value="MÉXICO"></div>
+                            <div class="form-group half"><label>ENTIDAD</label><input type="text" name="ENTIDAD T:" value="PUEBLA"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>MUNICIPIO</label><input type="text" name="MUNICIPIO T:"></div>
+                            <div class="form-group half"><label>LOCALIDAD</label><input type="text" name="LOCALIDAD T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>CP</label><input type="text" name="CP T:"></div>
+                            <div class="form-group"><label>COLONIA</label><input type="text" name="COLONIA T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>CALLE</label><input type="text" name="CALLE T:"></div>
+                            <div class="form-group third"><label>NÚM. EXT.</label><input type="text" name="NÚM. EXT T:"></div>
+                            <div class="form-group third"><label>NÚM. INT.</label><input type="text" name="NÚM. INT T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>TEL. FIJO</label><input type="tel" name="TEL. FIJO T:"></div>
+                            <div class="form-group third"><label>TEL. CELULAR</label><input type="tel" name="TEL. CELULAR T:"></div>
+                            <div class="form-group third"><label>E-MAIL <span class="optional">(opcional)</span></label><input type="email" name="E-MAIL T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half"><label>OCUPACIÓN</label><input type="text" name="OCUPACIÓN T:"></div>
+                            <div class="form-group half"><label>HORARIO</label><input type="text" name="HORARIO T:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third"><label>TEL. TRABAJO</label><input type="tel" name="TEL. TRABAJO T:"></div>
+                            <div class="form-group third"><label>EXT.</label><input type="text" name="EXT T:"></div>
+                            <div class="form-group third"><label>E-MAIL TRABAJO <span class="optional">(opcional)</span></label><input type="email" name="E-MAIL TRABAJO T:"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DOCUMENTO PROBATORIO -->
+                <div class="section">
+                    <div class="section-header">DOCUMENTO PROBATORIO</div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group half"><label>ENTIDAD FED. REGISTRO</label><input type="text" name="ENTIDAD FED. REGISTRO:" value="PUEBLA"></div>
+                            <div class="form-group half"><label>MUNICIPIO DE REGISTRO</label><input type="text" name="MUNICIPIO DE REGISTRO:"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>AÑO REGISTRO</label><input type="text" name="AÑO DE REGISTRO"></div>
+                        </div>
+                        <div class="document-grid">
+                            <div class="document-option">
+                                <label><input type="checkbox" name="ACTA DE NACIMIENTO:" value="SI"> ACTA DE NACIMIENTO</label>
+                                <div class="form-group"><label>No. DE LIBRO</label><input type="text" name="No. DE LIBRO:"></div>
+                                <div class="form-group"><label>No. DE ACTA</label><input type="text" name="No. DE ACTA:"></div>
+                                <div class="form-group"><label>CRIP</label><input type="text" name="CRIP:"></div>
+                            </div>
+                            <div class="document-option">
+                                <label><input type="checkbox" name="DOCUMENTO MIGRATORIO" value="SI"> DOCUMENTO MIGRATORIO</label>
+                                <div class="form-group"><label>No. REGISTRO NACIONAL DE EXTRANJEROS</label><input type="text" name="No. REGISTRO NACIONAL DE EXTRANJEROS"></div>
+                            </div>
+                            <div class="document-option">
+                                <label><input type="checkbox" name="NATURALIZACIÓN SRE" value="SI"> DOCUMENTO DE NATURALIZACIÓN DE LA SRE</label>
+                                <div class="form-group"><label>FOLIO DE LA CARTA</label><input type="text" name="FOLIO DE LA CARTA"></div>
+                            </div>
+                            <div class="document-option">
+                                <label><input type="checkbox" name="FICHA SEÑALÉTICA" value="SI"> FICHA SEÑALÉTICA</label>
+                                <div class="form-group"><label>No. JUZGADO</label><input type="text" name="No. JUZGADO"></div>
+                                <div class="form-group"><label>FOLIO DE LA FICHA</label><input type="text" name="FOLIO DE LA FICHA"></div>
+                            </div>
+                            <div class="document-option">
+                                <label><input type="checkbox" name="NO ENTREGO DOCUMENTO" value="SI"> NO ENTREGÓ DOCUMENTO PROBATORIO</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- OBSERVACIONES -->
+                <div class="section">
+                    <div class="section-header">OBSERVACIONES</div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <textarea name="OBSERVACIONES:" rows="4" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; text-transform: uppercase;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DATOS DE LA ESCUELA -->
+                <div class="section">
+                    <div class="section-header">DATOS DE LA ESCUELA</div>
+                    <div class="section-content">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label class="required">NOMBRE ESCUELA</label>
+                                <input type="text" name="NOMBRE ESCUELA" id="nombreEscuela" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third">
+                                <label>CCT</label>
+                                <input type="text" name="CCT" id="cctEscuela">
+                            </div>
+                            <div class="form-group third">
+                                <label>TURNO</label>
+                                <input type="text" name="TURNO" id="turnoEscuela">
+                            </div>
+                            <div class="form-group third">
+                                <label>GRADO</label>
+                                <input type="text" name="GRADO">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group third">
+                                <label>GRUPO</label>
+                                <input type="text" name="GRUPO">
+                            </div>
+                            <div class="form-group third">
+                                <label>ZE</label>
+                                <input type="text" name="ZE" id="zeEscuela">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DE FIRMAS -->
+                <div class="signatures">
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">FIRMA DEL PADRE / TUTOR</div>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">FIRMA DEL ALUMNO(A)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contenedor de botones actualizado -->
+            <div class="btn-container" id="btnContainer">
+                <button type="button" class="btn-pdf" id="pdfBtn">DESCARGAR PDF</button>
+                <button type="submit" class="btn-submit" id="submitBtn">ENVIAR REGISTRO</button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqxayaOeZovUSusVp2AAmlIk841X9ErrWghkGhnzw3ssbJrZT57ehBcWluqDggeQkkNw/exec';
+        let formularioEnviado = false;
+        
+        // Convertir automáticamente a mayúsculas
+        document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+            input.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        });
+        
+        // Llenado dinámico al cargar
+        window.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('fechaActual').value = `${yyyy}-${mm}-${dd}`;
+            
+            const currentMonth = today.getMonth() + 1;
+            let startYear, endYear;
+            if (currentMonth >= 8) {
+                startYear = yyyy;
+                endYear = yyyy + 1;
+            } else {
+                startYear = yyyy - 1;
+                endYear = yyyy;
+            }
+            document.getElementById('cicloEscolar').value = `${startYear}-${endYear}`;
+            
+            document.getElementById('nombreEscuela').value = "PROFR. HONORATO TLASECA BARRERA";
+            document.getElementById('cctEscuela').value = "21EES0265J";
+            document.getElementById('turnoEscuela').value = "MATUTINO";
+            document.getElementById('zeEscuela').value = "020";
+        });
+        
+        // --- FUNCIÓN REUTILIZABLE PARA ENVIAR LOS DATOS ---
+        function enviarDatos(activadoPorPDF = false) {
+            if (formularioEnviado) {
+                if(!activadoPorPDF) {
+                    const alertBox = document.getElementById('alert');
+                    alertBox.className = 'alert alert-success';
+                    alertBox.textContent = '✓ LOS DATOS YA HABÍAN SIDO ENVIADOS EXITOSAMENTE';
+                    alertBox.style.display = 'block';
+                    setTimeout(() => { alertBox.style.display = 'none'; }, 6000);
+                }
+                return;
+            }
+
+            const form = document.getElementById('registrationForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const alertBox = document.getElementById('alert');
+            
+            if (!activadoPorPDF) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'ENVIANDO...';
+            }
+            
+            const formData = new FormData(form);
+            let data = Object.fromEntries(formData.entries());
+            
+            const camposDefaultNo = [
+                "VIVE CON EL ALUMNO P:", "ES EL TUTOR P:", "ES FINADO P:",
+                "VIVE CON EL ALUMNO M:", "ES EL TUTOR M:", "ES FINADO M:",
+                "VIVE CON EL ALUMNO T:", "ES TUTOR LEGAL T:"
+            ];
+            
+            camposDefaultNo.forEach(campo => {
+                if (data[campo] === undefined) {
+                    data[campo] = "NO";
+                }
+            });
+            
+            data.ID = data['NIA:'] || 'REG-' + Date.now().toString();
+            data['MARCA TEMPORAL'] = new Date().toLocaleString('es-MX');
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    formularioEnviado = true;
+                    alertBox.className = 'alert alert-success';
+                    alertBox.textContent = '✓ LOS DATOS HAN SIDO ENVIADOS EXITOSAMENTE';
+                    alertBox.style.display = 'block';
+                    
+                    if (!activadoPorPDF) {
+                        form.reset();
+                        window.dispatchEvent(new Event('DOMContentLoaded'));
+                    }
+                    setTimeout(() => { alertBox.style.display = 'none'; }, 6000);
+                } else {
+                    throw new Error(result.message || 'Error al guardar');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                formularioEnviado = false;
+                alertBox.className = 'alert alert-error';
+                alertBox.textContent = '✗ ERROR AL ENVIAR LOS DATOS. INTENTE NUEVAMENTE.';
+                alertBox.style.display = 'block';
+                setTimeout(() => { alertBox.style.display = 'none'; }, 6000);
+            })
+            .finally(() => {
+                if (!activadoPorPDF) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'ENVIAR REGISTRO';
+                }
+            });
+        }
+
+        // --- FUNCIÓN PARA GENERAR EL PDF (CON MARGEN SUPERIOR) ---
+        document.getElementById('pdfBtn').addEventListener('click', async function() {
+            const btnContainer = document.getElementById('btnContainer');
+            const alertBox = document.getElementById('alert');
+            const body = document.body;
+            const page1 = document.getElementById('pdfPage1');
+            const page2 = document.getElementById('pdfPage2');
+            const container = document.getElementById('formContainer');
+            
+            const originalDisplayBtn = btnContainer.style.display;
+            const originalDisplayAlert = alertBox.style.display;
+            btnContainer.style.display = 'none';
+            alertBox.style.display = 'none';
+            
+            body.classList.add('pdf-mode');
+
+            // Reemplazar inputs por divs
+            const formElements = container.querySelectorAll('input, textarea, select');
+            const replacedElements = []; 
+
+            formElements.forEach(el => {
+                if (el.type === 'submit' || el.type === 'button' || el.type === 'hidden') return;
+
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    if (el.checked) {
+                        el.setAttribute('checked', 'checked');
+                    } else {
+                        el.removeAttribute('checked');
+                    }
+                } else {
+                    let val = el.value || '';
+                    if (el.tagName === 'SELECT' && el.selectedIndex >= 0) {
+                        val = el.options[el.selectedIndex].text;
+                    }
+
+                    let div = document.createElement('div');
+                    div.className = 'pdf-replaced-input';
+                    if (el.tagName === 'TEXTAREA') {
+                        div.className += ' textarea-replaced';
+                    }
+                    div.innerText = val;
+
+                    el.style.display = 'none';
+                    el.parentNode.insertBefore(div, el.nextSibling);
+                    replacedElements.push({ original: el, replacement: div });
+                }
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            try {
+                // --- FORZAR LA ALTURA COMPLETA EN LA CAPTURA ---
+                const page1Height = page1.scrollHeight;
+                const page2Height = page2.scrollHeight;
+
+                const canvas1 = await window.html2canvas(page1, { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: '#ffffff',
+                    windowHeight: page1Height, 
+                    height: page1Height
+                });
+
+                const canvas2 = await window.html2canvas(page2, { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: '#ffffff',
+                    windowHeight: page2Height, 
+                    height: page2Height
+                });
+
+                // Restaurar interfaz
+                replacedElements.forEach(item => {
+                    item.replacement.remove();
+                    item.original.style.display = '';
+                });
+                btnContainer.style.display = originalDisplayBtn;
+                alertBox.style.display = originalDisplayAlert;
+                body.classList.remove('pdf-mode');
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'letter'); 
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                
+                const topMargin = 10; // 10 milímetros de espacio superior
+                const bottomMargin = 10; // 10 milímetros de espacio inferior
+                const maxHeight = pageHeight - topMargin - bottomMargin; // Altura útil disponible
+
+                // Función estricta para escalar la imagen y que quepa en la hoja con márgenes sin cortarse
+                function addCanvasToPdf(canvas, isFirstPage = false) {
+                    if (!isFirstPage) pdf.addPage();
+                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                    
+                    // Calcular dimensiones basadas en el ancho de la hoja
+                    let imgWidth = pageWidth;
+                    let imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                    // Si la altura excede la altura útil (con márgenes), reducir proporcionalmente
+                    if (imgHeight > maxHeight) {
+                        const ratio = maxHeight / imgHeight;
+                        imgWidth = imgWidth * ratio;
+                        imgHeight = maxHeight;
+                    }
+                    
+                    // Centrar horizontalmente
+                    const xOff = (pageWidth - imgWidth) / 2;
+                    // Aplicar margen superior (bajar la imagen 10mm)
+                    const yOff = topMargin;
+                    pdf.addImage(imgData, 'JPEG', xOff, yOff, imgWidth, imgHeight);
+                }
+
+                // Agregar página 1 (Encabezado, Alumno, Padre, Madre)
+                addCanvasToPdf(canvas1, true);
+                // Agregar página 2 (Encabezado, Tutor, Documentos, Escuela, Firmas)
+                addCanvasToPdf(canvas2, false);
+
+                pdf.save("Cedula_Registro_Alumno.pdf");
+
+                // Enviar los datos a Google Sheets
+                enviarDatos(true);
+
+            } catch(err) {
+                console.error("Error al generar el PDF:", err);
+                replacedElements.forEach(item => {
+                    item.replacement.remove();
+                    item.original.style.display = '';
+                });
+                btnContainer.style.display = originalDisplayBtn;
+                alertBox.style.display = originalDisplayAlert;
+                body.classList.remove('pdf-mode');
+                alert('Hubo un error al generar el PDF. Intente de nuevo.');
+            }
+        });
+
+        // --- EVENTO DEL BOTÓN SUBMIT NORMAL ---
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            enviarDatos(false);
+        });
+    </script>
+</body>
+</html>
