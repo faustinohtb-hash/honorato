@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumnos - Secundaria Profr. Honorato Tlaseca Barrera</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #0f2744 100%);
+            display: flex;
+            flex-direction: column;
+            color: #fff;
+            overflow-x: hidden;
+            padding-top: 110px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .header-text h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffd700;
+            letter-spacing: 1px;
+        }
+
+        .header-text p {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .date-info {
+            text-align: right;
+            font-size: 0.85rem;
+        }
+
+        .date-info strong {
+            color: #ffd700;
+            display: block;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .welcome-section {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .welcome-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .welcome-section .subtitle {
+            font-size: 1.15rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .divider {
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            margin: 25px auto;
+        }
+
+        .actions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 20px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.15), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .action-card:hover::before {
+            left: 100%;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            border-color: #ffd700;
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .card-icon {
+            width: 75px;
+            height: 75px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+            transition: transform 0.4s ease;
+        }
+
+        .action-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card-badge {
+            margin-top: auto;
+            padding: 8px 20px;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffd700;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover .card-badge {
+            background: #ffd700;
+            color: #1e3c72;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 40px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #fff;
+            transform: translateX(-5px);
+        }
+
+        .social-section {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            margin-top: auto;
+        }
+
+        .social-title {
+            font-family: 'Montserrat', sans-serif;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .facebook-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            background: rgba(24, 119, 242, 0.15);
+            border: 1px solid rgba(24, 119, 242, 0.5);
+            border-radius: 50px;
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .facebook-button svg {
+            width: 22px;
+            height: 22px;
+            fill: #1877F2;
+            transition: fill 0.3s ease;
+        }
+
+        .facebook-button:hover {
+            background: #1877F2;
+            border-color: #1877F2;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(24, 119, 242, 0.4);
+        }
+
+        .facebook-button:hover svg {
+            fill: #fff;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            text-align: center;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            .date-info { text-align: center; }
+            .welcome-section h2 { font-size: 2rem; }
+            .actions-container { grid-template-columns: 1fr; }
+            body { padding-top: 140px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header FIJO -->
+    <header>
+        <div class="logo-container">
+            <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela" class="logo">
+            <div class="header-text">
+                <h1>SECUNDARIA PROFR. HONORATO TLASECA BARRERA</h1>
+                <p>Portal del Estudiante</p>
+            </div>
+        </div>
+        <div class="date-info">
+            <strong id="fecha-actual">Cargando fecha...</strong>
+            <span id="ciclo-escolar">Ciclo Escolar ...</span>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main>
+        <div class="welcome-section">
+            <h2>¡Hola, Estudiante!</h2>
+            <p class="subtitle">"El éxito es la suma de pequeños esfuerzos repetidos cada día"</p>
+            <div class="divider"></div>
+            <p style="opacity: 0.9; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                Este es tu espacio digital. Aquí encontrarás todo lo que necesitas para organizar tu tiempo, 
+                mejorar tu aprendizaje y participar activamente en la vida escolar. ¡Aprovéchalo al máximo!
+            </p>
+        </div>
+
+        <!-- Tarjetas de Acciones -->
+        <div class="actions-container">
+            
+            <!-- 1. Rendimiento Académico -->
+            <a href="https://sisep.puebla.gob.mx/sicepconsulta/" target="_blank" rel="noopener noreferrer" class="action-card">
+                <div class="card-icon">📈</div>
+                <h3 class="card-title">Rendimiento Académico</h3>
+                <p class="card-description">
+                    Consulta tus calificaciones, promedios parciales y observaciones de tus profesores en el sistema oficial.
+                </p>
+                <span class="card-badge">Ver calificaciones →</span>
+            </a>
+
+            <!-- 2. Horarios de Clases (ENLACE PDF ACTUALIZADO) -->
+            <a href="https://faustinohtb-hash.github.io/honorato/HorariosA.pdf" target="_blank" rel="noopener noreferrer" class="action-card">
+                <div class="card-icon">🕒</div>
+                <h3 class="card-title">Horarios de Clases</h3>
+                <p class="card-description">
+                    Revisa tu horario semanal oficial, fechas de exámenes parciales y el calendario de evaluaciones del grupo.
+                </p>
+                <span class="card-badge">Ver horario PDF →</span>
+            </a>
+
+            <!-- 3. Recursos Educativos -->
+            <a href="https://libros.conaliteg.gob.mx/" target="_blank" rel="noopener noreferrer" class="action-card">
+                <div class="card-icon">💻</div>
+                <h3 class="card-title">Recursos Educativos</h3>
+                <p class="card-description">
+                    Accede a los Libros de Texto Gratuitos digitales, plataformas de aprendizaje y material de apoyo por materia.
+                </p>
+                <span class="card-badge">Ir a la biblioteca digital →</span>
+            </a>
+
+            <!-- 4. Actividades y Talleres -->
+            <a href="#actividades" class="action-card">
+                <div class="card-icon">🎨</div>
+                <h3 class="card-title">Actividades y Talleres</h3>
+                <p class="card-description">
+                    Infórmate sobre los clubes escolares, equipos deportivos, concursos y eventos culturales del plantel.
+                </p>
+                <span class="card-badge">Ver actividades →</span>
+            </a>
+
+        </div>
+
+        <!-- Botón de regreso -->
+        <a href="https://faustinohtb-hash.github.io/honorato/index.html" class="back-button">
+            ← Regresar a la página principal
+        </a>
+    </main>
+
+    <!-- Sección de Redes Sociales -->
+    <section class="social-section">
+        <p class="social-title">Mantente informado, síguenos en nuestras redes</p>
+        <a href="https://www.facebook.com/profile.php?id=100006990796985" target="_blank" rel="noopener noreferrer" class="facebook-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            <span>Visita nuestra página de Facebook</span>
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© <span id="year-footer"></span> Secundaria Profr. Honorato Tlaseca Barrera | Todos los derechos reservados</p>
+    </footer>
+
+    <!-- Script para fechas dinámicas -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            
+            const startYear = month >= 7 ? year : year - 1;
+            const endYear = startYear + 1;
+            
+            document.getElementById('ciclo-escolar').textContent = `Ciclo Escolar ${startYear}-${endYear}`;
+
+            const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let fechaFormateada = now.toLocaleDateString('es-MX', opcionesFecha);
+            document.getElementById('fecha-actual').textContent = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+
+            document.getElementById('year-footer').textContent = year;
+        });
+    </script>
+</body>
+</html>
