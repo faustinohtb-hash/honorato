@@ -6,8 +6,8 @@
     <title>Secundaria Profr. Honorato Tlaseca Barrera</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <!-- ESTILOS DEL CHATBOT N8N -->
-    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <!-- ESTILOS DEL CHATBOT N8N CON TIMESTAMP -->
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css?v=2" rel="stylesheet" />
     
     <style>
         * {
@@ -756,17 +756,17 @@
     </script>
 
     <!-- ========================================== -->
-    <!-- CHATBOT N8N INTEGRADO Y PERSONALIZADO -->
+    <!-- CHATBOT N8N INTEGRADO CON TIMESTAMP v=2 -->
     <!-- ========================================== -->
     <script type="module">
-        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js?v=2';
 
         createChat({
             webhookUrl: 'https://n8n.honoratotb.uk/webhook/48472c48-4fc0-4572-bb0d-4fe91ec635ad/chat',
             mode: 'window',
             initialMessages: [
                 '¡Hola! 👋 Soy el asistente virtual de la **Secundaria Profr. Honorato Tlaseca Barrera**.',
-                '¿En qué puedo orientarte hoy? Puedes preguntarme sobre:\n• 📅 Horarios de clases\n• 📝 Proceso de inscripción\n• 📊 Consulta de calificaciones\n• 📜 Reglamento escolar'
+                '¿En qué puedo orientarte hoy? Puedes preguntarme sobre:\n• 📅 Horarios de clases\n•  Proceso de inscripción\n• 📊 Consulta de calificaciones\n• 📜 Reglamento escolar'
             ],
             showWelcomeScreen: true,
             welcomeScreen: {
