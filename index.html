@@ -619,7 +619,7 @@
 
             <!-- Botón Padres o Tutores -->
             <a href="https://faustinohtb-hash.github.io/honorato/padres.html" class="access-button">
-                <div class="button-icon">👨👩‍👧</div>
+                <div class="button-icon">👨👩👧</div>
                 <div class="button-title">Padres o Tutores</div>
                 <div class="button-description">
                     Consulta el progreso académico, comunicados y eventos escolares
@@ -629,7 +629,7 @@
 
             <!-- Botón Docentes (Con protección) -->
             <a href="#" class="access-button" onclick="openDocenteModal(event)">
-                <div class="button-icon">👨‍</div>
+                <div class="button-icon">👨‍🏫</div>
                 <div class="button-title">Docentes</div>
                 <div class="button-description">
                     Gestiona grupos, calificaciones, planeaciones y materiales
@@ -659,7 +659,7 @@
     <div id="docenteModal" class="modal-overlay">
         <div class="modal-content" id="modalContent">
             <div class="modal-header">
-                <h3>🔒 Acceso Restringido</h3>
+                <h3> Acceso Restringido</h3>
                 <button class="close-modal" onclick="closeDocenteModal()">×</button>
             </div>
             <div class="modal-body">
@@ -770,16 +770,28 @@
             ],
             showWelcomeScreen: true,
             welcomeScreen: {
-                title: 'Asistente Virtual',
-                subtitle: 'Secundaria Profr. Honorato Tlaseca Barrera',
+                title: '¡Bienvenido!',
+                subtitle: 'Asistente Virtual - Secundaria Profr. Honorato Tlaseca Barrera',
                 getStarted: 'Iniciar conversación'
             },
             i18n: {
+                // Traducción completa al español
                 title: 'Asistente Virtual',
                 subtitle: 'Secundaria Profr. Honorato Tlaseca Barrera',
                 footer: 'Tecnología educativa',
                 getStarted: 'Iniciar conversación',
-                inputPlaceholder: 'Escribe tu pregunta aquí...'
+                inputPlaceholder: 'Escribe tu pregunta aquí...',
+                poweredBy: 'Desarrollado por',
+                // Mensajes de bienvenida
+                welcomeScreenTitle: '¡Hola! 👋',
+                welcomeScreenSubtitle: 'Estamos aquí para ayudarte 24/7',
+                // Otros textos
+                newChat: 'Nueva conversación',
+                chatHistory: 'Historial de chat',
+                settings: 'Configuración',
+                close: 'Cerrar',
+                send: 'Enviar',
+                typing: 'Escribiendo...'
             },
             style: {
                 width: 380,
