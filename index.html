@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Secundaria Profr. Honorato Tlaseca Barrera</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- ESTILOS DEL CHATBOT N8N -->
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    
     <style>
         * {
             margin: 0;
@@ -507,7 +511,7 @@
             box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
         }
 
-        /* Tablet */
+        /* Tablet y Desktop */
         @media (min-width: 768px) {
             body {
                 padding-top: 110px;
@@ -535,7 +539,7 @@
             }
             
             .welcome-section h2 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             .info-cards {
@@ -552,17 +556,6 @@
             .access-button {
                 min-width: 250px;
                 max-width: 320px;
-            }
-        }
-
-        /* Desktop */
-        @media (min-width: 1024px) {
-            .welcome-section h2 {
-                font-size: 3rem;
-            }
-            
-            .info-cards {
-                max-width: 900px;
             }
         }
     </style>
@@ -616,7 +609,7 @@
         <div class="buttons-container">
             <!-- Botón Alumnos -->
             <a href="https://faustinohtb-hash.github.io/honorato/estudiante.html" class="access-button">
-                <div class="button-icon">👨</div>
+                <div class="button-icon">👨🎓</div>
                 <div class="button-title">Alumnos</div>
                 <div class="button-description">
                     Accede a tus calificaciones, tareas, horarios y recursos educativos
@@ -666,7 +659,7 @@
     <div id="docenteModal" class="modal-overlay">
         <div class="modal-content" id="modalContent">
             <div class="modal-header">
-                <h3> Acceso Restringido</h3>
+                <h3>🔒 Acceso Restringido</h3>
                 <button class="close-modal" onclick="closeDocenteModal()">×</button>
             </div>
             <div class="modal-body">
@@ -758,6 +751,67 @@
         document.getElementById('docenteModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeDocenteModal();
+            }
+        });
+    </script>
+
+    <!-- ========================================== -->
+    <!-- CHATBOT N8N INTEGRADO Y PERSONALIZADO -->
+    <!-- ========================================== -->
+    <script type="module">
+        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+        createChat({
+            webhookUrl: 'https://n8n.honoratotb.uk/webhook/48472c48-4fc0-4572-bb0d-4fe91ec635ad/chat',
+            mode: 'window',
+            initialMessages: [
+                '¡Hola! 👋 Soy el asistente virtual de la **Secundaria Profr. Honorato Tlaseca Barrera**.',
+                '¿En qué puedo orientarte hoy? Puedes preguntarme sobre:\n• 📅 Horarios de clases\n• 📝 Proceso de inscripción\n• 📊 Consulta de calificaciones\n• 📜 Reglamento escolar'
+            ],
+            showWelcomeScreen: true,
+            welcomeScreen: {
+                title: 'Asistente Virtual',
+                subtitle: 'Secundaria Profr. Honorato Tlaseca Barrera',
+                getStarted: 'Iniciar conversación'
+            },
+            i18n: {
+                title: 'Asistente Virtual',
+                subtitle: 'Secundaria Profr. Honorato Tlaseca Barrera',
+                footer: 'Tecnología educativa',
+                getStarted: 'Iniciar conversación',
+                inputPlaceholder: 'Escribe tu pregunta aquí...'
+            },
+            style: {
+                width: 380,
+                height: 550,
+                backgroundColor: '#ffffff',
+                fontFamily: 'Poppins, sans-serif',
+                chatWindow: {
+                    backgroundColor: '#f4f6f9',
+                    borderRadius: '16px',
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.25)'
+                },
+                header: {
+                    backgroundColor: '#1e3c72', // Azul marino institucional
+                    color: '#ffd700'            // Dorado institucional
+                },
+                button: {
+                    backgroundColor: '#1e3c72',
+                    color: '#ffd700',
+                    borderRadius: '50%',
+                    boxShadow: '0 4px 15px rgba(30, 60, 114, 0.5)'
+                },
+                userMessage: {
+                    backgroundColor: '#1e3c72',
+                    color: '#ffffff',
+                    borderRadius: '16px 16px 4px 16px'
+                },
+                botMessage: {
+                    backgroundColor: '#ffffff',
+                    color: '#1e3c72',
+                    borderRadius: '16px 16px 16px 4px',
+                    border: '1px solid rgba(30, 60, 114, 0.1)'
+                }
             }
         });
     </script>
