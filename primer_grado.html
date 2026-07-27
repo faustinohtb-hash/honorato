@@ -240,6 +240,37 @@
             margin: 5px 0;
         }
 
+        .carta-asignacion-section {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .btn-carta-asignacion {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .btn-carta-asignacion:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+            border-color: #fff;
+        }
+
+        .btn-carta-asignacion .icono {
+            font-size: 1.5em;
+        }
+
         .botones-container {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
@@ -387,6 +418,11 @@
             .botones-grid { grid-template-columns: 1fr; }
             .fecha-inscripcion h3 { font-size: 1.4em; }
             .fecha-inscripcion p { font-size: 1.1em; }
+            .btn-carta-asignacion { 
+                font-size: 1.1em; 
+                padding: 15px 30px;
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -573,11 +609,18 @@
                 <p>LUNES 24 DE AGOSTO</p>
                 <p>DE 8:00 A 12:00 HRS.</p>
             </div>
+
+            <div class="carta-asignacion-section">
+                <a href="http://inscripcion.dsps-puebla.com/sicepInscripciones/consulta" class="btn-carta-asignacion" target="_blank">
+                    <span class="icono">📄</span>
+                    <span>Descarga tu Carta de Asignación</span>
+                </a>
+            </div>
         </div>
 
         <div class="botones-container">
             <div class="botones-titulo">
-                <h3>📄 Documentos en Línea</h3>
+                <h3> Documentos en Línea</h3>
                 <p>Accede a los formularios digitales para completar tu inscripción</p>
             </div>
 
@@ -585,13 +628,13 @@
                 <a href="https://faustinohtb-hash.github.io/honorato/Cedula_Registro.html" class="btn-documento">
                     <div class="icono">📝</div>
                     <h4>Cédula de Registro y Actualización de datos</h4>
-                    <p>Formulario digital para registrar y actualizar información del alumno<br><strong> Llenar y Descargar</strong></p>
+                    <p>Formulario digital para registrar y actualizar información del alumno<br><strong>📥 Llenar y Descargar</strong></p>
                 </a>
 
                 <a href="https://faustinohtb-hash.github.io/honorato/Directorio.html" class="btn-documento">
                     <div class="icono">📞</div>
                     <h4>Directorio del Estudiante</h4>
-                    <p>Registro de contactos de emergencia y familiares del alumno<br><strong>📥 Llenar y Descargar</strong></p>
+                    <p>Registro de contactos de emergencia y familiares del alumno<br><strong> Llenar y Descargar</strong></p>
                 </a>
 
                 <a href="https://faustinohtb-hash.github.io/honorato/Pinscripcion.html" class="btn-documento">
