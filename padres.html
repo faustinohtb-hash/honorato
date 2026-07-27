@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Padres de Familia - Secundaria Profr. Honorato Tlaseca Barrera</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -20,7 +20,8 @@
             flex-direction: column;
             color: #fff;
             overflow-x: hidden;
-            padding-top: 110px; /* Espacio para el header fijo */
+            padding-top: 140px;
+            -webkit-font-smoothing: antialiased;
         }
 
         body::before {
@@ -37,7 +38,6 @@
             z-index: 0;
         }
 
-        /* HEADER FIJO - MODIFICADO */
         header {
             position: fixed;
             top: 0;
@@ -45,7 +45,8 @@
             width: 100%;
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
-            padding: 15px 30px;
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -57,40 +58,43 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .logo {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             object-fit: contain;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.9);
-            padding: 5px;
+            padding: 3px;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
         }
 
         .header-text h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #ffd700;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
         }
 
         .header-text p {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             opacity: 0.85;
+            line-height: 1.2;
         }
 
         .date-info {
             text-align: right;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
         }
 
         .date-info strong {
             color: #ffd700;
             display: block;
+            font-size: 0.75rem;
         }
 
         main {
@@ -99,7 +103,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 20px 15px;
             position: relative;
             z-index: 5;
         }
@@ -107,13 +111,13 @@
         .welcome-section {
             text-align: center;
             max-width: 900px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             animation: fadeInUp 1s ease-out;
         }
 
         .welcome-section h2 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             font-weight: 900;
             margin-bottom: 15px;
             background: linear-gradient(135deg, #ffffff 0%, #ffd700 100%);
@@ -124,7 +128,7 @@
         }
 
         .welcome-section .subtitle {
-            font-size: 1.15rem;
+            font-size: 1rem;
             font-weight: 300;
             opacity: 0.9;
             margin-bottom: 10px;
@@ -132,28 +136,29 @@
         }
 
         .divider {
-            width: 120px;
+            width: 80px;
             height: 3px;
             background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            margin: 25px auto;
+            margin: 15px auto;
         }
 
         .actions-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
+            gap: 25px;
             width: 100%;
             max-width: 1100px;
-            padding: 0 20px;
+            padding: 0 15px;
             animation: fadeInUp 1.2s ease-out;
         }
 
         .action-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 215, 0, 0.3);
             border-radius: 20px;
-            padding: 35px 25px;
+            padding: 30px 20px;
             text-align: center;
             text-decoration: none;
             color: #fff;
@@ -188,15 +193,15 @@
         }
 
         .card-icon {
-            width: 75px;
-            height: 75px;
-            margin-bottom: 20px;
+            width: 70px;
+            height: 70px;
+            margin-bottom: 15px;
             background: linear-gradient(135deg, #ffd700, #ffaa00);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 2rem;
             box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
             transition: transform 0.4s ease;
         }
@@ -207,22 +212,22 @@
 
         .card-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: #ffd700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .card-description {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             opacity: 0.85;
-            line-height: 1.5;
+            line-height: 1.4;
             margin-bottom: 20px;
         }
 
         .card-badge {
             margin-top: auto;
-            padding: 8px 20px;
+            padding: 8px 18px;
             background: rgba(255, 215, 0, 0.15);
             border: 1px solid rgba(255, 215, 0, 0.4);
             border-radius: 50px;
@@ -260,7 +265,7 @@
 
         .social-section {
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px 15px;
             background: rgba(0, 0, 0, 0.2);
             border-top: 1px solid rgba(255, 215, 0, 0.1);
             margin-top: auto;
@@ -269,16 +274,16 @@
         .social-title {
             font-family: 'Montserrat', sans-serif;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 1rem;
-            margin-bottom: 15px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
             letter-spacing: 0.5px;
         }
 
         .facebook-button {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 28px;
+            gap: 10px;
+            padding: 12px 20px;
             background: rgba(24, 119, 242, 0.15);
             border: 1px solid rgba(24, 119, 242, 0.5);
             border-radius: 50px;
@@ -286,13 +291,13 @@
             text-decoration: none;
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
 
         .facebook-button svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             fill: #1877F2;
             transition: fill 0.3s ease;
         }
@@ -310,14 +315,15 @@
 
         footer {
             background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
+            padding: 12px 15px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             border-top: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         footer p {
             opacity: 0.8;
+            line-height: 1.3;
         }
 
         @keyframes fadeInUp {
@@ -325,17 +331,41 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-                padding: 15px 20px;
+        /* Tablet y Desktop */
+        @media (min-width: 768px) {
+            body {
+                padding-top: 110px;
             }
-            .date-info { text-align: center; }
-            .welcome-section h2 { font-size: 2rem; }
-            .actions-container { grid-template-columns: 1fr; }
-            body { padding-top: 140px; /* Más espacio en móviles por el header más alto */ }
+            
+            header {
+                padding: 15px 30px;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .header-text h1 {
+                font-size: 1.1rem;
+            }
+            
+            .header-text p {
+                font-size: 0.75rem;
+            }
+            
+            .date-info {
+                font-size: 0.85rem;
+            }
+            
+            .welcome-section h2 {
+                font-size: 2.5rem;
+            }
+            
+            .actions-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                max-width: 1200px;
+            }
         }
     </style>
 </head>
@@ -400,7 +430,17 @@
                 <span class="card-badge">Solicitar permiso →</span>
             </a>
 
-            <!-- 4. Inscripción -->
+            <!-- 4. Calendario Escolar (NUEVO) -->
+            <a href="https://calendarioescolar.sep.gob.mx" target="_blank" rel="noopener noreferrer" class="action-card">
+                <div class="card-icon">📅</div>
+                <h3 class="card-title">Calendario Escolar</h3>
+                <p class="card-description">
+                    Consulta el calendario oficial de la SEP con fechas importantes, días festivos, periodos de vacaciones y suspensiones de clases.
+                </p>
+                <span class="card-badge">Ver calendario →</span>
+            </a>
+
+            <!-- 5. Inscripción -->
             <a href="https://faustinohtb-hash.github.io/honorato/Pinscripcion.html" target="_blank" rel="noopener noreferrer" class="action-card">
                 <div class="card-icon">📝</div>
                 <h3 class="card-title">Proceso de Inscripción</h3>
