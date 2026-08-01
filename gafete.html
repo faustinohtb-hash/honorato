@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de QR - Escuela Secundaria Profr. Honorato Tlaseca Barrera</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #2980b9;
+            --bg-color: #f4f6f7;
+            --text-color: #2c3e50;
+            --puebla-red: #C8102E;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        .school-logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        h1 { color: var(--primary-color); font-size: 1.4rem; margin-bottom: 0.5rem; line-height: 1.3; }
+        h2 { font-size: 1rem; color: #7f8c8d; margin-top: 0; margin-bottom: 1.5rem; font-weight: normal; }
+        .form-group { margin-bottom: 1rem; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--primary-color); }
+        select {
+            width: 100%; padding: 10px; border: 2px solid #bdc3c7; border-radius: 6px;
+            font-size: 1rem; background-color: white; transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        select:focus { outline: none; border-color: var(--secondary-color); }
+        select:disabled { background-color: #ecf0f1; cursor: not-allowed; }
+        
+        #qr-container { 
+            margin-top: 2rem; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 250px;
+        }
+        #qrcode { 
+            padding: 15px; 
+            background: white; 
+            border: 2px dashed #bdc3c7; 
+            border-radius: 8px; 
+            display: none; 
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        #qrcode img, #qrcode canvas { display: block; margin: 0 auto; }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .download-btn { 
+            background-color: #27ae60; 
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none; 
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover { background-color: #2ecc71; }
+        
+        .gafete-btn {
+            background-color: var(--puebla-red);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none; 
+            width: 100%;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        .gafete-btn:hover { background-color: #a00d24; }
+        .gafete-btn:disabled { background-color: #e74c3c; cursor: wait; opacity: 0.7; }
+        
+        .loading { color: var(--secondary-color); font-style: italic; }
+        .success { color: #27ae60; font-weight: bold; }
+        .error { color: #e74c3c; font-weight: bold; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela Secundaria Profr. Honorato Tlaseca Barrera" class="school-logo">
+        
+        <h1>Escuela Secundaria<br>Profr. Honorato Tlaseca Barrera</h1>
+        <h2>Generador de Código QR de Alumno</h2>
+
+        <div id="status-message" class="loading">Cargando datos de los alumnos...</div>
+
+        <div class="form-group">
+            <label for="grado">Grado:</label>
+            <select id="grado" disabled>
+                <option value="">Selecciona un grado</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="grupo">Grupo:</label>
+            <select id="grupo" disabled>
+                <option value="">Primero selecciona un grado</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="nombre">Nombre del Alumno:</label>
+            <select id="nombre" disabled>
+                <option value="">Primero selecciona un grupo</option>
+            </select>
+        </div>
+
+        <div id="qr-container">
+            <div id="qrcode"></div>
+            <div class="action-buttons">
+                <button id="descargarQrBtn" class="download-btn">📥 Descargar QR en PNG</button>
+                <button id="descargarGafeteBtn" class="gafete-btn">📄 Descargar Gafete en PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQ4XfTgp-qhfi_1BSUW_c6JmXDoAmr9W0y915QT977BhN6ZzU5IL7gxsDLriE8Egbv/exec";
+        let allStudents = [];
+
+        const clean = (val) => String(val).trim();
+
+        async function loadData() {
+            const statusMsg = document.getElementById('status-message');
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error("Error en la red");
+                
+                allStudents = await response.json();
+                
+                if (allStudents.length === 0) {
+                    throw new Error("La hoja de cálculo está vacía o no devuelve datos");
+                }
+
+                statusMsg.textContent = `✅ Datos cargados: ${allStudents.length} alumnos.`;
+                statusMsg.className = "success";
+                populateGrados();
+            } catch (error) {
+                console.error("Error cargando datos:", error);
+                statusMsg.textContent = "❌ Error al cargar los datos. Verifica la URL y los permisos del script.";
+                statusMsg.className = "error";
+            }
+        }
+
+        function populateGrados() {
+            const grados = [...new Set(allStudents.map(s => clean(s.grado)))].filter(Boolean).sort();
+            const gradoSelect = document.getElementById('grado');
+            
+            gradoSelect.innerHTML = '<option value="">Selecciona un grado</option>';
+            grados.forEach(g => {
+                gradoSelect.innerHTML += `<option value="${g}">${g}</option>`;
+            });
+            gradoSelect.disabled = false;
+        }
+
+        document.getElementById('grado').addEventListener('change', function() {
+            const selectedGrado = clean(this.value);
+            const grupoSelect = document.getElementById('grupo');
+            const nombreSelect = document.getElementById('nombre');
+            
+            grupoSelect.innerHTML = '<option value="">Selecciona un grupo</option>';
+            nombreSelect.innerHTML = '<option value="">Primero selecciona un grupo</option>';
+            nombreSelect.disabled = true;
+            hideElements();
+
+            if (selectedGrado) {
+                const grupos = [...new Set(
+                    allStudents
+                        .filter(s => clean(s.grado) === selectedGrado)
+                        .map(s => clean(s.grupo))
+                )].filter(Boolean).sort();
+                
+                if (grupos.length === 0) {
+                    grupoSelect.innerHTML = '<option value="">No hay grupos para este grado</option>';
+                } else {
+                    grupos.forEach(g => {
+                        grupoSelect.innerHTML += `<option value="${g}">${g}</option>`;
+                    });
+                }
+                grupoSelect.disabled = false;
+            } else {
+                grupoSelect.disabled = true;
+            }
+        });
+
+        document.getElementById('grupo').addEventListener('change', function() {
+            const selectedGrado = clean(document.getElementById('grado').value);
+            const selectedGrupo = clean(this.value);
+            const nombreSelect = document.getElementById('nombre');
+            
+            nombreSelect.innerHTML = '<option value="">Selecciona un nombre</option>';
+            hideElements();
+
+            if (selectedGrado && selectedGrupo) {
+                const nombres = allStudents
+                    .filter(s => clean(s.grado) === selectedGrado && clean(s.grupo) === selectedGrupo)
+                    .map(s => clean(s.nombre))
+                    .filter(Boolean)
+                    .sort();
+                
+                if (nombres.length === 0) {
+                    nombreSelect.innerHTML = '<option value="">No hay alumnos en este grupo</option>';
+                } else {
+                    nombres.forEach(n => {
+                        nombreSelect.innerHTML += `<option value="${n}">${n}</option>`;
+                    });
+                }
+                nombreSelect.disabled = false;
+            } else {
+                nombreSelect.disabled = true;
+            }
+        });
+
+        document.getElementById('nombre').addEventListener('change', function() {
+            if (this.value) {
+                generateQR();
+            } else {
+                hideElements();
+            }
+        });
+
+        function generateQR() {
+            const grado = clean(document.getElementById('grado').value);
+            const grupo = clean(document.getElementById('grupo').value);
+            const nombre = clean(document.getElementById('nombre').value);
+
+            if (!grado || !grupo || !nombre) {
+                hideElements();
+                return;
+            }
+
+            const student = allStudents.find(s => clean(s.grado) === grado && clean(s.grupo) === grupo && clean(s.nombre) === nombre);
+            
+            if (student && student.matricula_id) {
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = ""; 
+                
+                new QRCode(qrContainer, {
+                    text: String(student.matricula_id).trim(),
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                qrContainer.style.display = 'block';
+                
+                document.getElementById('descargarQrBtn').style.display = 'block';
+                document.getElementById('descargarGafeteBtn').style.display = 'block';
+                
+                const cleanMatricula = String(student.matricula_id).trim();
+                const cleanNombre = nombre.replace(/\s+/g, '_');
+                
+                document.getElementById('descargarQrBtn').dataset.filename = `QR_${cleanMatricula}_${cleanNombre}`;
+                
+                // Guardamos los valores exactos para el PDF
+                document.getElementById('descargarGafeteBtn').dataset.nombre = nombre;
+                document.getElementById('descargarGafeteBtn').dataset.grado = grado;
+                document.getElementById('descargarGafeteBtn').dataset.grupo = grupo;
+                
+            } else {
+                alert("No se encontró el ID de matrícula (matricula_id) para este alumno.");
+                hideElements();
+            }
+        }
+
+        document.getElementById('descargarQrBtn').addEventListener('click', function() {
+            const qrCanvas = document.querySelector('#qrcode canvas');
+            const qrImage = document.querySelector('#qrcode img');
+            let dataUrl = '';
+            
+            if (qrCanvas) {
+                dataUrl = qrCanvas.toDataURL("image/png");
+            } else if (qrImage && qrImage.src.startsWith('data:')) {
+                dataUrl = qrImage.src;
+            }
+
+            if (dataUrl) {
+                const link = document.createElement('a');
+                link.download = this.dataset.filename + '.png';
+                link.href = dataUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert("Error al generar la imagen para descarga.");
+            }
+        });
+
+        // Descargar Gafete en PDF (FORZANDO DESCARGA DIRECTA CON FETCH)
+        document.getElementById('descargarGafeteBtn').addEventListener('click', async function() {
+            const nombre = this.dataset.nombre;
+            const grado = this.dataset.grado;
+            const grupo = this.dataset.grupo;
+            
+            if (!nombre || !grado || !grupo) {
+                alert("Por favor, selecciona un alumno primero.");
+                return;
+            }
+
+            // 1. Construcción exacta del nombre del archivo
+            const filename = `Gafete ${nombre} ${grado} ${grupo}°.pdf`;
+            
+            // 2. URL RAW de GitHub (sirve el archivo directamente, no la página web de GitHub)
+            const baseUrl = "https://raw.githubusercontent.com/faustinohtb-hash/honorato/main/gafetes/";
+            const url = baseUrl + encodeURI(filename);
+            
+            const btn = this;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "⏳ Descargando gafete...";
+
+            try {
+                // Fetch obtiene el archivo como datos binarios (blob) para forzar la descarga
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Archivo no encontrado (404)");
+                
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                
+                // Crear enlace temporal para descargar el blob
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename; // Nombre con el que se guardará en tu dispositivo
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Liberar memoria del navegador
+                window.URL.revokeObjectURL(blobUrl);
+                
+            } catch (error) {
+                console.error("Error al descargar:", error);
+                alert("No se pudo descargar el gafete. Verifica que el archivo exista en la carpeta 'gafetes' del repositorio con este nombre exacto:\n\n" + filename);
+                
+                // Fallback: si falla la descarga directa, abrir en nueva pestaña
+                window.open(url, '_blank');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        function hideElements() {
+            document.getElementById('qrcode').style.display = 'none';
+            document.getElementById('qrcode').innerHTML = '';
+            document.getElementById('descargarQrBtn').style.display = 'none';
+            document.getElementById('descargarGafeteBtn').style.display = 'none';
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
