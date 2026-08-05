@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Docente - Gestión y Análisis</title>
+<style>
+  :root {
+    --primary: #6366f1; --primary-dark: #4f46e5; --secondary: #8b5cf6;
+    --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+    --bg-light: #f9fafb; --bg-gray: #f3f4f6; --border: #e5e7eb;
+    --text: #1f2937; --text-light: #6b7280; --white: #ffffff;
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+    --radius: 10px; --transition: all 0.3s ease;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-light); color: var(--text);
+    line-height: 1.6; min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white; padding: 20px; box-shadow: var(--shadow);
+  }
+  .header-content { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .logo-container {
+    flex-shrink: 0; background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-radius: 50%; padding: 10px; width: 90px; height: 90px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 3px solid rgba(255,255,255,0.3); transition: var(--transition);
+  }
+  .logo-container:hover { transform: scale(1.05) rotate(2deg); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+  .logo-container img { max-width: 100%; max-height: 100%; border-radius: 50%; object-fit: cover; }
+  .logo-placeholder { font-size: 2.5rem; line-height: 1; }
+  .header-text { flex: 1; min-width: 250px; }
+  .header-text h1 { font-size: clamp(1.2rem,3vw,1.8rem); margin-bottom: 5px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .header-text p { opacity: 0.9; font-size: 0.9rem; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.3); }
+  .header-info { display: flex; gap: 15px; margin-top: 8px; flex-wrap: wrap; font-size: 0.85rem; }
+  .header-info-item { display: flex; align-items: center; gap: 5px; opacity: 0.9; }
+  .container { max-width: 1500px; margin: 0 auto; padding: 20px; }
+  .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border); flex-wrap: wrap; }
+  .tab { padding: 12px 24px; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 1rem; font-weight: 600; color: var(--text-light); transition: var(--transition); }
+  .tab:hover { color: var(--primary); }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .module { display: none; animation: fadeIn 0.4s ease; }
+  .module.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .panel { background: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .panel h2 { color: var(--primary-dark); margin-bottom: 15px; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+  .panel h3 { color: var(--text); margin: 15px 0 10px; font-size: 1.1rem; }
+  .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin-bottom: 20px; }
+  .filter-group label { display: block; font-size: 0.85rem; color: var(--text-light); margin-bottom: 4px; font-weight: 600; }
+  select, input[type="text"], input[type="number"], textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.95rem; background: var(--white); transition: var(--transition); font-family: inherit; }
+  textarea { resize: vertical; min-height: 80px; }
+  select:focus, input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 18px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); white-space: nowrap; }
+  .btn:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+  .btn-secondary { background: var(--text-light); }
+  .btn-secondary:hover:not(:disabled) { background: #4b5563; }
+  .btn-success { background: var(--success); }
+  .btn-success:hover:not(:disabled) { background: #059669; }
+  .btn-danger { background: var(--danger); }
+  .btn-danger:hover:not(:disabled) { background: #dc2626; }
+  .btn-warning { background: var(--warning); }
+  .btn-info { background: var(--info); }
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .download-panel { background: linear-gradient(135deg,#f0f9ff 0%,#e0e7ff 100%); border: 2px solid #c7d2fe; border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+  .download-panel h3 { color: var(--primary-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+  .download-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 15px; margin-bottom: 15px; }
+  .download-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 15px; transition: var(--transition); }
+  .download-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .download-card h4 { color: var(--text); margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
+  .download-card p { color: var(--text-light); font-size: 0.85rem; margin-bottom: 12px; }
+  .download-options { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .download-options select { flex: 1; min-width: 120px; }
+  .download-btn { width: 100%; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 15px; margin-bottom: 20px; }
+  .stat-card { background: linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%); color: white; padding: 18px; border-radius: var(--radius); box-shadow: var(--shadow); }
+  .stat-card.green { background: linear-gradient(135deg,var(--success),#059669); }
+  .stat-card.orange { background: linear-gradient(135deg,var(--warning),#d97706); }
+  .stat-card.red { background: linear-gradient(135deg,var(--danger),#dc2626); }
+  .stat-card.blue { background: linear-gradient(135deg,var(--info),#1d4ed8); }
+  .stat-label { font-size: 0.85rem; opacity: 0.9; margin-bottom: 5px; }
+  .stat-value { font-size: 1.8rem; font-weight: 800; }
+  .questions-container { display: grid; grid-template-columns: repeat(auto-fill,minmax(400px,1fr)); gap: 15px; }
+  .question-card { background: var(--white); border: 2px solid var(--border); border-left: 5px solid var(--success); border-radius: var(--radius); padding: 15px; transition: var(--transition); position: relative; }
+  .question-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .question-card.inactive { border-left-color: var(--danger); opacity: 0.7; background: #fafafa; }
+  .question-card.inactive .question-text { text-decoration: line-through; color: var(--text-light); }
+  .question-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 10px; flex-wrap: wrap; }
+  .question-id { font-family: monospace; font-size: 0.8rem; color: var(--text-light); background: var(--bg-gray); padding: 3px 8px; border-radius: 4px; }
+  .question-text { font-size: 1rem; margin-bottom: 12px; color: var(--text); font-weight: 500; line-height: 1.5; }
+  .options-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; font-size: 0.85rem; }
+  .option-mini { padding: 6px 10px; background: var(--bg-gray); border-radius: 6px; display: flex; gap: 6px; align-items: flex-start; }
+  .option-mini.correct { background: #d1fae5; color: #065f46; font-weight: 600; border-left: 3px solid var(--success); }
+  .option-letter { background: white; color: var(--primary); width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+  .option-mini.correct .option-letter { background: var(--success); color: white; }
+  .badges-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+  .badge { padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+  .badge-disciplina { background: #e0e7ff; color: var(--primary-dark); }
+  .badge-grado { background: #ddd6fe; color: var(--secondary); }
+  .badge-area { background: #fce7f3; color: #9f1239; }
+  .badge-tema { background: #e0f2fe; color: #075985; }
+  .badge-diff-basica { background: #d1fae5; color: #065f46; }
+  .badge-diff-media { background: #fef3c7; color: #92400e; }
+  .badge-diff-reto { background: #fee2e2; color: #991b1b; }
+  .question-actions { display: flex; gap: 8px; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .switch-container { display: flex; align-items: center; gap: 8px; }
+  .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 26px; }
+  .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+  input:checked + .slider { background-color: var(--success); }
+  input:checked + .slider:before { transform: translateX(22px); }
+  .switch-label { font-size: 0.85rem; font-weight: 600; }
+  .switch-label.active { color: var(--success); }
+  .switch-label.inactive { color: var(--danger); }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+  th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg-gray); font-weight: 600; position: sticky; top: 0; }
+  tr:hover { background: var(--bg-light); }
+  .table-container { overflow-x: auto; max-height: 600px; overflow-y: auto; }
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: white; border-radius: var(--radius); padding: 25px; max-width: 800px; width: 100%; box-shadow: var(--shadow-lg); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; }
+  .modal h3 { color: var(--primary-dark); margin-bottom: 15px; font-size: 1.3rem; }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); }
+  .form-row { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 12px; margin-bottom: 12px; }
+  .form-group { margin-bottom: 12px; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .checkbox-group { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--bg-light); border-radius: var(--radius); margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
+  .checkbox-group:hover { background: #eef2ff; }
+  .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+  .checkbox-group label { cursor: pointer; flex: 1; font-size: 0.9rem; margin: 0; }
+  .checkbox-group small { display: block; color: var(--text-light); font-size: 0.8rem; margin-top: 2px; }
+  .info-fija { background: linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%); border: 1px solid #86efac; border-radius: var(--radius); padding: 15px; margin-bottom: 15px; }
+  .info-fija-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.9rem; }
+  .info-fija-item strong { color: #166534; min-width: 130px; }
+  .info-fija-item span { color: #15803d; }
+  .info-fija-lock { font-size: 0.75rem; color: #6b7280; margin-top: 8px; display: flex; align-items: center; gap: 5px; }
+  .exam-preview-info { background: linear-gradient(135deg,#fef3c7 0%,#fde68a 100%); border-left: 4px solid var(--warning); padding: 12px 15px; border-radius: var(--radius); margin-top: 15px; font-size: 0.9rem; color: #92400e; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 250px; padding: 10px 0; border-bottom: 2px solid var(--border); }
+  .bar { flex: 1; background: linear-gradient(to top,var(--primary),var(--secondary)); border-radius: 6px 6px 0 0; position: relative; min-height: 2px; transition: var(--transition); cursor: pointer; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+  .bar:hover { opacity: 0.8; }
+  .bar-value { position: absolute; top: -22px; background: var(--text); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+  .bar-label { position: absolute; bottom: -30px; font-size: 0.75rem; color: var(--text-light); text-align: center; width: 100%; }
+  .sync-panel { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 15px; margin-bottom: 15px; }
+  .sync-card { background: white; border: 2px solid var(--border); border-radius: var(--radius); padding: 15px; }
+  .sync-status { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; }
+  .sync-status.online { background: #d1fae5; color: #065f46; }
+  .sync-status.offline { background: #fee2e2; color: #991b1b; }
+  .sync-status.loading { background: #dbeafe; color: #1e40af; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+  .status-dot.pulse { animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .alert { padding: 12px 15px; border-radius: var(--radius); margin-bottom: 15px; font-size: 0.9rem; }
+  .alert-info { background: #dbeafe; color: #1e40af; border-left: 4px solid var(--info); }
+  .alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid var(--success); }
+  .alert-warning { background: #fef3c7; color: #92400e; border-left: 4px solid var(--warning); }
+  .alert-error { background: #fee2e2; color: #991b1b; border-left: 4px solid var(--danger); }
+  .spinner-mini { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); grid-column: 1 / -1; }
+  .empty-state-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
+  .counter-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 6px; }
+  .toast { position: fixed; bottom: 20px; right: 20px; padding: 15px 20px; border-radius: var(--radius); color: white; font-weight: 600; z-index: 2000; box-shadow: var(--shadow-lg); animation: slideInRight 0.3s ease; max-width: 400px; }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+  .toast.warning { background: var(--warning); }
+  @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  #iframe-examen { position: absolute; left: -9999px; top: 0; width: 850px; height: 1100px; border: 0; }
+  @media (max-width: 768px) {
+    .container { padding: 10px; }
+    .panel { padding: 15px; }
+    .stat-value { font-size: 1.4rem; }
+    .questions-container { grid-template-columns: 1fr; }
+    .options-mini { grid-template-columns: 1fr; }
+    .toast { bottom: 10px; right: 10px; left: 10px; max-width: none; }
+    header { padding: 15px; }
+    .logo-container { width: 70px; height: 70px; padding: 8px; }
+    .logo-placeholder { font-size: 2rem; }
+    .header-content { gap: 15px; }
+    .download-grid { grid-template-columns: 1fr; }
+    .info-fija-item { flex-direction: column; align-items: flex-start; gap: 2px; }
+  }
+  @media (max-width: 480px) {
+    .header-content { flex-direction: column; text-align: center; }
+    .header-text h1 { justify-content: center; }
+    .header-info { justify-content: center; }
+  }
+  @media print {
+    header, .tabs, .filters, .btn, .btn-group, .sync-panel, .question-actions, .download-panel, #iframe-examen { display: none !important; }
+    .module { display: block !important; }
+    .panel { box-shadow: none; border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo-container">
+      <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo de la escuela" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span class="logo-placeholder" style="display:none;">🎓</span>
+    </div>
+    <div class="header-text">
+      <h1>Panel Docente <span class="header-badge">📊 Evaluación Diagnóstica</span></h1>
+      <p>Secundaria Profr. Honorato Tlaseca Barrera - Huehuetlán el Chico, Pue.</p>
+      <div class="header-info">
+        <span class="header-info-item">📚 11 Disciplinas</span>
+        <span class="header-info-item">🎓 3 Grados</span>
+        <span class="header-info-item">👥 Grupos A y B</span>
+        <span class="header-info-item">🗓️ Ciclo: <span id="header-ciclo"></span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="banco">📚 Banco de Preguntas</button>
+    <button class="tab" data-tab="analisis">📈 Análisis de Resultados</button>
+  </div>
+
+  <div class="module active" id="mod-banco">
+    <div class="panel">
+      <h2>📚 Banco de Preguntas <span class="counter-badge" id="banco-total">0</span></h2>
+      <p style="color: var(--text-light); margin-bottom: 15px;">
+        Gestiona, valida y edita los reactivos del banco. Solo las preguntas <strong>activas</strong> serán consideradas en las evaluaciones aleatorias.
+      </p>
+      <div class="filters">
+        <div class="filter-group">
+          <label>Disciplina</label>
+          <select id="f-disciplina">
+            <option value="all">Todas</option>
+            <option>Español</option><option>Inglés</option><option>Matemáticas</option>
+            <option>Ciencias</option><option>Historia</option><option>Geografía</option>
+            <option>Formación Cívica y Ética</option><option>Educación Socioemocional</option>
+            <option>Educación Física</option><option>Artes</option><option>Tecnología</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Grado</label>
+          <select id="f-grado">
+            <option value="all">Todos</option>
+            <option value="1">1°</option><option value="2">2°</option><option value="3">3°</option>
+          </select>
+        </div>
+        <div class="filter-group"><label>Área</label><select id="f-area"><option value="all">Todas</option></select></div>
+        <div class="filter-group">
+          <label>Dificultad</label>
+          <select id="f-dificultad">
+            <option value="all">Todas</option>
+            <option value="básica">Básica</option><option value="media">Media</option><option value="reto">Reto</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Estado</label>
+          <select id="f-estado">
+            <option value="all">Todas</option>
+            <option value="activas">✓ Solo activas</option><option value="inactivas">✗ Solo inactivas</option>
+          </select>
+        </div>
+        <div class="filter-group"><label>Buscar</label><input type="text" id="f-buscar" placeholder="Enunciado, tema, ID..."></div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-success" onclick="abrirModalNueva()">➕ Nueva pregunta</button>
+        <button class="btn btn-warning" onclick="abrirModalExamen()">📄 Generar Examen PDF</button>
+        <button class="btn btn-secondary" onclick="recargarBanco()">🔄 Recargar</button>
+        <button class="btn btn-secondary" onclick="limpiarFiltrosBanco()">🧹 Limpiar filtros</button>
+        <span id="banco-contador" style="padding: 10px; color: var(--text-light); font-weight: 600;"></span>
+      </div>
+    </div>
+    <div class="panel"><h3>📊 Estadísticas del banco</h3><div class="stats-grid" id="stats-banco"></div></div>
+    <div class="panel">
+      <h3>📝 Preguntas</h3>
+      <div id="loading-banco" class="empty-state" style="display:none;"><div class="spinner-mini"></div><p>Cargando preguntas...</p></div>
+      <div class="questions-container" id="lista-banco"></div>
+    </div>
+  </div>
+
+  <div class="module" id="mod-analisis">
+    <div class="panel">
+      <h2>🔄 Sincronización con Google Sheets</h2>
+      <div class="sync-panel">
+        <div class="sync-card">
+          <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px; font-weight: 600;">Estado</div>
+          <div class="sync-status online" id="sync-status"><span class="status-dot pulse"></span><span id="sync-status-text">Listo</span></div>
+          <div style="font-size: 0.85rem; color: var(--text-light); margin-top: 6px;" id="sync-last-update">Sin datos</div>
+        </div>
+        <div class="sync-card">
+          <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px; font-weight: 600;">Registros</div>
+          <div style="font-size: 2rem; font-weight: 800; color: var(--primary);" id="sync-count">0</div>
+          <div style="font-size: 0.85rem; color: var(--text-light);">Total evaluaciones</div>
+        </div>
+        <div class="sync-card">
+          <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px; font-weight: 600;">Auto-refresh</div>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.9rem;">
+            <input type="checkbox" id="auto-refresh" style="width:auto;">
+            <span>Cada <input type="number" id="refresh-interval" value="30" min="5" max="300" style="width:60px; display:inline-block; padding:4px;"> s</span>
+          </label>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-success" onclick="sincronizarDatos()">🔄 Sincronizar ahora</button>
+        <button class="btn btn-warning" onclick="cargarEjemplo()">⚡ Datos demo</button>
+        <button class="btn btn-danger" onclick="limpiarDatos()">🗑️ Limpiar</button>
+      </div>
+    </div>
+    <div class="download-panel" id="download-panel" style="display:none;">
+      <h3>📥 Descargas de Resultados</h3>
+      <p style="color: var(--text-light); margin-bottom: 15px;">La columna <strong>Calificación</strong> se descarga en escala de 10 con un decimal (ej: 60% = 6.0) y las Ciencias se muestran como Biología (1°), Física (2°) o Química (3°).</p>
+      <div class="download-grid">
+        <div class="download-card"><h4>📊 Todos los resultados</h4><p>Descarga completa ordenada por grado, grupo y nombre.</p><button class="btn btn-primary download-btn" onclick="descargarTodos()">📥 Descargar Todo</button></div>
+        <div class="download-card"><h4>🎓 Por Grado</h4><div class="download-options"><select id="download-grado"><option value="all">Todos los grados</option><option value="1">1° Grado</option><option value="2">2° Grado</option><option value="3">3° Grado</option></select></div><button class="btn btn-info download-btn" onclick="descargarPorGrado()">📥 Descargar por Grado</button></div>
+        <div class="download-card"><h4>👥 Por Grupo</h4><div class="download-options"><select id="download-grupo"><option value="all">Todos los grupos</option><option value="A">Grupo A</option><option value="B">Grupo B</option></select></div><button class="btn btn-success download-btn" onclick="descargarPorGrupo()">📥 Descargar por Grupo</button></div>
+        <div class="download-card"><h4>📖 Por Disciplina</h4><div class="download-options"><select id="download-disciplina"><option value="all">Todas las disciplinas</option><option>Español</option><option>Inglés</option><option>Matemáticas</option><option>Ciencias</option><option>Historia</option><option>Geografía</option><option>Formación Cívica y Ética</option><option>Educación Socioemocional</option><option>Educación Física</option><option>Artes</option><option>Tecnología</option></select></div><button class="btn btn-warning download-btn" onclick="descargarPorDisciplina()">📥 Descargar por Disciplina</button></div>
+      </div>
+    </div>
+    <div id="contenedor-analisis" style="display:none;">
+      <div class="panel"><h2>📋 Vista General</h2><div class="stats-grid" id="stats-generales"></div></div>
+      <div class="panel">
+        <h2>🔍 Filtrar Análisis</h2>
+        <div class="filters">
+          <div class="filter-group"><label>Nivel</label>
+            <select id="nivel-analisis" onchange="cambiarNivel()">
+              <option value="total">📊 Total</option><option value="disciplina">📖 Por Disciplina</option>
+              <option value="grado">🎓 Por Grado</option><option value="grupo">👥 Por Grupo</option><option value="individual">👤 Individual</option>
+            </select>
+          </div>
+          <div class="filter-group" id="filtro-disciplina-wrap" style="display:none;"><label>Disciplina</label>
+            <select id="filtro-disciplina" onchange="actualizarAnalisis()">
+              <option value="all">Todas</option><option>Español</option><option>Inglés</option><option>Matemáticas</option>
+              <option>Ciencias</option><option>Historia</option><option>Geografía</option>
+              <option>Formación Cívica y Ética</option><option>Educación Socioemocional</option>
+              <option>Educación Física</option><option>Artes</option><option>Tecnología</option>
+            </select>
+          </div>
+          <div class="filter-group" id="filtro-grado-wrap" style="display:none;"><label>Grado</label>
+            <select id="filtro-grado" onchange="actualizarAnalisis()"><option value="all">Todos</option><option value="1">1°</option><option value="2">2°</option><option value="3">3°</option></select>
+          </div>
+          <div class="filter-group" id="filtro-grupo-wrap" style="display:none;"><label>Grupo</label>
+            <select id="filtro-grupo" onchange="actualizarAnalisis()"><option value="all">Todos</option><option value="A">A</option><option value="B">B</option></select>
+          </div>
+          <div class="filter-group" id="filtro-individual-wrap" style="display:none;"><label>Buscar alumno</label>
+            <input type="text" id="filtro-individual" placeholder="Matrícula o nombre..." oninput="actualizarAnalisis()">
+          </div>
+        </div>
+      </div>
+      <div id="resultados-analisis"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pregunta">
+  <div class="modal">
+    <h3 id="modal-pregunta-title">Editar Pregunta</h3>
+    <form id="form-pregunta">
+      <div class="form-row">
+        <div class="form-group"><label>ID único *</label><input type="text" id="p-id" required></div>
+        <div class="form-group"><label>Disciplina *</label>
+          <select id="p-disciplina" required><option value="">Seleccionar...</option>
+            <option>Español</option><option>Inglés</option><option>Matemáticas</option><option>Ciencias</option>
+            <option>Historia</option><option>Geografía</option><option>Formación Cívica y Ética</option>
+            <option>Educación Socioemocional</option><option>Educación Física</option><option>Artes</option><option>Tecnología</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Grado *</label>
+          <select id="p-grado" required><option value="">Seleccionar...</option><option value="1">1°</option><option value="2">2°</option><option value="3">3°</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Área *</label><input type="text" id="p-area" placeholder="Ej: Sentido numérico" required></div>
+        <div class="form-group"><label>Tema</label><input type="text" id="p-tema" placeholder="Ej: Fracciones"></div>
+        <div class="form-group"><label>Dificultad *</label>
+          <select id="p-dificultad" required><option value="básica">Básica</option><option value="media">Media</option><option value="reto">Reto</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Enunciado *</label><textarea id="p-enunciado" rows="3" required placeholder="Escribe la pregunta aquí..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Opción A *</label><input type="text" id="p-opcion_a" required></div>
+        <div class="form-group"><label>Opción B *</label><input type="text" id="p-opcion_b" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Opción C *</label><input type="text" id="p-opcion_c" required></div>
+        <div class="form-group"><label>Opción D *</label><input type="text" id="p-opcion_d" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Respuesta correcta *</label>
+          <select id="p-correcta" required><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+        </div>
+        <div class="form-group"><label>Autor</label><input type="text" id="p-autor" placeholder="Nombre del docente"></div>
+        <div class="form-group"><label>Estado</label>
+          <select id="p-activa"><option value="true">✓ Activa</option><option value="false">✗ Inactiva</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Explicación (opcional)</label><textarea id="p-explicacion" rows="2" placeholder="Justificación de la respuesta correcta..."></textarea></div>
+      <div id="form-error" class="alert alert-error" style="display:none;"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModalPregunta()">Cancelar</button>
+        <button type="submit" class="btn btn-success" id="btn-guardar-pregunta">💾 Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-examen">
+  <div class="modal">
+    <h3>📄 Generar Examen Diagnóstico PDF</h3>
+    <p style="color: var(--text-light); margin-bottom: 15px;">
+      Se generará un examen aleatorio con <strong>20 preguntas</strong>. Para Ciencias, el examen mostrará Biología (1°), Física (2°) o Química (3°) según el grado seleccionado.
+    </p>
+    <div class="info-fija">
+      <div class="info-fija-item"><strong>🏫 Institución:</strong> <span>Secundaria Profr. Honorato Tlaseca Barrera</span></div>
+      <div class="info-fija-item"><strong>📍 Ubicación:</strong> <span>Huehuetlán el Chico, Puebla</span></div>
+      <div class="info-fija-item"><strong>🗓️ Ciclo escolar:</strong> <span id="ciclo-escolar-display"></span></div>
+      <div class="info-fija-lock">🔒 Estos datos son fijos y no pueden modificarse</div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Disciplina *</label>
+        <select id="exam-disciplina">
+          <option value="">Seleccionar...</option>
+          <option>Español</option><option>Inglés</option><option>Matemáticas</option><option>Ciencias</option>
+          <option>Historia</option><option>Geografía</option><option>Formación Cívica y Ética</option>
+          <option>Educación Socioemocional</option><option>Educación Física</option><option>Artes</option><option>Tecnología</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Grado *</label>
+        <select id="exam-grado"><option value="">Seleccionar...</option><option value="1">1° Grado</option><option value="2">2° Grado</option><option value="3">3° Grado</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Nombre del docente</label><input type="text" id="exam-docente" placeholder="Ej: Prof. Juan Pérez"></div>
+      <div class="form-group"><label>Instrucciones adicionales (opcional)</label><input type="text" id="exam-instrucciones" placeholder="Instrucciones adicionales..."></div>
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="exam-mezclar-opciones" checked>
+      <label for="exam-mezclar-opciones">🔀 Mezclar opciones de respuesta<small>Las opciones aparecerán en orden aleatorio</small></label>
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="exam-incluir-hoja" checked>
+      <label for="exam-incluir-hoja">📋 Incluir hoja de respuestas para el docente<small>Página adicional con respuestas correctas</small></label>
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="exam-incluir-circulos" checked>
+      <label for="exam-incluir-circulos">⭕ Formato de círculo para respuestas<small>Círculos tipo burbuja para rellenar</small></label>
+    </div>
+    <div id="exam-error" class="alert alert-error" style="display:none;"></div>
+    <div class="exam-preview-info">
+      💡 <strong>Consejo:</strong> Al hacer clic en "Generar Examen" se abrirá automáticamente el diálogo de impresión. Selecciona <strong>"Guardar como PDF"</strong> como destino para descargar el archivo.
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="cerrarModalExamen()">Cancelar</button>
+      <button type="button" class="btn btn-warning" id="btn-generar-examen" onclick="generarExamenPDF()">📄 Generar Examen</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:450px;">
+    <h3 id="confirm-title">Confirmar acción</h3>
+    <p id="confirm-message">¿Estás seguro?</p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-confirm-cancel">Cancelar</button>
+      <button class="btn btn-danger" id="btn-confirm-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<iframe id="iframe-examen" title="Examen para imprimir"></iframe>
+
+<script>
+var API_URL = 'https://script.google.com/macros/s/AKfycbwdSF90fsKQZRLtUJ7E8RhsnuguhtCqNp3G-PJS0I16ttgAazGlwyAEzkt69XyQGoKL/exec';
+var LOGO_URL = 'https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png';
+var NOMBRE_ESCUELA = 'Secundaria Profr. Honorato Tlaseca Barrera';
+var UBICACION_ESCUELA = 'Huehuetlán el Chico, Puebla';
+var TOTAL_PREGUNTAS_EXAMEN = 20;
+
+var bancoPreguntas = [];
+var datosEstudiantes = [];
+var preguntaEditando = null;
+var autoRefreshTimer = null;
+
+function obtenerCicloEscolar() {
+  var hoy = new Date();
+  var mes = hoy.getMonth() + 1;
+  var anio = hoy.getFullYear();
+  if (mes >= 8) {
+    return anio + '-' + (anio + 1);
+  } else {
+    return (anio - 1) + '-' + anio;
+  }
+}
+
+function mostrarCicloEnHeader() {
+  var el = document.getElementById('header-ciclo');
+  if (el) el.textContent = obtenerCicloEscolar();
+}
+
+function obtenerNombreDisciplinaExamen(disciplina, grado) {
+  if (compararDisciplinas(disciplina, 'Ciencias')) {
+    var g = String(grado);
+    if (g === '1') return 'Biología';
+    if (g === '2') return 'Física';
+    if (g === '3') return 'Química';
+  }
+  return disciplina;
+}
+
+function normalizarDisciplina(nombre) {
+  if (!nombre) return '';
+  return String(nombre).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function compararDisciplinas(disc1, disc2) {
+  return normalizarDisciplina(disc1) === normalizarDisciplina(disc2);
+}
+
+function normalizarDificultad(valor) {
+  if (!valor) return '';
+  var normalizado = String(valor).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  var mapa = { 'basica': 'basica', 'media': 'media', 'reto': 'reto', 'intermedia': 'media', 'avanzada': 'reto', 'facil': 'basica', 'dificil': 'reto' };
+  return mapa[normalizado] || normalizado;
+}
+
+function compararDificultades(dif1, dif2) {
+  return normalizarDificultad(dif1) === normalizarDificultad(dif2);
+}
+
+function obtenerClaseDificultad(dificultad) {
+  var n = normalizarDificultad(dificultad);
+  if (n === 'basica') return 'badge-diff-basica';
+  if (n === 'media') return 'badge-diff-media';
+  if (n === 'reto') return 'badge-diff-reto';
+  return 'badge-diff-media';
+}
+
+function obtenerTextoDificultad(dificultad) {
+  var n = normalizarDificultad(dificultad);
+  if (n === 'basica') return 'Básica';
+  if (n === 'media') return 'Media';
+  if (n === 'reto') return 'Reto';
+  return dificultad.charAt(0).toUpperCase() + dificultad.slice(1);
+}
+
+function sanearValor(valor) {
+  if (valor === null || valor === undefined) return '';
+  if (valor instanceof Date) {
+    var d = valor.getDate();
+    var m = valor.getMonth() + 1;
+    var a = valor.getFullYear();
+    if (Math.abs(a - new Date().getFullYear()) <= 1) return d + '/' + m;
+    return valor.toLocaleDateString('es-MX');
+  }
+  if (typeof valor === 'string') {
+    var patronFecha = /\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}\s+\d{4}/i;
+    if (patronFecha.test(valor)) {
+      var meses = { 'Jan':'1','Feb':'2','Mar':'3','Apr':'4','May':'5','Jun':'6','Jul':'7','Aug':'8','Sep':'9','Oct':'10','Nov':'11','Dec':'12' };
+      var match = valor.match(patronFecha);
+      if (match) {
+        var mes = meses[match[2]];
+        var dia = parseInt(match[3], 10);
+        var anio = parseInt(match[4], 10);
+        if (Math.abs(anio - new Date().getFullYear()) <= 1) return dia + '/' + mes;
+      }
+      return valor;
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+      var partes = valor.split('-');
+      var anio2 = parseInt(partes[0], 10);
+      if (Math.abs(anio2 - new Date().getFullYear()) <= 1) {
+        return parseInt(partes[2], 10) + '/' + parseInt(partes[1], 10);
+      }
+    }
+    if (/^0\d+\s*\/\s*\d+$/.test(valor)) {
+      var p2 = valor.split('/');
+      return parseInt(p2[0], 10) + '/' + parseInt(p2[1], 10);
+    }
+    return valor.trim();
+  }
+  return String(valor).trim();
+}
+
+function escaparHTML(texto) {
+  if (!texto) return '';
+  return String(texto).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function sanearPregunta(p) {
+  var nuevo = {};
+  for (var key in p) { if (p.hasOwnProperty(key)) nuevo[key] = p[key]; }
+  nuevo.enunciado = sanearValor(p.enunciado);
+  nuevo.opcion_a = sanearValor(p.opcion_a);
+  nuevo.opcion_b = sanearValor(p.opcion_b);
+  nuevo.opcion_c = sanearValor(p.opcion_c);
+  nuevo.opcion_d = sanearValor(p.opcion_d);
+  nuevo.explicacion = sanearValor(p.explicacion);
+  nuevo['área'] = sanearValor(p['área'] || p.area);
+  nuevo.area = sanearValor(p.area || p['área']);
+  nuevo.tema = sanearValor(p.tema);
+  nuevo.disciplina = sanearValor(p.disciplina);
+  return nuevo;
+}
+
+function mostrarToast(mensaje, tipo, duracion) {
+  tipo = tipo || 'success';
+  duracion = duracion || 3500;
+  var toast = document.createElement('div');
+  toast.className = 'toast ' + tipo;
+  var icono = tipo === 'success' ? '✅' : (tipo === 'error' ? '❌' : '⚠️');
+  toast.textContent = icono + ' ' + mensaje;
+  document.body.appendChild(toast);
+  setTimeout(function() {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    setTimeout(function() { toast.remove(); }, 300);
+  }, duracion);
+}
+
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.module').forEach(function(m) { m.classList.remove('active'); });
+    tab.classList.add('active');
+    document.getElementById('mod-' + tab.dataset.tab).classList.add('active');
+    if (tab.dataset.tab === 'banco' && bancoPreguntas.length === 0) cargarBanco();
+    else if (tab.dataset.tab === 'analisis' && datosEstudiantes.length === 0) sincronizarDatos();
+  });
+});
+
+function cargarBanco() {
+  var loading = document.getElementById('loading-banco');
+  var lista = document.getElementById('lista-banco');
+  loading.style.display = 'block';
+  lista.innerHTML = '';
+  fetch(API_URL + '?action=getBanco&todas=1', { redirect: 'follow' })
+    .then(function(response) { return response.text(); })
+    .then(function(text) {
+      var data;
+      try { data = JSON.parse(text); }
+      catch (e) { throw new Error('Respuesta no válida del servidor'); }
+      if (data && data.error) throw new Error(data.error);
+      if (!Array.isArray(data)) {
+        if (data.data && Array.isArray(data.data)) data = data.data;
+        else throw new Error('Formato inesperado');
+      }
+      bancoPreguntas = data.map(function(p) { return normalizarPregunta(sanearPregunta(p)); });
+      actualizarAreasDinamicas();
+      renderBanco();
+      renderStatsBanco();
+    })
+    .catch(function(err) {
+      lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">❌</div><p>Error: ' + err.message + '</p></div>';
+    })
+    .finally(function() { loading.style.display = 'none'; });
+}
+
+function normalizarPregunta(p) {
+  var activa = true;
+  if (p.activa === false || p.activa === 'FALSE' || p.activa === 'false' || p.activa === '0' || p.activa === 0) activa = false;
+  return {
+    id: String(p.id || '').trim(),
+    grado: String(p.grado || '').trim(),
+    disciplina: String(p.disciplina || '').trim(),
+    'área': p['área'] || p.area || p['Área'] || '',
+    area: p.area || p['área'] || p['Área'] || '',
+    tema: String(p.tema || p.Tema || '').trim(),
+    dificultad: String(p.dificultad || p.Dificultad || '').trim(),
+    enunciado: String(p.enunciado || p.Enunciado || '').trim(),
+    opcion_a: String(p.opcion_a || p.opcion_A || '').trim(),
+    opcion_b: String(p.opcion_b || p.opcion_B || '').trim(),
+    opcion_c: String(p.opcion_c || p.opcion_C || '').trim(),
+    opcion_d: String(p.opcion_d || p.opcion_D || '').trim(),
+    correcta: String(p.correcta || p.Correcta || '').trim().toUpperCase(),
+    explicacion: String(p.explicacion || p.Explicacion || '').trim(),
+    activa: activa,
+    fecha_creacion: p.fecha_creacion || '',
+    autor: String(p.autor || p.Autor || '').trim()
+  };
+}
+
+function actualizarAreasDinamicas() {
+  var select = document.getElementById('f-area');
+  var areas = [];
+  bancoPreguntas.forEach(function(p) {
+    var area = p['área'] || p.area;
+    if (area && areas.indexOf(area) === -1) areas.push(area);
+  });
+  areas.sort();
+  select.innerHTML = '<option value="all">Todas</option>';
+  areas.forEach(function(a) { select.innerHTML += '<option>' + a + '</option>'; });
+}
+
+function renderBanco() {
+  var lista = document.getElementById('lista-banco');
+  var filtradas = filtrarBanco();
+  document.getElementById('banco-contador').textContent = filtradas.length + ' de ' + bancoPreguntas.length + ' pregunta(s)';
+  document.getElementById('banco-total').textContent = bancoPreguntas.length;
+  if (bancoPreguntas.length === 0) {
+    lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>No hay preguntas en el banco.</p></div>';
+    return;
+  }
+  if (filtradas.length === 0) {
+    lista.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>No hay preguntas con esos filtros.</p></div>';
+    return;
+  }
+  var letras = ['A', 'B', 'C', 'D'];
+  var html = '';
+  filtradas.forEach(function(p) {
+    var area = p['área'] || p.area;
+    var opciones = [p.opcion_a, p.opcion_b, p.opcion_c, p.opcion_d];
+    var correctaIdx = letras.indexOf(p.correcta);
+    html += '<div class="question-card ' + (p.activa ? '' : 'inactive') + '" data-id="' + p.id + '">';
+    html += '<div class="question-header"><span class="question-id">' + p.id + '</span><div class="badges-row">';
+    if (p.disciplina) html += '<span class="badge badge-disciplina">📖 ' + p.disciplina + '</span>';
+    if (p.grado) html += '<span class="badge badge-grado">' + p.grado + '°</span>';
+    if (area) html += '<span class="badge badge-area">' + area + '</span>';
+    if (p.tema) html += '<span class="badge badge-tema">' + p.tema + '</span>';
+    if (p.dificultad) html += '<span class="badge ' + obtenerClaseDificultad(p.dificultad) + '">' + obtenerTextoDificultad(p.dificultad) + '</span>';
+    html += '</div></div>';
+    html += '<div class="question-text">' + (p.enunciado || '(Sin enunciado)') + '</div>';
+    html += '<div class="options-mini">';
+    opciones.forEach(function(op, i) {
+      html += '<div class="option-mini ' + (i === correctaIdx ? 'correct' : '') + '"><span class="option-letter">' + letras[i] + '</span><span>' + (op || '(vacía)') + '</span></div>';
+    });
+    html += '</div>';
+    if (p.explicacion) html += '<div style="font-size:0.85rem; color:var(--text-light); margin-bottom:10px;"><strong>💡 Explicación:</strong> ' + p.explicacion + '</div>';
+    html += '<div class="question-actions"><div class="switch-container"><label class="switch"><input type="checkbox" ' + (p.activa ? 'checked' : '') + ' onchange="togglePregunta(\'' + p.id + '\', this)"><span class="slider"></span></label><span class="switch-label ' + (p.activa ? 'active' : 'inactive') + '">' + (p.activa ? '✓ Activa' : '✗ Inactiva') + '</span></div>';
+    html += '<div style="flex:1;"></div>';
+    html += '<button class="btn btn-sm btn-info" onclick="editarPregunta(\'' + p.id + '\')">✏️ Editar</button>';
+    html += '<button class="btn btn-sm btn-danger" onclick="confirmarEliminar(\'' + p.id + '\')">🗑️</button></div></div>';
+  });
+  lista.innerHTML = html;
+}
+
+function filtrarBanco() {
+  var f = {
+    disciplina: document.getElementById('f-disciplina').value,
+    grado: document.getElementById('f-grado').value,
+    area: document.getElementById('f-area').value,
+    dificultad: document.getElementById('f-dificultad').value,
+    estado: document.getElementById('f-estado').value,
+    buscar: document.getElementById('f-buscar').value.toLowerCase()
+  };
+  return bancoPreguntas.filter(function(p) {
+    if (f.disciplina !== 'all' && !compararDisciplinas(p.disciplina, f.disciplina)) return false;
+    if (f.grado !== 'all' && p.grado !== f.grado) return false;
+    var area = p['área'] || p.area;
+    if (f.area !== 'all' && area !== f.area) return false;
+    if (f.dificultad !== 'all' && !compararDificultades(p.dificultad, f.dificultad)) return false;
+    if (f.estado === 'activas' && !p.activa) return false;
+    if (f.estado === 'inactivas' && p.activa) return false;
+    if (f.buscar) {
+      var texto = (p.id + ' ' + p.enunciado + ' ' + p.tema + ' ' + area + ' ' + p.opcion_a + ' ' + p.opcion_b + ' ' + p.opcion_c + ' ' + p.opcion_d).toLowerCase();
+      if (texto.indexOf(f.buscar) === -1) return false;
+    }
+    return true;
+  });
+}
+
+function renderStatsBanco() {
+  var stats = { total: bancoPreguntas.length, activas: 0, inactivas: 0, porGrado: {'1':0,'2':0,'3':0}, porDificultad: {'basica':0,'media':0,'reto':0} };
+  bancoPreguntas.forEach(function(p) {
+    if (p.activa) stats.activas++; else stats.inactivas++;
+    if (p.grado && stats.porGrado.hasOwnProperty(p.grado)) stats.porGrado[p.grado]++;
+    if (p.dificultad) {
+      var dn = normalizarDificultad(p.dificultad);
+      if (stats.porDificultad.hasOwnProperty(dn)) stats.porDificultad[dn]++;
+      else stats.porDificultad['media']++;
+    }
+  });
+  document.getElementById('stats-banco').innerHTML = 
+    '<div class="stat-card blue"><div class="stat-label">Total</div><div class="stat-value">' + stats.total + '</div></div>' +
+    '<div class="stat-card green"><div class="stat-label">✓ Activas</div><div class="stat-value">' + stats.activas + '</div></div>' +
+    '<div class="stat-card red"><div class="stat-label">✗ Inactivas</div><div class="stat-value">' + stats.inactivas + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">1° grado</div><div class="stat-value">' + stats.porGrado['1'] + '</div></div>' +
+    '<div class="stat-card orange"><div class="stat-label">2° grado</div><div class="stat-value">' + stats.porGrado['2'] + '</div></div>' +
+    '<div class="stat-card blue"><div class="stat-label">3° grado</div><div class="stat-value">' + stats.porGrado['3'] + '</div></div>' +
+    '<div class="stat-card green"><div class="stat-label">Básicas</div><div class="stat-value">' + stats.porDificultad['basica'] + '</div></div>' +
+    '<div class="stat-card orange"><div class="stat-label">Medias</div><div class="stat-value">' + stats.porDificultad['media'] + '</div></div>' +
+    '<div class="stat-card red"><div class="stat-label">Reto</div><div class="stat-value">' + stats.porDificultad['reto'] + '</div></div>';
+}
+
+function togglePregunta(id, checkbox) {
+  var card = document.querySelector('.question-card[data-id="' + id + '"]');
+  var label = card.querySelector('.switch-label');
+  var estadoAnterior = checkbox.checked;
+  fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'togglePregunta', id: id }) })
+    .then(function() {
+      var preg = bancoPreguntas.find(function(p) { return p.id === id; });
+      if (preg) preg.activa = checkbox.checked;
+      if (checkbox.checked) { card.classList.remove('inactive'); label.textContent = '✓ Activa'; label.className = 'switch-label active'; }
+      else { card.classList.add('inactive'); label.textContent = '✗ Inactiva'; label.className = 'switch-label inactive'; }
+      renderStatsBanco();
+      mostrarToast('Estado actualizado correctamente');
+    })
+    .catch(function(err) { checkbox.checked = !estadoAnterior; mostrarToast('Error: ' + err.message, 'error'); });
+}
+
+function abrirModalNueva() {
+  preguntaEditando = null;
+  document.getElementById('modal-pregunta-title').textContent = '➕ Nueva Pregunta';
+  document.getElementById('form-pregunta').reset();
+  document.getElementById('p-id').value = generarID();
+  document.getElementById('p-id').disabled = false;
+  document.getElementById('p-activa').value = 'true';
+  document.getElementById('form-error').style.display = 'none';
+  document.getElementById('modal-pregunta').classList.add('active');
+}
+
+function editarPregunta(id) {
+  var p = bancoPreguntas.find(function(pr) { return pr.id === id; });
+  if (!p) { mostrarToast('Pregunta no encontrada', 'error'); return; }
+  preguntaEditando = p;
+  document.getElementById('modal-pregunta-title').textContent = '✏️ Editar: ' + p.id;
+  document.getElementById('p-id').value = p.id;
+  document.getElementById('p-id').disabled = true;
+  document.getElementById('p-disciplina').value = p.disciplina;
+  document.getElementById('p-grado').value = p.grado;
+  document.getElementById('p-area').value = p['área'] || p.area || '';
+  document.getElementById('p-tema').value = p.tema || '';
+  document.getElementById('p-dificultad').value = normalizarDificultad(p.dificultad);
+  document.getElementById('p-enunciado').value = sanearValor(p.enunciado);
+  document.getElementById('p-opcion_a').value = sanearValor(p.opcion_a);
+  document.getElementById('p-opcion_b').value = sanearValor(p.opcion_b);
+  document.getElementById('p-opcion_c').value = sanearValor(p.opcion_c);
+  document.getElementById('p-opcion_d').value = sanearValor(p.opcion_d);
+  document.getElementById('p-correcta').value = p.correcta;
+  document.getElementById('p-explicacion').value = sanearValor(p.explicacion) || '';
+  document.getElementById('p-activa').value = p.activa ? 'true' : 'false';
+  document.getElementById('p-autor').value = p.autor || '';
+  document.getElementById('form-error').style.display = 'none';
+  document.getElementById('modal-pregunta').classList.add('active');
+}
+
+function cerrarModalPregunta() {
+  document.getElementById('modal-pregunta').classList.remove('active');
+  document.getElementById('p-id').disabled = false;
+  preguntaEditando = null;
+}
+
+function generarID() {
+  return 'P-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+}
+
+document.getElementById('form-pregunta').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var btn = document.getElementById('btn-guardar-pregunta');
+  var errorDiv = document.getElementById('form-error');
+  errorDiv.style.display = 'none';
+  var data = {
+    action: preguntaEditando ? 'updatePregunta' : 'addPregunta',
+    id: document.getElementById('p-id').value.trim(),
+    disciplina: document.getElementById('p-disciplina').value.trim(),
+    grado: document.getElementById('p-grado').value.trim(),
+    'área': document.getElementById('p-area').value.trim(),
+    area: document.getElementById('p-area').value.trim(),
+    tema: document.getElementById('p-tema').value.trim(),
+    dificultad: document.getElementById('p-dificultad').value.trim(),
+    enunciado: sanearValor(document.getElementById('p-enunciado').value.trim()),
+    opcion_a: sanearValor(document.getElementById('p-opcion_a').value.trim()),
+    opcion_b: sanearValor(document.getElementById('p-opcion_b').value.trim()),
+    opcion_c: sanearValor(document.getElementById('p-opcion_c').value.trim()),
+    opcion_d: sanearValor(document.getElementById('p-opcion_d').value.trim()),
+    correcta: document.getElementById('p-correcta').value.trim().toUpperCase(),
+    explicacion: sanearValor(document.getElementById('p-explicacion').value.trim()),
+    activa: document.getElementById('p-activa').value === 'true',
+    autor: document.getElementById('p-autor').value.trim()
+  };
+  if (!data.id || !data.disciplina || !data.grado || !data.enunciado) {
+    errorDiv.textContent = '⚠️ Por favor completa todos los campos obligatorios.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-mini"></span> Guardando...';
+  fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
+    .then(function() {
+      if (preguntaEditando) {
+        var idx = bancoPreguntas.findIndex(function(p) { return p.id === data.id; });
+        if (idx !== -1) bancoPreguntas[idx] = normalizarPregunta(sanearPregunta(Object.assign({}, bancoPreguntas[idx], data)));
+        mostrarToast('Pregunta actualizada correctamente');
+      } else {
+        bancoPreguntas.push(normalizarPregunta(sanearPregunta(data)));
+        mostrarToast('Pregunta agregada correctamente');
+      }
+      cerrarModalPregunta();
+      renderBanco();
+      renderStatsBanco();
+    })
+    .catch(function(err) { errorDiv.innerHTML = '❌ Error: ' + err.message; errorDiv.style.display = 'block'; mostrarToast('Error al guardar', 'error'); })
+    .finally(function() { btn.disabled = false; btn.innerHTML = '💾 Guardar'; });
+});
+
+function confirmarEliminar(id) {
+  var preg = bancoPreguntas.find(function(p) { return p.id === id; });
+  document.getElementById('confirm-title').textContent = '🗑️ Desactivar pregunta';
+  document.getElementById('confirm-message').innerHTML = '¿Deseas <strong>desactivar</strong> esta pregunta?<br><br><strong>ID:</strong> ' + preg.id + '<br>La pregunta dejará de aparecer en las evaluaciones.';
+  document.getElementById('modal-confirm').classList.add('active');
+  var btnOk = document.getElementById('btn-confirm-ok');
+  var btnCancel = document.getElementById('btn-confirm-cancel');
+  function handlerOk() {
+    cleanup();
+    fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'togglePregunta', id: id }) })
+      .then(function() {
+        var p = bancoPreguntas.find(function(pr) { return pr.id === id; });
+        if (p) p.activa = false;
+        renderBanco(); renderStatsBanco(); mostrarToast('Pregunta desactivada');
+      }).catch(function(err) { mostrarToast('Error: ' + err.message, 'error'); });
+  }
+  function handlerCancel() { cleanup(); }
+  function cleanup() {
+    btnOk.removeEventListener('click', handlerOk);
+    btnCancel.removeEventListener('click', handlerCancel);
+    document.getElementById('modal-confirm').classList.remove('active');
+  }
+  btnOk.addEventListener('click', handlerOk);
+  btnCancel.addEventListener('click', handlerCancel);
+}
+
+function recargarBanco() { cargarBanco(); }
+
+function limpiarFiltrosBanco() {
+  document.getElementById('f-disciplina').value = 'all';
+  document.getElementById('f-grado').value = 'all';
+  document.getElementById('f-area').value = 'all';
+  document.getElementById('f-dificultad').value = 'all';
+  document.getElementById('f-estado').value = 'all';
+  document.getElementById('f-buscar').value = '';
+  renderBanco();
+}
+
+['f-disciplina','f-grado','f-area','f-dificultad','f-estado','f-buscar'].forEach(function(id) {
+  var el = document.getElementById(id);
+  el.addEventListener('input', renderBanco);
+  el.addEventListener('change', renderBanco);
+});
+
+function abrirModalExamen() {
+  if (bancoPreguntas.length === 0) { mostrarToast('Primero carga el banco de preguntas', 'warning'); return; }
+  var d = document.getElementById('f-disciplina').value;
+  var g = document.getElementById('f-grado').value;
+  document.getElementById('exam-disciplina').value = (d !== 'all') ? d : '';
+  document.getElementById('exam-grado').value = (g !== 'all') ? g : '';
+  document.getElementById('exam-error').style.display = 'none';
+  document.getElementById('ciclo-escolar-display').textContent = obtenerCicloEscolar();
+  document.getElementById('modal-examen').classList.add('active');
+}
+
+function cerrarModalExamen() { document.getElementById('modal-examen').classList.remove('active'); }
+
+function seleccionarPreguntasExamen(preguntas) {
+  var porArea = {};
+  preguntas.forEach(function(p) {
+    var area = p['área'] || p.area || 'General';
+    if (!porArea[area]) porArea[area] = [];
+    porArea[area].push(p);
+  });
+  var areas = Object.keys(porArea);
+  var seleccion = [];
+  if (areas.length === 0) return [];
+  var basePorArea = Math.floor(TOTAL_PREGUNTAS_EXAMEN / areas.length);
+  var extras = TOTAL_PREGUNTAS_EXAMEN % areas.length;
+  areas.forEach(function(area, idx) {
+    var cantidad = basePorArea + (idx < extras ? 1 : 0);
+    var mezcladas = porArea[area].slice().sort(function() { return Math.random() - 0.5; });
+    seleccion = seleccion.concat(mezcladas.slice(0, Math.min(cantidad, mezcladas.length)));
+  });
+  if (seleccion.length < TOTAL_PREGUNTAS_EXAMEN) {
+    var ids = {};
+    seleccion.forEach(function(p) { ids[p.id] = true; });
+    var disponibles = preguntas.filter(function(p) { return !ids[p.id]; });
+    var faltantes = TOTAL_PREGUNTAS_EXAMEN - seleccion.length;
+    seleccion = seleccion.concat(disponibles.sort(function() { return Math.random() - 0.5; }).slice(0, faltantes));
+  }
+  if (seleccion.length > TOTAL_PREGUNTAS_EXAMEN) seleccion = seleccion.sort(function() { return Math.random() - 0.5; }).slice(0, TOTAL_PREGUNTAS_EXAMEN);
+  return seleccion.sort(function() { return Math.random() - 0.5; });
+}
+
+function generarExamenPDF() {
+  var disciplina = document.getElementById('exam-disciplina').value;
+  var grado = document.getElementById('exam-grado').value;
+  var docente = document.getElementById('exam-docente').value.trim();
+  var instrucciones = document.getElementById('exam-instrucciones').value.trim();
+  var mezclarOpciones = document.getElementById('exam-mezclar-opciones').checked;
+  var incluirHoja = document.getElementById('exam-incluir-hoja').checked;
+  var incluirCirculos = document.getElementById('exam-incluir-circulos').checked;
+  var errorDiv = document.getElementById('exam-error');
+  errorDiv.style.display = 'none';
+  
+  if (!disciplina) { errorDiv.textContent = '⚠️ Selecciona una disciplina.'; errorDiv.style.display = 'block'; return; }
+  if (!grado) { errorDiv.textContent = '⚠️ Selecciona un grado.'; errorDiv.style.display = 'block'; return; }
+  
+  var preguntasDisponibles = bancoPreguntas.filter(function(p) {
+    return p.activa && compararDisciplinas(p.disciplina, disciplina) && p.grado === grado;
+  });
+  
+  if (preguntasDisponibles.length === 0) {
+    errorDiv.innerHTML = '⚠️ No hay preguntas activas para <strong>' + disciplina + '</strong> en <strong>' + grado + '° grado</strong>.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  if (preguntasDisponibles.length < TOTAL_PREGUNTAS_EXAMEN) {
+    if (!confirm('⚠️ Solo hay ' + preguntasDisponibles.length + ' preguntas disponibles. ¿Continuar con ' + preguntasDisponibles.length + ' preguntas?')) return;
+  }
+  
+  var seleccionadas = seleccionarPreguntasExamen(preguntasDisponibles);
+  if (seleccionadas.length === 0) { errorDiv.textContent = '⚠️ No se pudieron seleccionar preguntas.'; errorDiv.style.display = 'block'; return; }
+  
+  var letras = ['A', 'B', 'C', 'D'];
+  var procesadas = seleccionadas.map(function(p, index) {
+    var opciones = [
+      { letra: 'A', texto: sanearValor(p.opcion_a) },
+      { letra: 'B', texto: sanearValor(p.opcion_b) },
+      { letra: 'C', texto: sanearValor(p.opcion_c) },
+      { letra: 'D', texto: sanearValor(p.opcion_d) }
+    ];
+    var letraCorrectaOriginal = p.correcta.toUpperCase();
+    var opcionesFinales = opciones.slice();
+    var letraCorrectaFinal = letraCorrectaOriginal;
+    
+    if (mezclarOpciones) {
+      var correctaIdx = letras.indexOf(letraCorrectaOriginal);
+      var opcionCorrecta = opciones[correctaIdx];
+      opcionesFinales = opciones.slice().sort(function() { return Math.random() - 0.5; });
+      var nuevaPos = -1;
+      for (var i = 0; i < opcionesFinales.length; i++) {
+        if (opcionesFinales[i].texto === opcionCorrecta.texto) { nuevaPos = i; break; }
+      }
+      letraCorrectaFinal = letras[nuevaPos];
+      opcionesFinales = opcionesFinales.map(function(o, i) { return { letra: letras[i], texto: o.texto }; });
+    }
+    
+    return { numero: index + 1, id: p.id, enunciado: sanearValor(p.enunciado), opciones: opcionesFinales, correcta: letraCorrectaFinal, area: p['área'] || p.area || 'General' };
+  });
+  
+  var config = {
+    disciplina: disciplina,
+    grado: grado,
+    institucion: NOMBRE_ESCUELA,
+    ubicacion: UBICACION_ESCUELA,
+    cicloEscolar: obtenerCicloEscolar(),
+    docente: docente,
+    instrucciones: instrucciones,
+    preguntas: procesadas,
+    incluirHoja: incluirHoja,
+    incluirCirculos: incluirCirculos,
+    totalPreguntas: procesadas.length
+  };
+  
+  var htmlExamen = construirHTMLExamen(config);
+  
+  var iframe = document.getElementById('iframe-examen');
+  var doc = iframe.contentDocument || iframe.contentWindow.document;
+  
+  doc.open();
+  doc.write(htmlExamen);
+  doc.close();
+  
+  setTimeout(function() {
+    try {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } catch (e) {
+      console.error('Error al imprimir:', e);
+      mostrarToast('Error al abrir el diálogo de impresión: ' + e.message, 'error');
+    }
+  }, 600);
+  
+  cerrarModalExamen();
+  mostrarToast('Examen generado con ' + procesadas.length + ' preguntas. Abriendo diálogo de impresión...');
+}
+
+function construirHTMLExamen(config) {
+  var disciplina = config.disciplina;
+  var grado = config.grado;
+  var institucion = config.institucion;
+  var ubicacion = config.ubicacion;
+  var cicloEscolar = config.cicloEscolar;
+  var docente = config.docente;
+  var instrucciones = config.instrucciones;
+  var preguntas = config.preguntas;
+  var incluirHoja = config.incluirHoja;
+  var incluirCirculos = config.incluirCirculos;
+  var totalPreguntas = config.totalPreguntas;
+  
+  var nombreDisciplinaExamen = obtenerNombreDisciplinaExamen(disciplina, grado);
+  
+  var fechaHoy = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  
+  var htmlPreguntas = '';
+  preguntas.forEach(function(p) {
+    var htmlOpciones = '';
+    p.opciones.forEach(function(op) {
+      if (incluirCirculos) {
+        htmlOpciones += '<div class="opcion"><span class="circulo"></span><span class="letra-opcion">' + op.letra + ')</span><span class="texto-opcion">' + escaparHTML(op.texto) + '</span></div>';
+      } else {
+        htmlOpciones += '<div class="opcion"><span class="parentesis">( &nbsp; )</span><span class="letra-opcion">' + op.letra + ')</span><span class="texto-opcion">' + escaparHTML(op.texto) + '</span></div>';
+      }
+    });
+    htmlPreguntas += '<div class="pregunta"><div class="pregunta-texto"><span class="numero">' + p.numero + '.</span> ' + escaparHTML(p.enunciado) + '</div><div class="opciones">' + htmlOpciones + '</div></div>';
+  });
+  
+  var htmlHojaRespuestas = '';
+  if (incluirHoja) {
+    var filas = '';
+    preguntas.forEach(function(p) {
+      filas += '<tr><td class="num-pregunta">' + p.numero + '</td><td class="letra-correcta">' + p.correcta + '</td><td class="area-pregunta">' + escaparHTML(p.area) + '</td><td class="id-pregunta">' + p.id + '</td></tr>';
+    });
+    htmlHojaRespuestas = '<div class="page-break"></div><div class="hoja-respuestas"><h2 class="titulo-hoja">📋 HOJA DE RESPUESTAS - USO EXCLUSIVO DEL DOCENTE</h2><p class="info-hoja"><strong>Disciplina:</strong> ' + escaparHTML(nombreDisciplinaExamen) + ' | <strong>Grado:</strong> ' + grado + '° | <strong>Ciclo:</strong> ' + cicloEscolar + ' | <strong>Total:</strong> ' + totalPreguntas + '</p><table class="tabla-respuestas"><thead><tr><th>Pregunta</th><th>Respuesta</th><th>Área</th><th>ID</th></tr></thead><tbody>' + filas + '</tbody></table><div class="nota-hoja"><p><strong>⚠️ IMPORTANTE:</strong> Esta hoja es para uso exclusivo del docente. No entregar a los alumnos.</p></div></div>';
+  }
+  
+  var html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Examen</title><style>';
+  html += '* { box-sizing: border-box; margin: 0; padding: 0; }';
+  html += 'body { font-family: "Segoe UI", Arial, sans-serif; color: #1f2937; line-height: 1.6; background: white; padding: 1.5cm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }';
+  /* CLAVE: @page con margin: 0 elimina los encabezados/pies del navegador (URL, título, fecha, número de página) */
+  html += '@page { size: letter; margin: 0; }';
+  html += '@media print { body { padding: 1.5cm; -webkit-print-color-adjust: exact; print-color-adjust: exact; } .pregunta { page-break-inside: avoid; } .hoja-respuestas { page-break-before: always; } .encabezado, .datos-alumno, .instrucciones { page-break-inside: avoid; } }';
+  html += '.encabezado { text-align: center; border-bottom: 3px solid #6366f1; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; justify-content: center; }';
+  html += '.logo-examen { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid #6366f1; }';
+  html += '.encabezado-texto { flex: 1; }';
+  html += '.encabezado-texto .tipo-examen { font-size: 0.85rem; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3px; }';
+  html += '.encabezado-texto h1 { font-size: 1.4rem; color: #4f46e5; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }';
+  html += '.encabezado-texto .nombre-escuela { font-size: 1.05rem; color: #1f2937; font-weight: 700; margin-bottom: 2px; }';
+  html += '.encabezado-texto .ubicacion { font-size: 0.9rem; color: #6b7280; margin-bottom: 2px; }';
+  html += '.encabezado-texto .disciplina-grado { font-size: 1rem; color: #6366f1; font-weight: 600; margin-bottom: 2px; }';
+  html += '.encabezado-texto .info-extra { font-size: 0.85rem; color: #9ca3af; margin-top: 5px; }';
+  html += '.datos-alumno { margin-bottom: 20px; padding: 15px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; }';
+  html += '.campo-nombre { margin-bottom: 15px; }';
+  html += '.fila-segunda { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }';
+  html += '.campo-dato { display: flex; flex-direction: column; }';
+  html += '.campo-dato label { font-size: 0.75rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }';
+  html += '.campo-dato .linea { border-bottom: 2px solid #9ca3af; height: 25px; }';
+  html += '.instrucciones { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px 15px; margin-bottom: 20px; border-radius: 0 8px 8px 0; font-size: 0.9rem; }';
+  html += '.instrucciones strong { color: #92400e; display: block; margin-bottom: 5px; }';
+  html += '.instrucciones ul { margin-left: 20px; margin-top: 5px; }';
+  html += '.instrucciones li { margin-bottom: 3px; }';
+  html += '.pregunta { margin-bottom: 20px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; background: white; page-break-inside: avoid; }';
+  html += '.pregunta-texto { font-size: 1rem; font-weight: 600; margin-bottom: 10px; color: #1f2937; line-height: 1.5; }';
+  html += '.pregunta-texto .numero { color: #6366f1; font-weight: 700; margin-right: 5px; }';
+  html += '.opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }';
+  html += '.opcion { display: flex; align-items: flex-start; gap: 8px; padding: 8px; border-radius: 6px; background: #f9fafb; }';
+  html += '.circulo { width: 20px; height: 20px; border: 2px solid #6366f1; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }';
+  html += '.parentesis { color: #6366f1; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; margin-top: 2px; }';
+  html += '.letra-opcion { font-weight: 700; color: #4f46e5; flex-shrink: 0; }';
+  html += '.texto-opcion { flex: 1; color: #1f2937; }';
+  html += '.pie-examen { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 2px dashed #d1d5db; color: #9ca3af; font-size: 0.85rem; }';
+  html += '.page-break { page-break-after: always; }';
+  html += '.hoja-respuestas { padding: 20px; }';
+  html += '.titulo-hoja { text-align: center; color: #4f46e5; font-size: 1.3rem; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 3px solid #6366f1; }';
+  html += '.info-hoja { text-align: center; margin-bottom: 20px; color: #6b7280; font-size: 0.95rem; }';
+  html += '.tabla-respuestas { width: 100%; border-collapse: collapse; margin-bottom: 20px; }';
+  html += '.tabla-respuestas th { background: #6366f1; color: white; padding: 10px; text-align: left; font-size: 0.9rem; }';
+  html += '.tabla-respuestas td { padding: 8px 10px; border-bottom: 1px solid #e5e7eb; font-size: 0.9rem; }';
+  html += '.tabla-respuestas tr:nth-child(even) { background: #f9fafb; }';
+  html += '.num-pregunta { font-weight: 700; color: #4f46e5; width: 80px; }';
+  html += '.letra-correcta { font-weight: 700; color: #10b981; font-size: 1.1rem; width: 80px; }';
+  html += '.area-pregunta { color: #6b7280; }';
+  html += '.id-pregunta { font-family: monospace; font-size: 0.8rem; color: #9ca3af; }';
+  html += '.nota-hoja { background: #fee2e2; border-left: 4px solid #ef4444; padding: 12px 15px; border-radius: 0 8px 8px 0; color: #991b1b; font-size: 0.9rem; margin-top: 20px; }';
+  html += '</style></head><body>';
+  
+  html += '<div class="encabezado"><img src="' + LOGO_URL + '" alt="Logo" class="logo-examen" onerror="this.style.display=\'none\'"><div class="encabezado-texto"><div class="tipo-examen">✏️ Evaluación Diagnóstica</div><div class="nombre-escuela">' + escaparHTML(institucion) + '</div><div class="ubicacion">📍 ' + escaparHTML(ubicacion) + '</div><div class="disciplina-grado">' + escaparHTML(nombreDisciplinaExamen) + ' - ' + grado + '° Grado</div><div class="info-extra">';
+  html += 'Ciclo escolar: ' + escaparHTML(cicloEscolar) + ' | ';
+  if (docente) html += 'Docente: ' + escaparHTML(docente) + ' | ';
+  html += 'Fecha: ' + fechaHoy + '</div></div></div>';
+  
+  html += '<div class="datos-alumno">';
+  html += '<div class="campo-dato campo-nombre"><label>Nombre del alumno(a)</label><div class="linea"></div></div>';
+  html += '<div class="fila-segunda">';
+  html += '<div class="campo-dato"><label>Grupo</label><div class="linea"></div></div>';
+  html += '<div class="campo-dato"><label>Matrícula</label><div class="linea"></div></div>';
+  html += '<div class="campo-dato"><label>N° de Aciertos</label><div class="linea"></div></div>';
+  html += '<div class="campo-dato"><label>Calificación</label><div class="linea"></div></div>';
+  html += '</div>';
+  html += '</div>';
+  
+  html += '<div class="instrucciones"><strong>📝 Instrucciones:</strong><ul><li>Lee cuidadosamente cada pregunta antes de responder.</li><li>Selecciona <strong>una sola respuesta</strong> para cada pregunta.</li>';
+  if (incluirCirculos) html += '<li>Rellena completamente el círculo de la respuesta elegida.</li>';
+  else html += '<li>Marca dentro del paréntesis la letra de la respuesta elegida.</li>';
+  html += '<li>No uses corrector. Si te equivocas, tacha y marca la respuesta correcta.</li><li>Tienes 45 minutos para completar el examen.</li>';
+  if (instrucciones) html += '<li>' + escaparHTML(instrucciones) + '</li>';
+  html += '</ul></div>';
+  
+  html += htmlPreguntas;
+  
+  html += '<div class="pie-examen"><p>📚 Evaluación Diagnóstica de ' + escaparHTML(nombreDisciplinaExamen) + ' | ' + totalPreguntas + ' preguntas | Ciclo escolar ' + escaparHTML(cicloEscolar) + '</p><p>' + escaparHTML(institucion) + ' - ' + escaparHTML(ubicacion) + '</p><p>¡Mucho éxito! 🌟</p></div>';
+  
+  html += htmlHojaRespuestas;
+  html += '</body></html>';
+  
+  return html;
+}
+
+function sincronizarDatos() {
+  var status = document.getElementById('sync-status');
+  var statusText = document.getElementById('sync-status-text');
+  status.className = 'sync-status loading';
+  statusText.textContent = 'Sincronizando...';
+  fetch(API_URL + '?action=getAll', { redirect: 'follow' })
+    .then(function(response) { return response.text(); })
+    .then(function(text) {
+      var data;
+      try { data = JSON.parse(text); }
+      catch (e) { throw new Error('Respuesta no válida'); }
+      if (!Array.isArray(data)) {
+        if (data.data && Array.isArray(data.data)) data = data.data;
+        else throw new Error('Formato inesperado');
+      }
+      datosEstudiantes = data.map(normalizarEstudiante);
+      status.className = 'sync-status online';
+      statusText.textContent = '✅ Conectado';
+      document.getElementById('sync-last-update').textContent = 'Última: ' + new Date().toLocaleString('es-MX') + ' • ' + datosEstudiantes.length + ' registros';
+      document.getElementById('sync-count').textContent = datosEstudiantes.length;
+      document.getElementById('download-panel').style.display = datosEstudiantes.length > 0 ? 'block' : 'none';
+      if (datosEstudiantes.length > 0) {
+        document.getElementById('contenedor-analisis').style.display = 'block';
+        renderStatsGenerales();
+        actualizarAnalisis();
+      }
+    })
+    .catch(function(err) {
+      status.className = 'sync-status offline';
+      statusText.textContent = '❌ Error';
+      document.getElementById('sync-last-update').textContent = 'Error: ' + err.message;
+    });
+}
+
+function normalizarEstudiante(r) {
+  return {
+    id: String(r.id || '').trim(),
+    nombre: String(r.nombre || '').toUpperCase().trim(),
+    inicio: r.inicio || '', fin: r.fin || '',
+    disciplina: String(r.disciplina || '').trim(),
+    grado: String(r.grado || '').trim(),
+    grupo: String(r.grupo || '').toUpperCase().trim(),
+    calificacion: parseFloat(r.calificacion) || 0,
+    aciertos: parseInt(r.aciertos) || 0,
+    respuestas: Array.isArray(r.respuestas) ? r.respuestas : []
+  };
+}
+
+function renderStatsGenerales() {
+  var total = datosEstudiantes.length;
+  if (total === 0) return;
+  var suma = 0, max = 0, min = 100, aprobados = 0, riesgo = 0;
+  datosEstudiantes.forEach(function(e) {
+    suma += e.calificacion;
+    if (e.calificacion > max) max = e.calificacion;
+    if (e.calificacion < min) min = e.calificacion;
+    if (e.calificacion >= 70) aprobados++;
+    if (e.calificacion < 60) riesgo++;
+  });
+  var promEscala10 = (suma / total / 10).toFixed(1);
+  var maxEscala10 = (max / 10).toFixed(1);
+  var minEscala10 = (min / 10).toFixed(1);
+  document.getElementById('stats-generales').innerHTML = 
+    '<div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">' + total + '</div></div>' +
+    '<div class="stat-card blue"><div class="stat-label">Promedio</div><div class="stat-value">' + promEscala10 + '</div></div>' +
+    '<div class="stat-card green"><div class="stat-label">Aprobados (≥6.0)</div><div class="stat-value">' + ((aprobados/total)*100).toFixed(1) + '%</div></div>' +
+    '<div class="stat-card green"><div class="stat-label">Máxima</div><div class="stat-value">' + maxEscala10 + '</div></div>' +
+    '<div class="stat-card red"><div class="stat-label">Mínima</div><div class="stat-value">' + minEscala10 + '</div></div>' +
+    '<div class="stat-card orange"><div class="stat-label">En riesgo (<6.0)</div><div class="stat-value">' + riesgo + '</div></div>';
+}
+
+function cambiarNivel() {
+  var nivel = document.getElementById('nivel-analisis').value;
+  document.getElementById('filtro-disciplina-wrap').style.display = nivel === 'disciplina' ? 'block' : 'none';
+  document.getElementById('filtro-grado-wrap').style.display = nivel === 'grado' ? 'block' : 'none';
+  document.getElementById('filtro-grupo-wrap').style.display = nivel === 'grupo' ? 'block' : 'none';
+  document.getElementById('filtro-individual-wrap').style.display = nivel === 'individual' ? 'block' : 'none';
+  actualizarAnalisis();
+}
+
+function obtenerDatosFiltrados() {
+  var nivel = document.getElementById('nivel-analisis').value;
+  var datos = datosEstudiantes.slice();
+  if (nivel === 'disciplina') {
+    var d = document.getElementById('filtro-disciplina').value;
+    if (d !== 'all') datos = datos.filter(function(e) { return compararDisciplinas(e.disciplina, d); });
+  } else if (nivel === 'grado') {
+    var g = document.getElementById('filtro-grado').value;
+    if (g !== 'all') datos = datos.filter(function(e) { return e.grado === g; });
+  } else if (nivel === 'grupo') {
+    var g2 = document.getElementById('filtro-grupo').value;
+    if (g2 !== 'all') datos = datos.filter(function(e) { return e.grupo === g2; });
+  }
+  return datos;
+}
+
+function actualizarAnalisis() {
+  var nivel = document.getElementById('nivel-analisis').value;
+  var cont = document.getElementById('resultados-analisis');
+  var datos = obtenerDatosFiltrados();
+  if (datos.length === 0) {
+    cont.innerHTML = '<div class="panel"><div class="empty-state"><div class="empty-state-icon">📭</div><p>No hay datos.</p></div></div>';
+    return;
+  }
+  if (nivel === 'individual') renderVistaIndividual(datos);
+  else if (nivel === 'disciplina' || nivel === 'grado' || nivel === 'grupo') renderComparativa(nivel, datos);
+  else renderVistaTotal(datos);
+}
+
+function renderVistaTotal(datos) {
+  var cont = document.getElementById('resultados-analisis');
+  var rangos = [
+    { label: '9-10', min: 90, max: 100, color: '#10b981' },
+    { label: '8-8.9', min: 80, max: 89, color: '#34d399' },
+    { label: '7-7.9', min: 70, max: 79, color: '#60a5fa' },
+    { label: '6-6.9', min: 60, max: 69, color: '#fbbf24' },
+    { label: '<6', min: 0, max: 59, color: '#ef4444' }
+  ];
+  rangos.forEach(function(r) { r.count = datos.filter(function(e) { return e.calificacion >= r.min && e.calificacion <= r.max; }).length; });
+  var maxDist = 0;
+  rangos.forEach(function(d) { if (d.count > maxDist) maxDist = d.count; });
+  var html = '<div class="panel"><h2>📊 Distribución (escala 10)</h2><div class="bar-chart" style="margin-bottom:40px;">';
+  rangos.forEach(function(d) {
+    html += '<div class="bar" style="height: ' + (maxDist > 0 ? (d.count/maxDist)*100 : 0) + '%; background: ' + d.color + ';"><div class="bar-value">' + d.count + '</div><div class="bar-label">' + d.label + '</div></div>';
+  });
+  html += '</div></div><div class="panel"><h2>📋 Listado (' + datos.length + ')</h2><div class="table-container"><table><thead><tr><th>ID</th><th>Nombre</th><th>Disciplina</th><th>Grado</th><th>Grupo</th><th>Aciertos</th><th>Calif.</th></tr></thead><tbody>';
+  datos.sort(function(a, b) { return a.nombre.localeCompare(b.nombre); });
+  datos.forEach(function(e) {
+    var nombreDisc = obtenerNombreDisciplinaExamen(e.disciplina, e.grado);
+    var calEscala10 = (e.calificacion / 10).toFixed(1);
+    html += '<tr><td>' + e.id + '</td><td>' + e.nombre + '</td><td>' + nombreDisc + '</td><td>' + e.grado + '°</td><td>' + e.grupo + '</td><td>' + e.aciertos + '/20</td><td><strong>' + calEscala10 + '</strong></td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+  cont.innerHTML = html;
+}
+
+function renderComparativa(campo, datos) {
+  var cont = document.getElementById('resultados-analisis');
+  var grupos = {};
+  datos.forEach(function(e) {
+    var key = e[campo] || 'Sin dato';
+    if (!grupos[key]) grupos[key] = [];
+    grupos[key].push(e);
+  });
+  var stats = Object.keys(grupos).map(function(k) {
+    var arr = grupos[k];
+    var suma = 0, aprob = 0, riesgo = 0;
+    arr.forEach(function(e) { suma += e.calificacion; if (e.calificacion >= 70) aprob++; if (e.calificacion < 60) riesgo++; });
+    var promedioPorcentaje = suma / arr.length;
+    var promedioEscala10 = (promedioPorcentaje / 10).toFixed(1);
+    return { key: k, label: k + (campo === 'grado' ? '°' : ''), total: arr.length, promedio: promedioEscala10, promedioPorcentaje: promedioPorcentaje, aprobados: ((aprob/arr.length)*100).toFixed(1), riesgo: ((riesgo/arr.length)*100).toFixed(1) };
+  });
+  var html = '<div class="panel"><h2>📊 Comparativa por ' + campo + ' (escala 10)</h2><div class="bar-chart" style="margin-bottom:50px;">';
+  stats.forEach(function(s) {
+    html += '<div class="bar" style="height: ' + (parseFloat(s.promedioPorcentaje)/100)*100 + '%;"><div class="bar-value">' + s.promedio + '</div><div class="bar-label">' + s.label + '<br>(' + s.total + ')</div></div>';
+  });
+  html += '</div></div><div class="panel"><h2>📈 Detalle</h2><div class="table-container"><table><thead><tr><th>' + campo + '</th><th>Total</th><th>Promedio</th><th>Aprobados</th><th>Riesgo</th></tr></thead><tbody>';
+  stats.forEach(function(s) {
+    html += '<tr><td><strong>' + s.label + '</strong></td><td>' + s.total + '</td><td>' + s.promedio + '</td><td>' + s.aprobados + '%</td><td style="color:var(--danger);">' + s.riesgo + '%</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+  cont.innerHTML = html;
+}
+
+function renderVistaIndividual(datos) {
+  var cont = document.getElementById('resultados-analisis');
+  var busqueda = document.getElementById('filtro-individual').value.toLowerCase();
+  var filtrados = datos;
+  if (busqueda) {
+    filtrados = datos.filter(function(e) {
+      return e.id.toLowerCase().indexOf(busqueda) !== -1 || e.nombre.toLowerCase().indexOf(busqueda) !== -1;
+    });
+  }
+  if (filtrados.length === 0) {
+    cont.innerHTML = '<div class="panel"><div class="empty-state"><div class="empty-state-icon">🔍</div><p>Sin resultados.</p></div></div>';
+    return;
+  }
+  var html = '<div class="panel"><h2>👤 Individuales (' + filtrados.length + ')</h2><div class="table-container"><table><thead><tr><th>ID</th><th>Nombre</th><th>Disciplina</th><th>Grado</th><th>Grupo</th><th>Calif.</th></tr></thead><tbody>';
+  filtrados.forEach(function(e) {
+    var nombreDisc = obtenerNombreDisciplinaExamen(e.disciplina, e.grado);
+    var calEscala10 = (e.calificacion / 10).toFixed(1);
+    html += '<tr><td>' + e.id + '</td><td>' + e.nombre + '</td><td>' + nombreDisc + '</td><td>' + e.grado + '°</td><td>' + e.grupo + '</td><td><strong>' + calEscala10 + '</strong></td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+  cont.innerHTML = html;
+}
+
+function generarCSV(datos, nombreArchivo) {
+  if (datos.length === 0) { mostrarToast('No hay datos para descargar', 'warning'); return; }
+  
+  var headers = ['ID', 'Nombre', 'Disciplina', 'Grado', 'Grupo', 'Aciertos', 'Calificación', 'Fecha Inicio', 'Fecha Fin'];
+  var rows = [];
+  
+  datos.forEach(function(e) {
+    var calPorcentaje = parseFloat(e.calificacion) || 0;
+    var calEscala10 = calPorcentaje / 10;
+    var calFormato = calEscala10.toFixed(1);
+    var nombreDisciplina = obtenerNombreDisciplinaExamen(e.disciplina, e.grado);
+    var aciertosNum = parseInt(e.aciertos) || 0;
+    
+    var fila = [
+      '"' + String(e.id).replace(/"/g, '""') + '"',
+      '"' + String(e.nombre).replace(/"/g, '""') + '"',
+      '"' + String(nombreDisciplina).replace(/"/g, '""') + '"',
+      '"' + String(e.grado).replace(/"/g, '""') + '"',
+      '"' + String(e.grupo).replace(/"/g, '""') + '"',
+      aciertosNum,
+      calFormato,
+      '"' + (e.inicio ? new Date(e.inicio).toLocaleString('es-MX') : '').replace(/"/g, '""') + '"',
+      '"' + (e.fin ? new Date(e.fin).toLocaleString('es-MX') : '').replace(/"/g, '""') + '"'
+    ];
+    rows.push(fila.join(','));
+  });
+  
+  var csv = [headers.join(',')].concat(rows).join('\n');
+  var blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
+  link.href = url;
+  link.download = nombreArchivo;
+  link.click();
+  URL.revokeObjectURL(url);
+  mostrarToast('Descargados ' + datos.length + ' registros');
+}
+
+function descargarTodos() {
+  var datos = datosEstudiantes.slice().sort(function(a, b) {
+    var ga = parseInt(a.grado) || 0, gb = parseInt(b.grado) || 0;
+    if (ga !== gb) return ga - gb;
+    if (a.grupo !== b.grupo) return a.grupo.localeCompare(b.grupo);
+    return a.nombre.localeCompare(b.nombre);
+  });
+  generarCSV(datos, 'resultados_todos_' + new Date().toISOString().slice(0, 10) + '.csv');
+}
+
+function descargarPorGrado() {
+  var g = document.getElementById('download-grado').value;
+  var datos = datosEstudiantes.slice();
+  if (g !== 'all') datos = datos.filter(function(e) { return e.grado === g; });
+  datos.sort(function(a, b) { return a.nombre.localeCompare(b.nombre); });
+  var sufijo = g === 'all' ? 'todos_grados' : 'grado_' + g;
+  generarCSV(datos, 'resultados_' + sufijo + '_' + new Date().toISOString().slice(0, 10) + '.csv');
+}
+
+function descargarPorGrupo() {
+  var g = document.getElementById('download-grupo').value;
+  var datos = datosEstudiantes.slice();
+  if (g !== 'all') datos = datos.filter(function(e) { return e.grupo === g; });
+  datos.sort(function(a, b) {
+    var ga = parseInt(a.grado) || 0, gb = parseInt(b.grado) || 0;
+    if (ga !== gb) return ga - gb;
+    return a.nombre.localeCompare(b.nombre);
+  });
+  var sufijo = g === 'all' ? 'todos_grupos' : 'grupo_' + g;
+  generarCSV(datos, 'resultados_' + sufijo + '_' + new Date().toISOString().slice(0, 10) + '.csv');
+}
+
+function descargarPorDisciplina() {
+  var d = document.getElementById('download-disciplina').value;
+  var datos = datosEstudiantes.slice();
+  if (d !== 'all') datos = datos.filter(function(e) { return compararDisciplinas(e.disciplina, d); });
+  datos.sort(function(a, b) {
+    var ga = parseInt(a.grado) || 0, gb = parseInt(b.grado) || 0;
+    if (ga !== gb) return ga - gb;
+    if (a.grupo !== b.grupo) return a.grupo.localeCompare(b.grupo);
+    return a.nombre.localeCompare(b.nombre);
+  });
+  var sufijo = d === 'all' ? 'todas_disciplinas' : d.toLowerCase().replace(/\s+/g, '_');
+  generarCSV(datos, 'resultados_' + sufijo + '_' + new Date().toISOString().slice(0, 10) + '.csv');
+}
+
+function limpiarDatos() {
+  if (!confirm('¿Limpiar todos los datos?')) return;
+  datosEstudiantes = [];
+  document.getElementById('contenedor-analisis').style.display = 'none';
+  document.getElementById('download-panel').style.display = 'none';
+  document.getElementById('sync-count').textContent = '0';
+}
+
+document.getElementById('auto-refresh').addEventListener('change', function(e) {
+  if (e.target.checked) {
+    var seg = parseInt(document.getElementById('refresh-interval').value) || 30;
+    autoRefreshTimer = setInterval(function() {
+      if (document.visibilityState === 'visible') sincronizarDatos();
+    }, seg * 1000);
+  } else {
+    if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+  }
+});
+
+mostrarCicloEnHeader();
+cargarBanco();
+</script>
+
+</body>
+</html>
