@@ -136,7 +136,6 @@
             padding-bottom: 20px;
             border-bottom: 3px solid #1e3a8a;
         }
-        /* 👇 TAMAÑO AJUSTADO para el escudo en el PDF (proporción horizontal) */
         .pdf-header img {
             width: 120px;
             height: 80px;
@@ -307,17 +306,12 @@
                         <option value="1">1°</option>
                         <option value="2">2°</option>
                         <option value="3">3°</option>
-                        <option value="4">4°</option>
-                        <option value="5">5°</option>
-                        <option value="6">6°</option>
                     </select>
+                    <!-- 👇 GRUPO: Solo opciones A y B -->
                     <select id="selectGrupo" class="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none">
                         <option value="">Selecciona grupo</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
                     </select>
                     <button onclick="buscarPorGrado()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium">Buscar</button>
                 </div>
@@ -1001,7 +995,6 @@
             }
         }
 
-        // 👇 PDF: AHORA USA EL ESCUDO (misma imagen del Word) con respaldo al logo original
         async function generarCartaPDF() {
             if (!alumnoSeleccionado) {
                 mostrarMensaje('Primero selecciona un alumno', 'warning');
@@ -1020,11 +1013,9 @@
             document.getElementById('btnGenerarCartaPDF').disabled = true;
             document.getElementById('btnGenerarCartaWord').disabled = true;
 
-            // 👇 Asegurar que ambos logos estén cargados
             if (!logoBase64) await precargarLogo();
             if (!logoWordBase64) await precargarLogoWord();
             
-            // 👇 El PDF usa el escudo; si no existe, usa el logo original automáticamente
             const logoParaPDF = logoWordBase64 || logoBase64 || LOGO_URL;
 
             const hoy = new Date().toLocaleDateString('es-MX', { 
@@ -1169,7 +1160,6 @@
                         padding-bottom: 15pt;
                         border-bottom: 3pt solid #1e3a8a;
                     }
-                    /* Escudo pequeño en Word (1/4 del tamaño original) */
                     .pdf-header img {
                         display: table-cell;
                         width: 22pt;
