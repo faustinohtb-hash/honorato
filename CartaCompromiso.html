@@ -7,31 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .incidencia-card {
-            transition: all 0.3s ease;
-        }
-        .incidencia-card:hover {
-            transform: translateY(-2px);
-        }
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
+        .loading-spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .incidencia-card { transition: all 0.3s ease; }
+        .incidencia-card:hover { transform: translateY(-2px); }
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
         .badge-rojo { background-color: #fee2e2; color: #991b1b; }
         .badge-amarillo { background-color: #fef3c7; color: #92400e; }
         .badge-verde { background-color: #d1fae5; color: #065f46; }
@@ -39,41 +19,16 @@
         .badge-naranja { background-color: #ffedd5; color: #9a3412; }
         .badge-morado { background-color: #f3e8ff; color: #6b21a8; }
         .badge-gris { background-color: #f3f4f6; color: #374151; }
-        
-        .modo-prueba-banner {
-            background: linear-gradient(90deg, #f59e0b, #d97706);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: bold;
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .modo-prueba-banner { background: linear-gradient(90deg, #f59e0b, #d97706); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; display: none; align-items: center; gap: 0.5rem; }
         .modo-prueba-banner.activo { display: flex; }
-        
-        .incidencia-carta {
-            border: 2px solid #e5e7eb;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background-color: #f9fafb;
-        }
+        .incidencia-carta { border: 2px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; background-color: #f9fafb; }
         .incidencia-carta.tipo-violencia { border-left: 5px solid #dc2626; background-color: #fef2f2; }
         .incidencia-carta.tipo-acoso { border-left: 5px solid #7c3aed; background-color: #f5f3ff; }
         .incidencia-carta.tipo-indisciplina { border-left: 5px solid #f59e0b; background-color: #fffbeb; }
         .incidencia-carta.tipo-academico { border-left: 5px solid #3b82f6; background-color: #eff6ff; }
         .incidencia-carta.tipo-asistencia { border-left: 5px solid #10b981; background-color: #ecfdf5; }
         .incidencia-carta.tipo-general { border-left: 5px solid #6b7280; background-color: #f9fafb; }
-        
-        .badge-carta {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-right: 0.5rem;
-        }
+        .badge-carta { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; margin-right: 0.5rem; }
         .badge-carta-rojo { background-color: #fee2e2; color: #991b1b; }
         .badge-carta-amarillo { background-color: #fef3c7; color: #92400e; }
         .badge-carta-verde { background-color: #d1fae5; color: #065f46; }
@@ -81,160 +36,44 @@
         .badge-carta-morado { background-color: #f3e8ff; color: #6b21a8; }
         .badge-carta-naranja { background-color: #ffedd5; color: #9a3412; }
         .badge-carta-gris { background-color: #f3f4f6; color: #374151; }
-        
-        .detalle-carta {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: #4b5563;
-            margin-top: 0.75rem;
-        }
+        .detalle-carta { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem; color: #4b5563; margin-top: 0.75rem; }
         .detalle-carta .full-width { grid-column: 1 / -1; }
-        
-        .banner-modo-normal {
-            background: linear-gradient(90deg, #3b82f6, #2563eb);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            font-size: 0.875rem;
-        }
-        
+        .banner-modo-normal { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; font-size: 0.875rem; }
         .incidencia-tipo-violencia { border-left: 5px solid #dc2626 !important; }
         .incidencia-tipo-acoso { border-left: 5px solid #7c3aed !important; }
         .incidencia-tipo-indisciplina { border-left: 5px solid #f59e0b !important; }
         .incidencia-tipo-academico { border-left: 5px solid #3b82f6 !important; }
         .incidencia-tipo-asistencia { border-left: 5px solid #10b981 !important; }
         .incidencia-tipo-general { border-left: 5px solid #6b7280 !important; }
-        
         .hidden { display: none !important; }
-        
-        .pdf-container-wrapper {
-            position: absolute;
-            left: -10000px;
-            top: 0;
-            width: 800px;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .pdf-container {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            width: 800px;
-            padding: 20px;
-            background: white;
-            color: #000;
-        }
-        
-        .pdf-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #1e3a8a;
-        }
-        .pdf-header img {
-            width: 120px;
-            height: 80px;
-            object-fit: contain;
-            display: block;
-        }
-        .pdf-header-text {
-            flex: 1;
-        }
-        .pdf-header-text h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: bold;
-            color: #1e3a8a;
-            line-height: 1.3;
-        }
-        .pdf-header-text p {
-            margin: 5px 0 0 0;
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .header-escuela-visible {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid #1e3a8a;
-        }
-        .header-escuela-visible img {
-            width: 70px;
-            height: 70px;
-            object-fit: contain;
-        }
-        .header-escuela-visible h2 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: bold;
-            color: #1e3a8a;
-        }
-        .header-escuela-visible p {
-            margin: 3px 0 0 0;
-            font-size: 13px;
-            color: #666;
-        }
-        
-        .pdf-container .incidencia-carta {
-            background: transparent !important;
-            border: 1px solid #333 !important;
-            border-left: 5px solid #333 !important;
-            border-radius: 0.3rem !important;
-            padding: 0.75rem !important;
-            margin-bottom: 0.75rem !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-            -webkit-column-break-inside: avoid !important;
-        }
+        .pdf-container-wrapper { position: absolute; left: -10000px; top: 0; width: 800px; pointer-events: none; z-index: 1; }
+        .pdf-container { font-family: 'Arial', sans-serif; line-height: 1.6; width: 800px; padding: 20px; background: white; color: #000; }
+        .pdf-header { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 3px solid #1e3a8a; }
+        .pdf-header img { width: 120px; height: 80px; object-fit: contain; display: block; }
+        .pdf-header-text { flex: 1; }
+        .pdf-header-text h2 { margin: 0; font-size: 20px; font-weight: bold; color: #1e3a8a; line-height: 1.3; }
+        .pdf-header-text p { margin: 5px 0 0 0; font-size: 14px; color: #666; }
+        .header-escuela-visible { display: flex; align-items: center; gap: 15px; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 3px solid #1e3a8a; }
+        .header-escuela-visible img { width: 70px; height: 70px; object-fit: contain; }
+        .header-escuela-visible h2 { margin: 0; font-size: 18px; font-weight: bold; color: #1e3a8a; }
+        .header-escuela-visible p { margin: 3px 0 0 0; font-size: 13px; color: #666; }
+        .pdf-container .incidencia-carta { background: transparent !important; border: 1px solid #333 !important; border-left: 5px solid #333 !important; border-radius: 0.3rem !important; padding: 0.75rem !important; margin-bottom: 0.75rem !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-column-break-inside: avoid !important; }
         .pdf-container .incidencia-carta.tipo-violencia { border-left-color: #dc2626 !important; }
         .pdf-container .incidencia-carta.tipo-acoso { border-left-color: #7c3aed !important; }
         .pdf-container .incidencia-carta.tipo-indisciplina { border-left-color: #f59e0b !important; }
         .pdf-container .incidencia-carta.tipo-academico { border-left-color: #3b82f6 !important; }
         .pdf-container .incidencia-carta.tipo-asistencia { border-left-color: #10b981 !important; }
         .pdf-container .incidencia-carta.tipo-general { border-left-color: #6b7280 !important; }
-        
-        .pdf-container .badge-carta {
-            background: transparent !important;
-            border: 1px solid #333 !important;
-            color: #000 !important;
-            padding: 0.1rem 0.5rem !important;
-            font-size: 0.7rem !important;
-        }
+        .pdf-container .badge-carta { background: transparent !important; border: 1px solid #333 !important; color: #000 !important; padding: 0.1rem 0.5rem !important; font-size: 0.7rem !important; }
         .pdf-container h1, .pdf-container h2, .pdf-container h4, .pdf-container strong { color: #000 !important; }
         .pdf-container p, .pdf-container li { color: #000 !important; }
-        
-        .generando-pdf {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-        }
-        .generando-pdf-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            text-align: center;
-        }
+        .generando-pdf { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 99999; }
+        .generando-pdf-content { background: white; padding: 2rem; border-radius: 1rem; text-align: center; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         
-        <!-- Header -->
         <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
             <div class="header-escuela-visible">
                 <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela" id="logoVisible">
@@ -254,7 +93,6 @@
                         <p class="text-sm text-gray-600">Ciclo Escolar</p>
                         <p class="text-xl font-bold text-indigo-600" id="cicloActual">Calculando...</p>
                     </div>
-                    
                     <button onclick="alternarCiclo()" id="btnAlternarCiclo" 
                             class="px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium shadow-md transition-all flex items-center gap-2"
                             title="Botón temporal para revisar datos del ciclo anterior">
@@ -270,17 +108,14 @@
             </div>
         </div>
 
-        <!-- Panel de Búsqueda -->
         <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">🔍 Buscar Alumno</h2>
-            
             <div class="flex flex-wrap gap-2 mb-4">
                 <button onclick="cambiarBusqueda('nombre', event)" class="tab-btn px-4 py-2 rounded-lg bg-indigo-600 text-white font-medium">Por Nombre</button>
                 <button onclick="cambiarBusqueda('matricula', event)" class="tab-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-medium">Por Matrícula</button>
                 <button onclick="cambiarBusqueda('grado', event)" class="tab-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-medium">Por Grado y Grupo</button>
                 <button onclick="cargarTodos()" class="tab-btn px-4 py-2 rounded-lg bg-green-600 text-white font-medium">Ver Todos</button>
             </div>
-
             <div id="busquedaNombre" class="busqueda-panel">
                 <div class="flex gap-2">
                     <input type="text" id="inputNombre" placeholder="Ingresa el nombre del alumno..." 
@@ -289,16 +124,14 @@
                     <button onclick="buscarPorNombre()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium">Buscar</button>
                 </div>
             </div>
-
             <div id="busquedaMatricula" class="busqueda-panel hidden">
                 <div class="flex gap-2">
-                    <input type="text" id="inputMatricula" placeholder="Ingresa la matrícula..." 
+                    <input type="text" id="inputMatricula" placeholder="Ingresa la matrícula completa..." 
                            class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none"
                            onkeypress="if(event.key==='Enter') buscarPorMatricula()">
                     <button onclick="buscarPorMatricula()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium">Buscar</button>
                 </div>
             </div>
-
             <div id="busquedaGrado" class="busqueda-panel hidden">
                 <div class="flex gap-2 flex-wrap">
                     <select id="selectGrado" class="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none">
@@ -307,7 +140,6 @@
                         <option value="2">2°</option>
                         <option value="3">3°</option>
                     </select>
-                    <!-- 👇 GRUPO: Solo opciones A y B -->
                     <select id="selectGrupo" class="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none">
                         <option value="">Selecciona grupo</option>
                         <option value="A">A</option>
@@ -318,16 +150,12 @@
             </div>
         </div>
 
-        <!-- Loading -->
         <div id="loading" class="hidden flex flex-col items-center justify-center py-12">
             <div class="loading-spinner mb-4"></div>
             <p class="text-gray-600 font-medium">Cargando incidencias...</p>
         </div>
-
-        <!-- Mensaje de estado -->
         <div id="mensaje" class="hidden"></div>
 
-        <!-- Resultados -->
         <div id="resultados" class="hidden space-y-4">
             <div id="infoAlumno" class="bg-white rounded-xl shadow-lg p-6 mb-4">
                 <div class="flex items-start justify-between flex-wrap gap-4">
@@ -337,6 +165,13 @@
                             <span>📚 <strong>Grado:</strong> <span id="alumnoGrado"></span></span>
                             <span>👥 <strong>Grupo:</strong> <span id="alumnoGrupo"></span></span>
                             <span>🆔 <strong>Matrícula:</strong> <span id="alumnoMatricula"></span></span>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-gray-200" id="tutorInfoContainer">
+                            <p class="text-gray-600">
+                                <span class="inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                                    👪 <strong>Padre, Madre o Tutor:</strong> <span id="alumnoTutor">Cargando...</span>
+                                </span>
+                            </p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
@@ -358,7 +193,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600">Total de Incidencias</p>
+                            <p class="text-sm text-gray-600" id="labelTotal">Total de Incidencias</p>
                             <p class="text-3xl font-bold text-gray-800" id="totalIncidencias">0</p>
                         </div>
                         <div class="text-4xl">📊</div>
@@ -367,7 +202,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600">Sin Compromiso</p>
+                            <p class="text-sm text-gray-600" id="labelSin">Sin Compromiso</p>
                             <p class="text-3xl font-bold text-red-600" id="sinCompromiso">0</p>
                         </div>
                         <div class="text-4xl">⚠️</div>
@@ -376,7 +211,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600">Con Compromiso</p>
+                            <p class="text-sm text-gray-600" id="labelCon">Con Compromiso</p>
                             <p class="text-3xl font-bold text-green-600" id="conCompromiso">0</p>
                         </div>
                         <div class="text-4xl">✅</div>
@@ -385,7 +220,7 @@
             </div>
 
             <div id="bannerModoNormal" class="banner-modo-normal">
-                ℹ️ Solo se muestran incidencias pendientes de carta compromiso. Las ya atendidas no aparecen en modo normal.
+                ℹ️ Modo normal: alumnos con pendientes aparecen en 🔴 rojo y con todos sus compromisos en 🟢 verde. La carta solo incluye incidencias pendientes.
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-6">
@@ -396,7 +231,6 @@
                 <div id="listaIncidencias" class="space-y-3"></div>
             </div>
         </div>
-
     </div>
 
     <div class="pdf-container-wrapper">
@@ -413,36 +247,35 @@
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbwH9z2Snoiu7gBBOzkR5lmvM00ZO2Z0GBJSpHZfa0VMm2rSeiJPZLuW_JySG6eCrThJ/exec';
+        const API_TUTORES_URL = 'https://script.google.com/macros/s/AKfycbyQ4XfTgp-qhfi_1BSUW_c6JmXDoAmr9W0y915QT977BhN6ZzU5IL7gxsDLriE8Egbv/exec';
         const LOGO_URL = 'https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png';
         const LOGO_WORD_URL = 'https://faustinohtb-hash.github.io/honorato/imagenes/escudo.png';
         
+        // 👇 NOMBRE DE LA DIRECTORA FIJO
+        const NOMBRE_DIRECTORA = 'LAURA CHOLULA RIVERA';
+        
         let logoBase64 = '';
         let logoWordBase64 = '';
+        let tutoresPorMatricula = {};
+        let tutoresPorNombre = {};
+        let tutoresCargados = false;
         
         async function precargarLogo() {
             try {
                 const response = await fetch(LOGO_URL);
                 const blob = await response.blob();
                 const reader = new FileReader();
-                
                 return new Promise((resolve) => {
                     reader.onloadend = () => {
                         logoBase64 = reader.result;
                         const logoVisible = document.getElementById('logoVisible');
                         if (logoVisible) logoVisible.src = logoBase64;
-                        console.log('✅ Logo original pre-cargado y convertido a base64');
                         resolve(logoBase64);
                     };
-                    reader.onerror = () => {
-                        console.warn('⚠️ No se pudo convertir el logo a base64');
-                        resolve(LOGO_URL);
-                    };
+                    reader.onerror = () => resolve(LOGO_URL);
                     reader.readAsDataURL(blob);
                 });
-            } catch (error) {
-                console.warn('⚠️ Error al pre-cargar el logo:', error);
-                return LOGO_URL;
-            }
+            } catch (error) { return LOGO_URL; }
         }
         
         async function precargarLogoWord() {
@@ -451,31 +284,66 @@
                 if (!response.ok) throw new Error('No se encontró el escudo');
                 const blob = await response.blob();
                 const reader = new FileReader();
-                
                 return new Promise((resolve) => {
                     reader.onloadend = () => {
                         logoWordBase64 = reader.result;
-                        console.log('✅ Escudo pre-cargado y convertido a base64');
                         resolve(logoWordBase64);
                     };
                     reader.onerror = () => {
-                        console.warn('⚠️ No se pudo convertir el escudo, se usará el logo original');
                         logoWordBase64 = logoBase64 || LOGO_URL;
                         resolve(logoWordBase64);
                     };
                     reader.readAsDataURL(blob);
                 });
             } catch (error) {
-                console.warn('⚠️ Error al pre-cargar el escudo, se usará el logo original:', error);
                 logoWordBase64 = logoBase64 || LOGO_URL;
                 return logoWordBase64;
             }
         }
         
+        async function cargarTutores() {
+            if (tutoresCargados) return;
+            try {
+                const response = await fetch(API_TUTORES_URL);
+                const data = await response.json();
+                if (data.status === 'error') {
+                    console.warn('Error al cargar tutores:', data.message);
+                    tutoresCargados = true;
+                    return;
+                }
+                let listaTutores = Array.isArray(data) ? data : (data.data || []);
+                tutoresPorMatricula = {};
+                tutoresPorNombre = {};
+                listaTutores.forEach(t => {
+                    const tutor = t.tutor || t.Tutor || '';
+                    const matriculaId = String(t.matricula_id || t.Matricula_id || t.matriculaId || '').trim();
+                    const nombreAlumno = String(t.nombreAlumno || t.nombre || t.Nombre || t.alumno || '').trim().toLowerCase();
+                    if (tutor && matriculaId) tutoresPorMatricula[matriculaId] = tutor;
+                    if (tutor && nombreAlumno) tutoresPorNombre[nombreAlumno] = tutor;
+                });
+                tutoresCargados = true;
+                console.log(`✅ ${listaTutores.length} tutores (padres/madres) cargados`);
+            } catch (error) {
+                console.warn('⚠️ Error al cargar tutores:', error);
+                tutoresCargados = true;
+            }
+        }
+        
+        function obtenerTutor(alumno) {
+            if (!alumno) return null;
+            const matricula = String(alumno.matricula || '').trim();
+            if (matricula && tutoresPorMatricula[matricula]) return tutoresPorMatricula[matricula];
+            const nombre = String(alumno.nombre || '').trim().toLowerCase();
+            if (nombre && tutoresPorNombre[nombre]) return tutoresPorNombre[nombre];
+            for (const [key, tutor] of Object.entries(tutoresPorNombre)) {
+                if (nombre.includes(key) || key.includes(nombre)) return tutor;
+            }
+            return null;
+        }
+        
         document.addEventListener('DOMContentLoaded', async () => {
             calcularCicloActual();
-            await precargarLogo();
-            await precargarLogoWord();
+            await Promise.all([precargarLogo(), precargarLogoWord(), cargarTutores()]);
         });
         
         let todasIncidencias = [];
@@ -487,85 +355,30 @@
 
         function formatearFecha(fecha) {
             if (!fecha) return 'N/A';
-            
             let dateObj;
-            
-            if (fecha instanceof Date) {
-                dateObj = fecha;
-            } 
+            if (fecha instanceof Date) dateObj = fecha;
             else if (typeof fecha === 'string') {
-                if (fecha.includes('T')) {
-                    dateObj = new Date(fecha);
-                }
+                if (fecha.includes('T')) dateObj = new Date(fecha);
                 else if (fecha.includes('/')) {
                     const partes = fecha.split('/');
-                    if (partes.length === 3) {
-                        const dia = parseInt(partes[0]);
-                        const mes = parseInt(partes[1]) - 1;
-                        const anio = parseInt(partes[2]);
-                        dateObj = new Date(anio, mes, dia);
-                    }
-                }
-                else if (fecha.includes('-')) {
+                    if (partes.length === 3) dateObj = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+                } else if (fecha.includes('-')) {
                     const partes = fecha.split('-');
-                    if (partes.length === 3) {
-                        const anio = parseInt(partes[0]);
-                        const mes = parseInt(partes[1]) - 1;
-                        const dia = parseInt(partes[2]);
-                        dateObj = new Date(anio, mes, dia);
-                    }
-                }
-                else {
-                    dateObj = new Date(fecha);
-                }
-            }
-            else if (typeof fecha === 'number') {
-                dateObj = new Date(fecha);
-            }
-            else {
-                return String(fecha);
-            }
-            
-            if (isNaN(dateObj.getTime())) {
-                return String(fecha);
-            }
-            
-            const opciones = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                timeZone: 'America/Mexico_City'
-            };
-            
-            return dateObj.toLocaleDateString('es-MX', opciones);
+                    if (partes.length === 3) dateObj = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+                } else dateObj = new Date(fecha);
+            } else if (typeof fecha === 'number') dateObj = new Date(fecha);
+            else return String(fecha);
+            if (isNaN(dateObj.getTime())) return String(fecha);
+            return dateObj.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Mexico_City' });
         }
 
         function determinarTipoIncidencia(descripcion) {
             const desc = (descripcion || '').toLowerCase();
-            
-            if (desc.includes('violencia') || desc.includes('agresión') || desc.includes('agresion') || 
-                desc.includes('golpe') || desc.includes('pelea') || desc.includes('bullying') || 
-                desc.includes('acoso físico') || desc.includes('acoso fisico')) {
-                return { tipo: 'violencia', color: 'rojo', emoji: '🔴', label: 'Violencia' };
-            }
-            if (desc.includes('acoso') || desc.includes('hostigamiento') || desc.includes('burlas') || 
-                desc.includes('discriminación') || desc.includes('discriminacion') || desc.includes('insultos')) {
-                return { tipo: 'acoso', color: 'morado', emoji: '🟣', label: 'Acoso' };
-            }
-            if (desc.includes('indisciplina') || desc.includes('desobediencia') || desc.includes('grosería') || 
-                desc.includes('groseria') || desc.includes('interrupción') || desc.includes('interrupcion') || 
-                desc.includes('desorden') || desc.includes('desacato')) {
-                return { tipo: 'indisciplina', color: 'naranja', emoji: '🟠', label: 'Indisciplina' };
-            }
-            if (desc.includes('tarea') || desc.includes('trabajo') || desc.includes('académico') || 
-                desc.includes('academico') || desc.includes('calificación') || desc.includes('calificacion') || 
-                desc.includes('evaluación') || desc.includes('evaluacion') || desc.includes('material')) {
-                return { tipo: 'academico', color: 'azul', emoji: '🔵', label: 'Académico' };
-            }
-            if (desc.includes('asistencia') || desc.includes('faltas') || desc.includes('retardo') || 
-                desc.includes('puntualidad') || desc.includes('inasistencia') || desc.includes('ausencia')) {
-                return { tipo: 'asistencia', color: 'verde', emoji: '🟢', label: 'Asistencia' };
-            }
+            if (desc.includes('violencia') || desc.includes('agresión') || desc.includes('agresion') || desc.includes('golpe') || desc.includes('pelea') || desc.includes('bullying') || desc.includes('acoso físico') || desc.includes('acoso fisico')) return { tipo: 'violencia', color: 'rojo', emoji: '🔴', label: 'Violencia' };
+            if (desc.includes('acoso') || desc.includes('hostigamiento') || desc.includes('burlas') || desc.includes('discriminación') || desc.includes('discriminacion') || desc.includes('insultos')) return { tipo: 'acoso', color: 'morado', emoji: '🟣', label: 'Acoso' };
+            if (desc.includes('indisciplina') || desc.includes('desobediencia') || desc.includes('grosería') || desc.includes('groseria') || desc.includes('interrupción') || desc.includes('interrupcion') || desc.includes('desorden') || desc.includes('desacato')) return { tipo: 'indisciplina', color: 'naranja', emoji: '🟠', label: 'Indisciplina' };
+            if (desc.includes('tarea') || desc.includes('trabajo') || desc.includes('académico') || desc.includes('academico') || desc.includes('calificación') || desc.includes('calificacion') || desc.includes('evaluación') || desc.includes('evaluacion') || desc.includes('material')) return { tipo: 'academico', color: 'azul', emoji: '🔵', label: 'Académico' };
+            if (desc.includes('asistencia') || desc.includes('faltas') || desc.includes('retardo') || desc.includes('puntualidad') || desc.includes('inasistencia') || desc.includes('ausencia')) return { tipo: 'asistencia', color: 'verde', emoji: '🟢', label: 'Asistencia' };
             return { tipo: 'general', color: 'gris', emoji: '⚪', label: 'General' };
         }
 
@@ -573,21 +386,11 @@
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth();
-            
-            let cicloReal = '';
-            if (month >= 7) {
-                cicloReal = `${year}-${year + 1}`;
-            } else {
-                cicloReal = `${year - 1}-${year}`;
-            }
-            
+            let cicloReal = month >= 7 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
             if (esCicloAnterior) {
                 const partes = cicloReal.split('-');
                 cicloActual = `${parseInt(partes[0]) - 1}-${parseInt(partes[1]) - 1}`;
-            } else {
-                cicloActual = cicloReal;
-            }
-            
+            } else cicloActual = cicloReal;
             document.getElementById('cicloActual').textContent = cicloActual;
             document.getElementById('cicloEnLista').textContent = cicloActual;
             return cicloActual;
@@ -596,7 +399,6 @@
         async function alternarCiclo() {
             esCicloAnterior = !esCicloAnterior;
             calcularCicloActual();
-            
             const btn = document.getElementById('btnAlternarCiclo');
             const icono = document.getElementById('iconoCiclo');
             const texto = document.getElementById('textoBtnCiclo');
@@ -605,7 +407,6 @@
             const banner = document.getElementById('bannerModoPrueba');
             const badgeModo = document.getElementById('badgeModoPrueba');
             const bannerNormal = document.getElementById('bannerModoNormal');
-            
             if (esCicloAnterior) {
                 btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
                 btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
@@ -631,7 +432,6 @@
                 badgeModo.classList.add('hidden');
                 bannerNormal.classList.remove('hidden');
             }
-            
             await recargarBusquedaActiva();
         }
 
@@ -640,7 +440,6 @@
             const inputMatricula = document.getElementById('inputMatricula').value.trim();
             const selectGrado = document.getElementById('selectGrado').value;
             const selectGrupo = document.getElementById('selectGrupo').value;
-            
             if (ultimoTipoBusqueda === 'nombre' && inputNombre) await buscarPorNombre();
             else if (ultimoTipoBusqueda === 'matricula' && inputMatricula) await buscarPorMatricula();
             else if (ultimoTipoBusqueda === 'grado' && selectGrado && selectGrupo) await buscarPorGrado();
@@ -654,7 +453,6 @@
             });
             event.target.classList.add('bg-indigo-600', 'text-white');
             event.target.classList.remove('bg-gray-200', 'text-gray-700');
-
             document.querySelectorAll('.busqueda-panel').forEach(panel => panel.classList.add('hidden'));
             document.getElementById(`busqueda${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`).classList.remove('hidden');
         }
@@ -664,7 +462,6 @@
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
-                
                 if (data.status === 'error') throw new Error(data.message);
                 todasIncidencias = data;
                 return data;
@@ -672,36 +469,24 @@
                 console.error('Error:', error);
                 mostrarMensaje('Error al cargar datos: ' + error.message, 'error');
                 return [];
-            } finally {
-                ocultarLoading();
-            }
+            } finally { ocultarLoading(); }
         }
 
         function filtrarPorCiclo(incidencias) {
-            return incidencias.filter(inc => {
-                const cicloIncidencia = String(inc.ciclo || '').trim();
-                return cicloIncidencia === cicloActual;
-            });
+            return incidencias.filter(inc => String(inc.ciclo || '').trim() === cicloActual);
         }
 
         function tieneCompromiso(incidencia) {
             const compromiso = incidencia.compromiso;
-            if (!compromiso || compromiso === '' || compromiso === false || 
-                compromiso === 'false' || compromiso === 'FALSE' || compromiso === 0 || compromiso === '0') {
-                return false;
-            }
-            return true;
+            return !(!compromiso || compromiso === '' || compromiso === false || compromiso === 'false' || compromiso === 'FALSE' || compromiso === 0 || compromiso === '0');
         }
 
         async function buscarPorNombre() {
             ultimoTipoBusqueda = 'nombre';
             const nombre = document.getElementById('inputNombre').value.trim().toLowerCase();
             if (!nombre) { mostrarMensaje('Por favor ingresa un nombre', 'warning'); return; }
-
             await cargarTodasIncidencias();
-            const filtradas = todasIncidencias.filter(inc => 
-                String(inc.nombreAlumno || '').toLowerCase().includes(nombre)
-            );
+            const filtradas = todasIncidencias.filter(inc => String(inc.nombreAlumno || '').toLowerCase().includes(nombre));
             procesarResultados(filtradas);
         }
 
@@ -709,11 +494,12 @@
             ultimoTipoBusqueda = 'matricula';
             const matricula = document.getElementById('inputMatricula').value.trim();
             if (!matricula) { mostrarMensaje('Por favor ingresa una matrícula', 'warning'); return; }
-
             await cargarTodasIncidencias();
-            const filtradas = todasIncidencias.filter(inc => 
-                String(inc.matricula || '').trim() === matricula
-            );
+            const filtradas = todasIncidencias.filter(inc => {
+                const completa = String(inc.matriculacompleta || '').trim();
+                const corta = String(inc.matricula || '').trim();
+                return completa === matricula || corta === matricula;
+            });
             procesarResultados(filtradas);
         }
 
@@ -721,14 +507,9 @@
             ultimoTipoBusqueda = 'grado';
             const grado = document.getElementById('selectGrado').value;
             const grupo = document.getElementById('selectGrupo').value.toUpperCase();
-            
             if (!grado || !grupo) { mostrarMensaje('Por favor selecciona grado y grupo', 'warning'); return; }
-
             await cargarTodasIncidencias();
-            const filtradas = todasIncidencias.filter(inc => 
-                String(inc.grado || '').trim() === grado && 
-                String(inc.grupo || '').trim().toUpperCase() === grupo
-            );
+            const filtradas = todasIncidencias.filter(inc => String(inc.grado || '').trim() === grado && String(inc.grupo || '').trim().toUpperCase() === grupo);
             procesarResultados(filtradas);
         }
 
@@ -738,16 +519,23 @@
             procesarResultados(todasIncidencias);
         }
 
+        function actualizarContadores(incidencias) {
+            const sinCompromiso = incidencias.filter(inc => !tieneCompromiso(inc));
+            const conCompromiso = incidencias.filter(inc => tieneCompromiso(inc));
+            document.getElementById('totalIncidencias').textContent = incidencias.length;
+            document.getElementById('sinCompromiso').textContent = sinCompromiso.length;
+            document.getElementById('conCompromiso').textContent = conCompromiso.length;
+        }
+
         function procesarResultados(incidencias) {
             let cicloFiltradas = filtrarPorCiclo(incidencias);
-            
             if (cicloFiltradas.length === 0) {
                 mostrarMensaje('No se encontraron incidencias para el ciclo ' + cicloActual + (esCicloAnterior ? ' (modo revisión)' : ''), 'info');
                 document.getElementById('resultados').classList.add('hidden');
                 return;
             }
-
-            if (!esCicloAnterior) {
+            const esBusquedaLista = (ultimoTipoBusqueda === 'grado' || ultimoTipoBusqueda === 'todos');
+            if (!esCicloAnterior && !esBusquedaLista) {
                 cicloFiltradas = cicloFiltradas.filter(inc => !tieneCompromiso(inc));
                 if (cicloFiltradas.length === 0) {
                     mostrarMensaje('✅ No hay incidencias pendientes de carta compromiso para el ciclo ' + cicloActual + '. ¡Todo atendido!', 'success');
@@ -755,57 +543,65 @@
                     return;
                 }
             }
-
             incidenciasFiltradas = cicloFiltradas;
-            
             const alumnos = {};
             cicloFiltradas.forEach(inc => {
-                const key = inc.matricula || inc.nombreAlumno;
+                const matriculaAlumno = inc.matriculacompleta || inc.matricula;
+                const key = matriculaAlumno || inc.nombreAlumno;
                 if (!alumnos[key]) {
-                    alumnos[key] = {
-                        nombre: inc.nombreAlumno,
-                        matricula: inc.matricula,
-                        grado: inc.grado,
-                        grupo: inc.grupo,
-                        incidencias: []
-                    };
+                    alumnos[key] = { nombre: inc.nombreAlumno, matricula: matriculaAlumno, grado: inc.grado, grupo: inc.grupo, incidencias: [] };
                 }
                 alumnos[key].incidencias.push(inc);
             });
-
             const keys = Object.keys(alumnos);
             if (keys.length === 1) {
                 alumnoSeleccionado = alumnos[keys[0]];
                 mostrarInfoAlumno(alumnoSeleccionado);
-                mostrarIncidencias(alumnoSeleccionado.incidencias);
+                mostrarDetalleAlumno(alumnoSeleccionado);
             } else {
                 mostrarListaAlumnos(alumnos);
             }
-
             document.getElementById('resultados').classList.remove('hidden');
         }
 
         function mostrarListaAlumnos(alumnos) {
-            const html = Object.values(alumnos).map(alumno => `
-                <div class="incidencia-card bg-gray-50 border-2 border-gray-200 rounded-lg p-4 hover:border-indigo-500 cursor-pointer"
-                     onclick='seleccionarAlumno(${JSON.stringify(alumno).replace(/'/g, "\\'")})'>
-                    <div class="flex justify-between items-start flex-wrap gap-2">
-                        <div>
-                            <h4 class="font-bold text-lg text-gray-800">${alumno.nombre || 'Sin nombre'}</h4>
-                            <div class="flex flex-wrap gap-3 mt-2 text-sm text-gray-600">
-                                <span>📚 ${alumno.grado}°</span>
-                                <span>👥 Grupo ${alumno.grupo}</span>
-                                <span>🆔 ${alumno.matricula || 'N/A'}</span>
+            const todasLasIncidencias = Object.values(alumnos).flatMap(a => a.incidencias);
+            actualizarContadores(todasLasIncidencias);
+            document.getElementById('labelTotal').textContent = 'Total de Incidencias (grupo)';
+            document.getElementById('labelSin').textContent = 'Sin Compromiso (grupo)';
+            document.getElementById('labelCon').textContent = 'Con Compromiso (grupo)';
+            const html = Object.values(alumnos).map(alumno => {
+                const pendientes = alumno.incidencias.filter(i => !tieneCompromiso(i)).length;
+                const atendidas = alumno.incidencias.length - pendientes;
+                const completo = pendientes === 0;
+                const tutor = obtenerTutor(alumno);
+                const cardClass = completo ? 'bg-green-50 border-green-400 hover:border-green-600' : 'bg-red-50 border-red-400 hover:border-red-600';
+                const estadoBadge = completo ? '<span class="badge badge-verde">✅ Compromisos completos</span>' : `<span class="badge badge-rojo">⚠️ ${pendientes} pendiente${pendientes !== 1 ? 's' : ''}</span>`;
+                return `
+                    <div class="incidencia-card ${cardClass} border-2 rounded-lg p-4 cursor-pointer"
+                         onclick='seleccionarAlumno(${JSON.stringify(alumno).replace(/'/g, "\\'")})'>
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg text-gray-800">${alumno.nombre || 'Sin nombre'}</h4>
+                                <div class="flex flex-wrap gap-3 mt-2 text-sm text-gray-600 items-center">
+                                    <span>📚 ${alumno.grado}°</span>
+                                    <span>👥 Grupo ${alumno.grupo}</span>
+                                    <span>🆔 ${alumno.matricula || 'N/A'}</span>
+                                    ${estadoBadge}
+                                </div>
+                                ${tutor ? `<p class="mt-2 text-sm text-purple-700">👪 <strong>Padre/Madre/Tutor:</strong> ${tutor}</p>` : ''}
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600">${esCicloAnterior ? 'Incidencias (historial)' : 'Incidencias'}</p>
+                                <p class="text-xl font-bold">
+                                    <span class="${completo ? 'text-green-600' : 'text-red-600'}">${pendientes} pend.</span>
+                                    <span class="text-gray-400 text-sm"> / ${atendidas} atend.</span>
+                                </p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-600">${esCicloAnterior ? 'Incidencias (historial)' : 'Incidencias pendientes'}</p>
-                            <p class="text-2xl font-bold text-indigo-600">${alumno.incidencias.length}</p>
-                        </div>
                     </div>
-                </div>
-            `).join('');
-
+                `;
+            }).join('');
             document.getElementById('listaIncidencias').innerHTML = `<div class="space-y-3">${html}</div>`;
             document.getElementById('infoAlumno').classList.add('hidden');
         }
@@ -813,7 +609,19 @@
         function seleccionarAlumno(alumno) {
             alumnoSeleccionado = alumno;
             mostrarInfoAlumno(alumno);
-            mostrarIncidencias(alumno.incidencias);
+            mostrarDetalleAlumno(alumno);
+        }
+
+        function mostrarDetalleAlumno(alumno) {
+            let incidenciasAMostrar = alumno.incidencias;
+            if (!esCicloAnterior) {
+                const pendientes = alumno.incidencias.filter(i => !tieneCompromiso(i));
+                incidenciasAMostrar = pendientes.length > 0 ? pendientes : alumno.incidencias;
+            }
+            document.getElementById('labelTotal').textContent = 'Total de Incidencias';
+            document.getElementById('labelSin').textContent = 'Sin Compromiso';
+            document.getElementById('labelCon').textContent = 'Con Compromiso';
+            mostrarIncidencias(incidenciasAMostrar);
         }
 
         function mostrarInfoAlumno(alumno) {
@@ -821,17 +629,14 @@
             document.getElementById('alumnoGrado').textContent = alumno.grado + '°';
             document.getElementById('alumnoGrupo').textContent = alumno.grupo;
             document.getElementById('alumnoMatricula').textContent = alumno.matricula || 'N/A';
+            const tutor = obtenerTutor(alumno);
+            const tutorEl = document.getElementById('alumnoTutor');
+            tutorEl.textContent = tutor || 'No registrado';
             document.getElementById('infoAlumno').classList.remove('hidden');
         }
 
         function mostrarIncidencias(incidencias) {
-            const sinCompromiso = incidencias.filter(inc => !tieneCompromiso(inc));
-            const conCompromiso = incidencias.filter(inc => tieneCompromiso(inc));
-
-            document.getElementById('totalIncidencias').textContent = incidencias.length;
-            document.getElementById('sinCompromiso').textContent = sinCompromiso.length;
-            document.getElementById('conCompromiso').textContent = conCompromiso.length;
-
+            actualizarContadores(incidencias);
             const html = incidencias.map((inc) => {
                 const tiene = tieneCompromiso(inc);
                 const badgeClass = tiene ? 'badge-verde' : 'badge-rojo';
@@ -840,12 +645,9 @@
                 let nivelBadge = 'badge-amarillo';
                 if (nivel.toLowerCase().includes('leve')) nivelBadge = 'badge-verde';
                 if (nivel.toLowerCase().includes('grave')) nivelBadge = 'badge-rojo';
-                
                 const tipoInfo = determinarTipoIncidencia(inc.descripcionFalta);
                 const tipoClase = `incidencia-tipo-${tipoInfo.tipo}`;
-                
                 const fechaFormateada = formatearFecha(inc.fecha);
-
                 return `
                     <div class="incidencia-card ${tipoClase} ${tiene ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} border-2 rounded-lg p-4">
                         <div class="flex justify-between items-start flex-wrap gap-2">
@@ -859,7 +661,7 @@
                                 <h4 class="font-semibold text-gray-800 mb-2">${inc.descripcionFalta || 'Sin descripción'}</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
                                     <p>📅 <strong>Fecha:</strong> ${fechaFormateada}</p>
-                                    <p>👨‍ <strong>Docente:</strong> ${inc.docente || 'N/A'}</p>
+                                    <p>👨‍🏫 <strong>Docente:</strong> ${inc.docente || 'N/A'}</p>
                                     <p class="col-span-full">📝 <strong>Observaciones:</strong> ${inc.observaciones || 'N/A'}</p>
                                     ${tiene ? `<p class="col-span-full">📋 <strong>Compromiso:</strong> ${inc.compromiso}</p>` : ''}
                                 </div>
@@ -868,11 +670,18 @@
                     </div>
                 `;
             }).join('');
-
             document.getElementById('listaIncidencias').innerHTML = `<div class="space-y-3">${html}</div>`;
         }
 
+        // 👇 MODIFICADO: Tutor aparece pre-llenado en "yo ___" y Directora con nombre fijo
         function construirHTMLCarta(tarjetasIncidencias, hoy, logoUsar) {
+            const tutor = alumnoSeleccionado ? obtenerTutor(alumnoSeleccionado) : null;
+            
+            // 👇 Si hay tutor registrado, aparece pre-llenado. Si no, queda línea en blanco.
+            const yoLinea = tutor
+                ? `<strong style="border-bottom: 2px solid #333; display: inline-block; min-width: 300px;">${tutor}</strong>`
+                : `<strong style="border-bottom: 2px solid #333; display: inline-block; min-width: 300px;">&nbsp;</strong>`;
+
             return `
                 <div class="pdf-header">
                     <img src="${logoUsar}" alt="Logo Escuela">
@@ -900,7 +709,7 @@
 
                 <div style="margin-bottom: 25px;">
                     <p style="font-size: 16px; text-align: justify;">
-                        Por medio de la presente, yo <strong style="border-bottom: 2px solid #333; display: inline-block; min-width: 300px;">&nbsp;</strong>, 
+                        Por medio de la presente, yo ${yoLinea}, 
                         en mi carácter de <strong>padre, madre o tutor</strong> del alumno(a) antes mencionado, 
                         me comprometo a trabajar en conjunto con la institución educativa para corregir las 
                         siguientes incidencias reportadas durante el ciclo escolar actual:
@@ -934,8 +743,8 @@
                             </td>
                             <td style="text-align: center; padding-top: 60px; width: 50%;">
                                 <div style="border-top: 2px solid #333; width: 80%; margin: 0 auto;"></div>
-                                <p style="margin-top: 10px; font-size: 14px;"><strong>Director(a) del Plantel</strong></p>
-                                <p style="margin-top: 5px; font-size: 12px;">Nombre y Firma</p>
+                                <p style="margin-top: 10px; font-size: 14px;"><strong>${NOMBRE_DIRECTORA}</strong></p>
+                                <p style="margin-top: 5px; font-size: 12px;">Directora del Plantel</p>
                             </td>
                         </tr>
                     </table>
@@ -949,12 +758,9 @@
                 let nivelBadgeClass = 'badge-carta-amarillo';
                 if (nivel.toLowerCase().includes('leve')) nivelBadgeClass = 'badge-carta-verde';
                 if (nivel.toLowerCase().includes('grave')) nivelBadgeClass = 'badge-carta-rojo';
-                
                 const tipoInfo = determinarTipoIncidencia(inc.descripcionFalta);
                 const tipoClase = `tipo-${tipoInfo.tipo}`;
-                
                 const fechaFormateada = formatearFecha(inc.fecha);
-
                 return `
                     <div class="incidencia-carta ${tipoClase}">
                         <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
@@ -978,7 +784,6 @@
 
         async function preguntarMarcarCompromisos(sinCompromiso, nombreArchivo) {
             const folios = sinCompromiso.map(inc => inc.newFolio).filter(f => f && f.trim() !== '');
-            
             if (folios.length > 0) {
                 setTimeout(() => {
                     const marcar = confirm(
@@ -987,105 +792,51 @@
                         `✅ SÍ: Las incidencias se marcarán como atendidas y ya no aparecerán en modo normal.\n` +
                         `❌ NO: No se modificará el sistema.`
                     );
-                    
-                    if (marcar) {
-                        actualizarCompromisosAsync(folios);
-                    }
+                    if (marcar) actualizarCompromisosAsync(folios);
                 }, 1000);
             }
         }
 
         async function generarCartaPDF() {
-            if (!alumnoSeleccionado) {
-                mostrarMensaje('Primero selecciona un alumno', 'warning');
-                return;
-            }
-
+            if (!alumnoSeleccionado) { mostrarMensaje('Primero selecciona un alumno', 'warning'); return; }
             const sinCompromiso = alumnoSeleccionado.incidencias.filter(inc => !tieneCompromiso(inc));
-            
-            if (sinCompromiso.length === 0) {
-                mostrarMensaje('Este alumno no tiene incidencias sin compromiso. ¡Excelente trabajo! 🎉', 'success');
-                return;
-            }
-
+            if (sinCompromiso.length === 0) { mostrarMensaje('Este alumno no tiene incidencias sin compromiso. ¡Excelente trabajo! 🎉', 'success'); return; }
             document.getElementById('generandoPDF').classList.remove('hidden');
             document.getElementById('textoGenerando').textContent = 'Generando PDF...';
             document.getElementById('btnGenerarCartaPDF').disabled = true;
             document.getElementById('btnGenerarCartaWord').disabled = true;
-
             if (!logoBase64) await precargarLogo();
             if (!logoWordBase64) await precargarLogoWord();
-            
             const logoParaPDF = logoWordBase64 || logoBase64 || LOGO_URL;
-
-            const hoy = new Date().toLocaleDateString('es-MX', { 
-                year: 'numeric', month: 'long', day: 'numeric' 
-            });
-
+            const hoy = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
             const tarjetasIncidencias = construirTarjetasIncidencias(sinCompromiso);
             const cartaHTML = construirHTMLCarta(tarjetasIncidencias, hoy, logoParaPDF);
-
             const contenedor = document.getElementById('contenedorPDF');
             contenedor.innerHTML = cartaHTML;
-
             const imagen = contenedor.querySelector('img');
             if (imagen) {
                 await new Promise((resolve) => {
-                    if (imagen.complete) {
-                        resolve();
-                    } else {
-                        imagen.onload = resolve;
-                        imagen.onerror = resolve;
-                    }
+                    if (imagen.complete) resolve();
+                    else { imagen.onload = resolve; imagen.onerror = resolve; }
                 });
             }
-
             await new Promise(resolve => setTimeout(resolve, 1000));
-
             try {
-                const nombreArchivo = `Carta_Compromiso_${alumnoSeleccionado.nombre || 'Alumno'}_${cicloActual}.pdf`
-                    .replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_\-\s]/g, '')
-                    .replace(/\s+/g, '_');
-
+                const nombreArchivo = `Carta_Compromiso_${alumnoSeleccionado.nombre || 'Alumno'}_${cicloActual}.pdf`.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_\-\s]/g, '').replace(/\s+/g, '_');
                 const opciones = {
-                    margin: [10, 10, 10, 10],
-                    filename: nombreArchivo,
+                    margin: [10, 10, 10, 10], filename: nombreArchivo,
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: true,
-                        logging: false,
-                        letterRendering: true,
-                        backgroundColor: '#ffffff',
-                        imageTimeout: 0,
-                        removeContainer: false
-                    },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'letter',
-                        orientation: 'portrait'
-                    },
-                    pagebreak: { 
-                        mode: ['css', 'legacy'],
-                        before: '.page-break-before',
-                        after: '.page-break-after',
-                        avoid: ['.incidencia-carta', '.detalle-carta', 'h1', 'h2', 'h3', 'h4', 'ul', 'table', 'img']
-                    }
+                    html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false, letterRendering: true, backgroundColor: '#ffffff', imageTimeout: 0, removeContainer: false },
+                    jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
+                    pagebreak: { mode: ['css', 'legacy'], avoid: ['.incidencia-carta', '.detalle-carta', 'h1', 'h2', 'h3', 'h4', 'ul', 'table', 'img'] }
                 };
-
                 await html2pdf().set(opciones).from(contenedor).save();
-
                 document.getElementById('generandoPDF').classList.add('hidden');
                 document.getElementById('btnGenerarCartaPDF').disabled = false;
                 document.getElementById('btnGenerarCartaWord').disabled = false;
-
                 contenedor.innerHTML = '';
-
                 mostrarMensaje('✅ PDF generado y descargado exitosamente: ' + nombreArchivo, 'success');
-                
                 await preguntarMarcarCompromisos(sinCompromiso, nombreArchivo);
-
             } catch (error) {
                 console.error('Error al generar PDF:', error);
                 document.getElementById('generandoPDF').classList.add('hidden');
@@ -1096,55 +847,23 @@
         }
 
         async function generarCartaWord() {
-            if (!alumnoSeleccionado) {
-                mostrarMensaje('Primero selecciona un alumno', 'warning');
-                return;
-            }
-
+            if (!alumnoSeleccionado) { mostrarMensaje('Primero selecciona un alumno', 'warning'); return; }
             const sinCompromiso = alumnoSeleccionado.incidencias.filter(inc => !tieneCompromiso(inc));
-            
-            if (sinCompromiso.length === 0) {
-                mostrarMensaje('Este alumno no tiene incidencias sin compromiso. ¡Excelente trabajo! 🎉', 'success');
-                return;
-            }
-
+            if (sinCompromiso.length === 0) { mostrarMensaje('Este alumno no tiene incidencias sin compromiso. ¡Excelente trabajo! 🎉', 'success'); return; }
             document.getElementById('generandoPDF').classList.remove('hidden');
             document.getElementById('textoGenerando').textContent = 'Generando Word...';
             document.getElementById('btnGenerarCartaPDF').disabled = true;
             document.getElementById('btnGenerarCartaWord').disabled = true;
-
-            if (!logoWordBase64) {
-                await precargarLogoWord();
-            }
-
-            const hoy = new Date().toLocaleDateString('es-MX', { 
-                year: 'numeric', month: 'long', day: 'numeric' 
-            });
-
+            if (!logoWordBase64) await precargarLogoWord();
+            const hoy = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
             const tarjetasIncidencias = construirTarjetasIncidencias(sinCompromiso);
             const contenidoCarta = construirHTMLCarta(tarjetasIncidencias, hoy, logoWordBase64);
-
             try {
                 const estilosWord = `
-                    @page {
-                        size: letter;
-                        margin: 2cm;
-                        mso-page-orientation: portrait;
-                    }
-                    @page Section1 {
-                        margin: 2.0cm 2.0cm 2.0cm 2.0cm;
-                        mso-header-margin: 1.0cm;
-                        mso-footer-margin: 1.0cm;
-                        mso-paper-source: 0;
-                    }
+                    @page { size: letter; margin: 2cm; mso-page-orientation: portrait; }
+                    @page Section1 { margin: 2.0cm 2.0cm 2.0cm 2.0cm; mso-header-margin: 1.0cm; mso-footer-margin: 1.0cm; mso-paper-source: 0; }
                     div.Section1 { page: Section1; }
-                    
-                    body {
-                        font-family: 'Arial', sans-serif;
-                        font-size: 11pt;
-                        line-height: 1.6;
-                        color: #000000;
-                    }
+                    body { font-family: 'Arial', sans-serif; font-size: 11pt; line-height: 1.6; color: #000000; }
                     h1 { font-size: 22pt; color: #1e3a8a; font-weight: bold; margin: 0; }
                     h2 { font-size: 16pt; color: #1e3a8a; font-weight: bold; margin: 0; }
                     h4 { font-size: 12pt; font-weight: bold; margin: 0 0 8pt 0; }
@@ -1152,111 +871,37 @@
                     ul { margin: 8pt 0; }
                     li { margin: 4pt 0; }
                     strong { font-weight: bold; }
-                    
-                    .pdf-header {
-                        display: table;
-                        width: 100%;
-                        margin-bottom: 20pt;
-                        padding-bottom: 15pt;
-                        border-bottom: 3pt solid #1e3a8a;
-                    }
-                    .pdf-header img {
-                        display: table-cell;
-                        width: 22pt;
-                        height: 25pt;
-                        vertical-align: middle;
-                    }
-                    .pdf-header-text {
-                        display: table-cell;
-                        vertical-align: middle;
-                        padding-left: 15pt;
-                    }
-                    
-                    .incidencia-carta {
-                        border: 1pt solid #333333;
-                        border-left: 5pt solid #333333;
-                        padding: 8pt;
-                        margin-bottom: 10pt;
-                        page-break-inside: avoid;
-                    }
+                    .pdf-header { display: table; width: 100%; margin-bottom: 20pt; padding-bottom: 15pt; border-bottom: 3pt solid #1e3a8a; }
+                    .pdf-header img { display: table-cell; width: 22pt; height: 25pt; vertical-align: middle; }
+                    .pdf-header-text { display: table-cell; vertical-align: middle; padding-left: 15pt; }
+                    .incidencia-carta { border: 1pt solid #333333; border-left: 5pt solid #333333; padding: 8pt; margin-bottom: 10pt; page-break-inside: avoid; }
                     .incidencia-carta.tipo-violencia { border-left-color: #dc2626; }
                     .incidencia-carta.tipo-acoso { border-left-color: #7c3aed; }
                     .incidencia-carta.tipo-indisciplina { border-left-color: #f59e0b; }
                     .incidencia-carta.tipo-academico { border-left-color: #3b82f6; }
                     .incidencia-carta.tipo-asistencia { border-left-color: #10b981; }
                     .incidencia-carta.tipo-general { border-left-color: #6b7280; }
-                    
-                    .badge-carta {
-                        display: inline-block;
-                        padding: 2pt 8pt;
-                        border: 1pt solid #333333;
-                        font-size: 8pt;
-                        font-weight: bold;
-                        margin-right: 4pt;
-                    }
-                    
-                    .detalle-carta {
-                        margin-top: 6pt;
-                    }
-                    .detalle-carta p {
-                        margin: 2pt 0;
-                        font-size: 10pt;
-                    }
+                    .badge-carta { display: inline-block; padding: 2pt 8pt; border: 1pt solid #333333; font-size: 8pt; font-weight: bold; margin-right: 4pt; }
+                    .detalle-carta { margin-top: 6pt; }
+                    .detalle-carta p { margin: 2pt 0; font-size: 10pt; }
                 `;
-
                 const documentoWord = `
-                    <html xmlns:o='urn:schemas-microsoft-com:office:office' 
-                          xmlns:w='urn:schemas-microsoft-com:office:word' 
-                          xmlns='http://www.w3.org/TR/REC-html40'>
-                    <head>
-                        <meta charset='utf-8'>
-                        <title>Carta Compromiso - ${alumnoSeleccionado.nombre || 'Alumno'}</title>
-                        <!--[if gte mso 9]>
-                        <xml>
-                            <w:WordDocument>
-                                <w:View>Print</w:View>
-                                <w:Zoom>100</w:Zoom>
-                                <w:DoNotOptimizeForBrowser/>
-                            </w:WordDocument>
-                        </xml>
-                        <![endif]-->
-                        <style>
-                            ${estilosWord}
-                        </style>
-                    </head>
-                    <body>
-                        <div class='Section1'>
-                            ${contenidoCarta}
-                        </div>
-                    </body>
-                    </html>
+                    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                    <head><meta charset='utf-8'><title>Carta Compromiso - ${alumnoSeleccionado.nombre || 'Alumno'}</title><style>${estilosWord}</style></head>
+                    <body><div class='Section1'>${contenidoCarta}</div></body></html>
                 `;
-
-                const blob = new Blob(['\ufeff', documentoWord], {
-                    type: 'application/msword'
-                });
-
-                const nombreArchivo = `Carta_Compromiso_${alumnoSeleccionado.nombre || 'Alumno'}_${cicloActual}.doc`
-                    .replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_\-\s]/g, '')
-                    .replace(/\s+/g, '_');
-
+                const blob = new Blob(['\ufeff', documentoWord], { type: 'application/msword' });
+                const nombreArchivo = `Carta_Compromiso_${alumnoSeleccionado.nombre || 'Alumno'}_${cicloActual}.doc`.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_\-\s]/g, '').replace(/\s+/g, '_');
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                link.href = url;
-                link.download = nombreArchivo;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-
+                link.href = url; link.download = nombreArchivo;
+                document.body.appendChild(link); link.click();
+                document.body.removeChild(link); URL.revokeObjectURL(url);
                 document.getElementById('generandoPDF').classList.add('hidden');
                 document.getElementById('btnGenerarCartaPDF').disabled = false;
                 document.getElementById('btnGenerarCartaWord').disabled = false;
-
                 mostrarMensaje('✅ Documento Word generado y descargado exitosamente: ' + nombreArchivo, 'success');
-                
                 await preguntarMarcarCompromisos(sinCompromiso, nombreArchivo);
-
             } catch (error) {
                 console.error('Error al generar Word:', error);
                 document.getElementById('generandoPDF').classList.add('hidden');
@@ -1269,19 +914,13 @@
         async function actualizarCompromisosAsync(folios) {
             try {
                 const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
+                    method: 'POST', headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ accion: 'marcarCompromiso', folios: folios })
                 });
-                
                 const result = await response.json();
-                
                 if (result.status === 'success') {
-                    console.log('Compromisos actualizados:', result);
                     mostrarMensaje(`✅ ${result.actualizados} incidencia(s) marcada(s) como atendidas`, 'success');
-                    setTimeout(async () => {
-                        await recargarBusquedaActiva();
-                    }, 1500);
+                    setTimeout(async () => { await recargarBusquedaActiva(); }, 1500);
                 }
             } catch (error) {
                 console.error('Error al actualizar compromisos:', error);
@@ -1289,14 +928,8 @@
             }
         }
 
-        function mostrarLoading() {
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('resultados').classList.add('hidden');
-        }
-
-        function ocultarLoading() {
-            document.getElementById('loading').classList.add('hidden');
-        }
+        function mostrarLoading() { document.getElementById('loading').classList.remove('hidden'); document.getElementById('resultados').classList.add('hidden'); }
+        function ocultarLoading() { document.getElementById('loading').classList.add('hidden'); }
 
         function mostrarMensaje(texto, tipo) {
             const colores = {
