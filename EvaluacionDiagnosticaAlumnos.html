@@ -47,273 +47,176 @@
   @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
   @keyframes spin { to { transform: rotate(360deg); } }
-  
   .logo-container { text-align: center; margin-bottom: 25px; }
   .logo-container img { max-width: 150px; height: auto; }
   h1 { text-align: center; color: var(--primary); margin-bottom: 8px; font-size: clamp(1.5rem, 4vw, 2rem); }
   h2 { color: var(--primary-dark); margin: 20px 0; font-size: clamp(1.2rem, 3vw, 1.5rem); }
   .subtitle { text-align: center; color: var(--text-light); margin-bottom: 25px; }
-  
-  /* ===== Formularios ===== */
   .form-group { margin-bottom: 20px; }
   label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); }
   input, select {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 1rem;
-    transition: var(--transition);
+    width: 100%; padding: 14px 16px; border: 2px solid var(--border);
+    border-radius: var(--radius); font-size: 1rem; transition: var(--transition);
     background: var(--white);
   }
   input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
   .name-input { text-transform: uppercase; }
   .input-wrapper { position: relative; }
-  .input-icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.2rem;
-  }
+  .input-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; }
   .spinner-mini {
-    width: 20px; height: 20px;
-    border: 2px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    display: inline-block;
+    width: 20px; height: 20px; border: 2px solid var(--border);
+    border-top-color: var(--primary); border-radius: 50%;
+    animation: spin 0.8s linear infinite; display: inline-block;
   }
   
-  /* ===== Estado del alumno ===== */
-  .student-status {
-    padding: 12px 15px;
+  /* ============================================
+     SECCIÓN INFORMATIVA - EVALUACIÓN DIAGNÓSTICA
+     ============================================ */
+  .info-diagnostica {
+    background: linear-gradient(135deg, #eff6ff 0%, #ede9fe 100%);
+    border: 2px solid #c7d2fe;
     border-radius: var(--radius);
-    margin-top: 10px;
-    font-size: 0.9rem;
-    display: none;
-    animation: slideIn 0.3s ease;
+    padding: 20px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.6s ease;
   }
-  .student-status.found {
-    background: #d1fae5;
-    color: #065f46;
-    border-left: 4px solid var(--success);
-    display: block;
-  }
-  .student-status.not-found {
-    background: #dbeafe;
-    color: #1e40af;
-    border-left: 4px solid var(--info);
-    display: block;
-  }
-  .student-status.error {
-    background: #fee2e2;
-    color: #991b1b;
-    border-left: 4px solid var(--danger);
-    display: block;
-  }
-  .status-summary {
-    display: flex;
-    gap: 15px;
-    margin-top: 8px;
-    flex-wrap: wrap;
-    font-weight: 600;
-  }
-  .status-count {
+  .info-diagnostica-titulo {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 15px;
   }
+  .info-diagnostica-titulo .icono {
+    font-size: 1.5rem;
+  }
+  .info-items {
+    display: grid;
+    gap: 12px;
+  }
+  .info-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: white;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: var(--transition);
+  }
+  .info-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow);
+  }
+  .info-item.honestidad { border-left-color: var(--success); }
+  .info-item.calificacion { border-left-color: var(--info); }
+  .info-item.conciencia { border-left-color: var(--warning); }
+  .info-item .item-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .info-item .item-content strong {
+    display: block;
+    color: var(--text);
+    margin-bottom: 3px;
+    font-size: 0.95rem;
+  }
+  .info-item .item-content p {
+    color: var(--text-light);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  
+  .student-status {
+    padding: 12px 15px; border-radius: var(--radius); margin-top: 10px;
+    font-size: 0.9rem; display: none; animation: slideIn 0.3s ease;
+  }
+  .student-status.found { background: #d1fae5; color: #065f46; border-left: 4px solid var(--success); display: block; }
+  .student-status.not-found { background: #dbeafe; color: #1e40af; border-left: 4px solid var(--info); display: block; }
+  .student-status.error { background: #fee2e2; color: #991b1b; border-left: 4px solid var(--danger); display: block; }
+  .status-summary { display: flex; gap: 15px; margin-top: 8px; flex-wrap: wrap; font-weight: 600; }
+  .status-count { display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; }
   .count-done { background: #a7f3d0; color: #065f46; }
   .count-pending { background: #fde68a; color: #92400e; }
-  
-  /* ===== Tarjetas de disciplinas ===== */
   .disciplines-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px; margin-bottom: 20px;
   }
   .discipline-card {
-    background: var(--white);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    padding: 15px 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 15px 10px; text-align: center;
+    cursor: pointer; transition: var(--transition); position: relative; overflow: hidden;
   }
   .discipline-card:hover:not(.completed):not(.disabled) {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-    border-color: var(--primary);
+    transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--primary);
   }
   .discipline-card.selected {
     border-color: var(--primary);
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+    color: white; transform: translateY(-3px); box-shadow: var(--shadow-lg);
   }
   .discipline-card.selected .discipline-icon { background: rgba(255,255,255,0.2); color: white; }
   .discipline-card.selected .discipline-name { color: white; }
   .discipline-card.selected .discipline-status { color: rgba(255,255,255,0.9); }
-  
-  /* ===== Tarjetas COMPLETADAS ===== */
   .discipline-card.completed {
     background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-    border-color: var(--success);
-    opacity: 0.95;
+    border-color: var(--success); opacity: 0.95;
   }
-  .discipline-card.completed:hover:not(.disabled) {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-  }
-  .discipline-card.completed .discipline-icon {
-    background: rgba(16,185,129,0.15);
-    color: var(--success-dark);
-  }
+  .discipline-card.completed:hover:not(.disabled) { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .discipline-card.completed .discipline-icon { background: rgba(16,185,129,0.15); color: var(--success-dark); }
   .discipline-card.completed .discipline-name { color: #065f46; }
   .discipline-card.completed::before {
-    content: '✓';
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    width: 24px;
-    height: 24px;
-    background: var(--success);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    content: '✓'; position: absolute; top: 6px; right: 8px;
+    width: 24px; height: 24px; background: var(--success); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
-  
-  /* ===== Tarjetas DESHABILITADAS (nuevo) ===== */
   .discipline-card.disabled {
-    background: #f3f4f6;
-    border-color: #e5e7eb;
-    cursor: not-allowed;
-    opacity: 0.6;
+    background: #f3f4f6; border-color: #e5e7eb; cursor: not-allowed; opacity: 0.6;
   }
-  .discipline-card.disabled:hover {
-    transform: none;
-    box-shadow: none;
-    border-color: #e5e7eb;
-  }
-  .discipline-card.disabled .discipline-icon {
-    background: #e5e7eb;
-    color: #9ca3af;
-    filter: grayscale(100%);
-  }
-  .discipline-card.disabled .discipline-name {
-    color: #9ca3af;
-    text-decoration: line-through;
-  }
-  .discipline-card.disabled::after {
-    content: '🔒';
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    font-size: 1rem;
-  }
-  
-  .discipline-status {
-    font-size: 0.75rem;
-    color: var(--text-light);
-    margin-top: 4px;
-    min-height: 14px;
-  }
+  .discipline-card.disabled:hover { transform: none; box-shadow: none; border-color: #e5e7eb; }
+  .discipline-card.disabled .discipline-icon { background: #e5e7eb; color: #9ca3af; filter: grayscale(100%); }
+  .discipline-card.disabled .discipline-name { color: #9ca3af; text-decoration: line-through; }
+  .discipline-card.disabled::after { content: '🔒'; position: absolute; top: 6px; right: 8px; font-size: 1rem; }
+  .discipline-status { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; min-height: 14px; }
   .discipline-status.done { color: var(--success-dark); font-weight: 600; }
   .discipline-status.pending { color: var(--warning); font-weight: 600; }
   .discipline-status.not-available { color: var(--disabled); font-weight: 600; font-style: italic; }
-  
   .discipline-icon {
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: var(--bg-gray);
+    font-size: 2rem; width: 50px; height: 50px; margin: 0 auto 8px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: var(--bg-gray);
   }
   .discipline-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
-  
-  /* Tooltip */
   .card-tooltip {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1f2937;
-    color: white;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease;
-    z-index: 100;
-    box-shadow: var(--shadow-lg);
-    pointer-events: none;
-    line-height: 1.5;
-    max-width: 250px;
-    white-space: normal;
-    text-align: center;
+    position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%); background: #1f2937; color: white;
+    padding: 10px 14px; border-radius: 8px; font-size: 0.8rem;
+    opacity: 0; visibility: hidden; transition: all 0.2s ease;
+    z-index: 100; box-shadow: var(--shadow-lg); pointer-events: none;
+    line-height: 1.5; max-width: 250px; white-space: normal; text-align: center;
   }
   .card-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
+    content: ''; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%); border: 6px solid transparent;
     border-top-color: #1f2937;
   }
-  .discipline-card:hover .card-tooltip {
-    opacity: 1;
-    visibility: visible;
-    bottom: calc(100% + 10px);
-  }
-  
-  /* Aviso de restricción */
+  .discipline-card:hover .card-tooltip { opacity: 1; visibility: visible; bottom: calc(100% + 10px); }
   .grade-notice {
-    background: #fef3c7;
-    border-left: 4px solid var(--warning);
-    padding: 12px 15px;
-    border-radius: var(--radius);
-    margin-bottom: 15px;
-    font-size: 0.9rem;
-    color: #92400e;
-    display: none;
+    background: #fef3c7; border-left: 4px solid var(--warning);
+    padding: 12px 15px; border-radius: var(--radius); margin-bottom: 15px;
+    font-size: 0.9rem; color: #92400e; display: none;
   }
   .grade-notice.visible { display: block; animation: slideIn 0.3s ease; }
-  
-  /* ===== Botones ===== */
   .btn {
-    display: inline-block;
-    padding: 14px 28px;
-    background: var(--primary);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    text-align: center;
-    width: 100%;
+    display: inline-block; padding: 14px 28px; background: var(--primary);
+    color: var(--white); border: none; border-radius: var(--radius);
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    transition: var(--transition); text-align: center; width: 100%;
   }
   .btn:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow); }
   .btn:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
@@ -321,14 +224,10 @@
   .btn-secondary:hover:not(:disabled) { background: #4b5563; }
   .btn-success { background: var(--success); }
   .btn-success:hover:not(:disabled) { background: #059669; }
-  .btn-danger { background: var(--danger); }
-  .btn-danger:hover:not(:disabled) { background: #dc2626; }
   .btn-warning { background: var(--warning); }
   .btn-warning:hover:not(:disabled) { background: #d97706; }
   .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
   .btn-group .btn { flex: 1; min-width: 120px; }
-  
-  /* ===== Examen ===== */
   .progress-container { background: var(--bg-gray); border-radius: 20px; height: 10px; margin-bottom: 20px; overflow: hidden; }
   .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.3s ease; border-radius: 20px; }
   .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
@@ -338,108 +237,59 @@
   .question-text { font-size: clamp(1rem, 3vw, 1.15rem); margin-bottom: 25px; color: var(--text); line-height: 1.8; font-weight: 500; }
   .options { display: flex; flex-direction: column; gap: 12px; }
   .option-btn {
-    padding: 16px 20px;
-    background: var(--bg-gray);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-    text-align: left;
-    font-size: 1rem;
-    color: var(--text);
-    position: relative;
-    padding-left: 50px;
+    padding: 16px 20px; background: var(--bg-gray);
+    border: 2px solid var(--border); border-radius: var(--radius);
+    cursor: pointer; transition: var(--transition); text-align: left;
+    font-size: 1rem; color: var(--text); position: relative; padding-left: 50px;
   }
   .option-btn::before {
-    content: '';
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--border);
-    border-radius: 50%;
-    background: var(--white);
-    transition: var(--transition);
+    content: ''; position: absolute; left: 16px; top: 50%;
+    transform: translateY(-50%); width: 24px; height: 24px;
+    border: 2px solid var(--border); border-radius: 50%;
+    background: var(--white); transition: var(--transition);
   }
   .option-btn:hover { border-color: var(--primary); background: #eef2ff; }
   .option-btn.selected { background: var(--primary); color: var(--white); border-color: var(--primary); }
   .option-btn.selected::before { background: var(--white); border-color: var(--white); box-shadow: inset 0 0 0 4px var(--primary); }
   .quiz-info { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-light); margin-bottom: 15px; flex-wrap: wrap; }
   .selected-discipline {
-    text-align: center;
-    padding: 8px 15px;
+    text-align: center; padding: 8px 15px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    border-radius: var(--radius);
-    font-weight: 600;
-    margin-bottom: 15px;
-    font-size: 0.95rem;
+    color: white; border-radius: var(--radius); font-weight: 600;
+    margin-bottom: 15px; font-size: 0.95rem;
   }
-  
-  /* ===== Modales ===== */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); z-index: 1000;
+    align-items: center; justify-content: center; padding: 20px;
   }
   .modal-overlay.active { display: flex; }
   .modal {
-    background: white;
-    border-radius: var(--radius);
-    padding: 25px;
-    max-width: 450px;
-    width: 100%;
-    box-shadow: var(--shadow-lg);
+    background: white; border-radius: var(--radius); padding: 25px;
+    max-width: 450px; width: 100%; box-shadow: var(--shadow-lg);
     animation: fadeIn 0.3s ease;
   }
   .modal h3 { color: var(--primary-dark); margin-bottom: 15px; font-size: 1.2rem; }
   .modal p { color: var(--text); margin-bottom: 10px; }
-  .modal-info {
-    background: var(--bg-gray);
-    padding: 12px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-size: 0.9rem;
-  }
+  .modal-info { background: var(--bg-gray); padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.9rem; }
   .modal-info strong { color: var(--primary-dark); }
-  
-  /* ===== Loading ===== */
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
   .hidden { display: none !important; }
   .loading-spinner { text-align: center; padding: 40px; }
   .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid var(--bg-gray);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
+    width: 50px; height: 50px; border: 4px solid var(--bg-gray);
+    border-top-color: var(--primary); border-radius: 50%;
+    animation: spin 1s linear infinite; margin: 0 auto 20px;
   }
-  
-  /* ===== Resultados ===== */
   .results-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--bg-gray); }
   .score-display {
-    font-size: clamp(3rem, 10vw, 5rem);
-    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 5rem); font-weight: 800;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .score-subtitle { font-size: 1.2rem; color: var(--text-light); margin-top: 10px; }
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin-bottom: 30px;
-  }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
   .info-card { background: var(--bg-gray); padding: 15px; border-radius: var(--radius); text-align: center; }
   .info-card-label { font-size: 0.85rem; color: var(--text-light); margin-bottom: 5px; }
   .info-card-value { font-size: 1.1rem; font-weight: 600; color: var(--text); }
@@ -452,26 +302,17 @@
   .progress-warning { background: var(--warning); }
   .progress-danger { background: var(--danger); }
   .recommendation-card {
-    background: #fef3c7;
-    border-left: 4px solid var(--warning);
-    padding: 15px;
-    border-radius: var(--radius);
-    margin-bottom: 15px;
+    background: #fef3c7; border-left: 4px solid var(--warning);
+    padding: 15px; border-radius: var(--radius); margin-bottom: 15px;
   }
   .recommendation-card h4 { color: #92400e; margin-bottom: 8px; }
   .recommendation-card p { color: #78350f; }
   .congrats {
-    background: #d1fae5;
-    border-left: 4px solid var(--success);
-    padding: 20px;
-    border-radius: var(--radius);
-    text-align: center;
-    margin-top: 20px;
+    background: #d1fae5; border-left: 4px solid var(--success);
+    padding: 20px; border-radius: var(--radius); text-align: center; margin-top: 20px;
   }
   .congrats h3 { color: #065f46; margin-bottom: 10px; }
   .congrats p { color: #047857; }
-  
-  /* ===== Responsive ===== */
   @media (max-width: 600px) {
     body { padding: 10px; }
     .container { padding: 20px; }
@@ -480,15 +321,17 @@
     .area-table th, .area-table td { padding: 8px; font-size: 0.9rem; }
     .disciplines-grid { grid-template-columns: repeat(2, 1fr); }
     .card-tooltip { font-size: 0.7rem; padding: 8px 10px; max-width: 180px; }
+    .info-diagnostica { padding: 15px; }
+    .info-item .item-content p { font-size: 0.82rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- ========== PANTALLA 1: INICIO ========== -->
+<!-- PANTALLA 1: INICIO -->
 <div class="container" id="screen-start">
   <div class="logo-container">
-    <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo de la escuela" onerror="this.style.display='none'">
+    <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo de la escuela" onerror="this.style.display='none';">
   </div>
   <h1>📚 Evaluación Diagnóstica</h1>
   <p class="subtitle">Secundaria - Multidisciplinaria</p>
@@ -527,13 +370,56 @@
       </select>
     </div>
     
+    <!-- ============================================
+         SECCIÓN INFORMATIVA - EVALUACIÓN DIAGNÓSTICA
+         ============================================ -->
+    <div class="info-diagnostica">
+      <div class="info-diagnostica-titulo">
+        <span class="icono">💡</span>
+        <span>Antes de comenzar, es importante que sepas:</span>
+      </div>
+      
+      <div class="info-items">
+        <div class="info-item">
+          <span class="item-icon">🎯</span>
+          <div class="item-content">
+            <strong>¿Para qué sirve esta evaluación?</strong>
+            <p>Es una evaluación diagnóstica que nos ayuda a conocer tus conocimientos actuales para que tus maestros puedan apoyarte mejor durante el ciclo escolar.</p>
+          </div>
+        </div>
+        
+        <div class="info-item honestidad">
+          <span class="item-icon">🤝</span>
+          <div class="item-content">
+            <strong>Responde con honestidad</strong>
+            <p>Contesta únicamente lo que tú sabes, sin pedir ayuda a compañeros, familiares ni consultar internet. Tus respuestas honestas nos permiten ayudarte de la mejor manera.</p>
+          </div>
+        </div>
+        
+        <div class="info-item calificacion">
+          <span class="item-icon">📝</span>
+          <div class="item-content">
+            <strong>No afecta tu boleta</strong>
+            <p>El resultado de esta evaluación NO se reflejará en tu boleta de calificaciones. Es solo una herramienta para conocer tu punto de partida.</p>
+          </div>
+        </div>
+        
+        <div class="info-item conciencia">
+          <span class="item-icon">⭐</span>
+          <div class="item-content">
+            <strong>¡Es una oportunidad, no un examen!</strong>
+            <p>No te preocupes por obtener una calificación alta. Lo más valioso es que tus respuestas sean sinceras para que recibas el apoyo que realmente necesitas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="form-group">
       <label>📖 Selecciona la disciplina *</label>
       <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 10px;">
         ✓ Verde = ya realizado • ⏳ Amarillo = pendiente • 🔒 Gris = no disponible
       </p>
       
-      <!-- Aviso de restricción por grado -->
       <div id="grade-notice" class="grade-notice">
         ℹ️ <strong>Nota:</strong> La disciplina de <strong>Geografía</strong> solo se cursa en <strong>1° grado</strong>, por lo que no está disponible para tu grado actual.
       </div>
@@ -546,21 +432,21 @@
   </form>
 </div>
 
-<!-- ========== MODAL: Examen ya realizado ========== -->
+<!-- MODAL: Examen ya realizado -->
 <div class="modal-overlay" id="modal-ya-realizado">
   <div class="modal">
     <h3>⚠️ Examen ya realizado</h3>
     <p>Ya completaste esta evaluación anteriormente.</p>
     <div class="modal-info" id="modal-info-anterior"></div>
     <p style="font-size: 0.9rem; color: var(--text-light);">¿Deseas realizarla nuevamente? Tu nuevo resultado se agregará al registro.</p>
-    <div class="btn-group">
+    <div class="modal-footer">
       <button class="btn btn-secondary" id="btn-cancelar-reintento">Cancelar</button>
       <button class="btn btn-warning" id="btn-confirmar-reintento">Sí, volver a presentar</button>
     </div>
   </div>
 </div>
 
-<!-- ========== PANTALLA 2: CARGA DE PREGUNTAS ========== -->
+<!-- PANTALLA 2: CARGA DE PREGUNTAS -->
 <div class="container hidden" id="screen-loading-questions">
   <div class="loading-spinner">
     <div class="spinner"></div>
@@ -569,7 +455,7 @@
   </div>
 </div>
 
-<!-- ========== PANTALLA 3: EXAMEN ========== -->
+<!-- PANTALLA 3: EXAMEN -->
 <div class="container hidden" id="screen-quiz">
   <div class="selected-discipline" id="quiz-discipline">Disciplina</div>
   <div class="quiz-info">
@@ -592,7 +478,7 @@
   </div>
 </div>
 
-<!-- ========== PANTALLA 4: GUARDANDO ========== -->
+<!-- PANTALLA 4: GUARDANDO -->
 <div class="container hidden" id="screen-saving">
   <div class="loading-spinner">
     <div class="spinner"></div>
@@ -601,7 +487,7 @@
   </div>
 </div>
 
-<!-- ========== PANTALLA 5: RESULTADOS ========== -->
+<!-- PANTALLA 5: RESULTADOS -->
 <div class="container hidden" id="screen-results">
   <h1>📊 Resultados de la Evaluación</h1>
   <div class="results-header">
@@ -629,265 +515,284 @@
 
 <script>
 /* ============================================
-   CONFIGURACIÓN GLOBAL
+   CONFIGURACIÓN
    ============================================ */
-const API_URL = 'https://script.google.com/macros/s/AKfycbwK_YRPfajX3NUftNnThasdRxiXGl7E5EBehIpuE7Tuyi8owEk3CjAxruShVdcPs2jHJw/exec';
-const TOTAL_PREGUNTAS = 20;
+var API_URL = 'https://script.google.com/macros/s/AKfycbwdSF90fsKQZRLtUJ7E8RhsnuguhtCqNp3G-PJS0I16ttgAazGlwyAEzkt69XyQGoKL/exec';
+var LOGO_URL = 'https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png';
+var NOMBRE_ESCUELA = 'Secundaria Profr. Honorato Tlaseca Barrera';
+var UBICACION_ESCUELA = 'Huehuetlán el Chico, Puebla';
+var TOTAL_PREGUNTAS_EXAMEN = 20;
 
-/**
- * Catálogo de disciplinas
- * soloGrados: array de grados donde está disponible.
- * Si no se especifica, está disponible en todos los grados.
- */
-const DISCIPLINAS = [
+var DISCIPLINAS = [
   { nombre: 'Español', icono: '📖' },
   { nombre: 'Inglés', icono: '🌍' },
   { nombre: 'Matemáticas', icono: '🔢' },
   { nombre: 'Ciencias', icono: '🔬' },
   { nombre: 'Historia', icono: '📜' },
   { nombre: 'Geografía', icono: '🗺️', soloGrados: ['1'], motivoRestriccion: 'Solo se cursa en 1° de Secundaria' },
-  { nombre: 'Formación cívica y ética', icono: '⚖️' },
-  { nombre: 'Socioemocional', icono: '💚' },
-  { nombre: 'Educación física', icono: '⚽' },
+  { nombre: 'Formación Cívica y Ética', icono: '⚖️' },
+  { nombre: 'Educación Socioemocional', icono: '💚' },
+  { nombre: 'Educación Física', icono: '⚽' },
   { nombre: 'Artes', icono: '🎨' },
   { nombre: 'Tecnología', icono: '💻' }
 ];
 
-let estado = {
-  inicio: null,
-  fin: null,
-  matricula: '',
-  nombre: '',
-  grado: '',
-  grupo: '',
-  disciplina: '',
-  preguntas: [],
-  respuestas: [],
-  indice: 0
+var bancoPreguntas = [];
+var estado = {
+  inicio: null, fin: null, matricula: '', nombre: '',
+  grado: '', grupo: '', disciplina: '',
+  preguntas: [], respuestas: [], indice: 0
 };
+var examenesAlumno = {};
 
-let examenesAlumno = {};
+function obtenerCicloEscolar() {
+  var hoy = new Date();
+  var mes = hoy.getMonth() + 1;
+  var anio = hoy.getFullYear();
+  if (mes >= 8) {
+    return anio + '-' + (anio + 1);
+  } else {
+    return (anio - 1) + '-' + anio;
+  }
+}
 
-/* ============================================
-   UTILIDADES: Disponibilidad por grado
-   ============================================ */
+function obtenerNombreDisciplinaExamen(disciplina, grado) {
+  if (compararDisciplinas(disciplina, 'Ciencias')) {
+    var g = String(grado);
+    if (g === '1') return 'Biología';
+    if (g === '2') return 'Física';
+    if (g === '3') return 'Química';
+  }
+  return disciplina;
+}
 
-/**
- * Verifica si una disciplina está disponible para el grado actual
- */
+function normalizarDisciplina(nombre) {
+  if (!nombre) return '';
+  return String(nombre).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function compararDisciplinas(disc1, disc2) {
+  return normalizarDisciplina(disc1) === normalizarDisciplina(disc2);
+}
+
+function normalizarDificultad(valor) {
+  if (!valor) return '';
+  var normalizado = String(valor).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  var mapa = { 'basica': 'basica', 'media': 'media', 'reto': 'reto', 'intermedia': 'media', 'avanzada': 'reto', 'facil': 'basica', 'dificil': 'reto' };
+  return mapa[normalizado] || normalizado;
+}
+
+function obtenerClaseDificultad(dificultad) {
+  var n = normalizarDificultad(dificultad);
+  if (n === 'basica') return 'badge-diff-basica';
+  if (n === 'media') return 'badge-diff-media';
+  if (n === 'reto') return 'badge-diff-reto';
+  return 'badge-diff-media';
+}
+
+function obtenerTextoDificultad(dificultad) {
+  var n = normalizarDificultad(dificultad);
+  if (n === 'basica') return 'Básica';
+  if (n === 'media') return 'Media';
+  if (n === 'reto') return 'Reto';
+  return dificultad.charAt(0).toUpperCase() + dificultad.slice(1);
+}
+
+function sanearValor(valor) {
+  if (valor === null || valor === undefined) return '';
+  if (valor instanceof Date) {
+    var d = valor.getDate();
+    var m = valor.getMonth() + 1;
+    var a = valor.getFullYear();
+    if (Math.abs(a - new Date().getFullYear()) <= 1) return d + '/' + m;
+    return valor.toLocaleDateString('es-MX');
+  }
+  if (typeof valor === 'string') {
+    var patronFecha = /\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}\s+\d{4}/i;
+    if (patronFecha.test(valor)) {
+      var meses = { 'Jan':'1','Feb':'2','Mar':'3','Apr':'4','May':'5','Jun':'6','Jul':'7','Aug':'8','Sep':'9','Oct':'10','Nov':'11','Dec':'12' };
+      var match = valor.match(patronFecha);
+      if (match) {
+        var mes = meses[match[2]];
+        var dia = parseInt(match[3], 10);
+        var anio = parseInt(match[4], 10);
+        if (Math.abs(anio - new Date().getFullYear()) <= 1) return dia + '/' + mes;
+      }
+      return valor;
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+      var partes = valor.split('-');
+      var anio2 = parseInt(partes[0], 10);
+      if (Math.abs(anio2 - new Date().getFullYear()) <= 1) {
+        return parseInt(partes[2], 10) + '/' + parseInt(partes[1], 10);
+      }
+    }
+    if (/^0\d+\s*\/\s*\d+$/.test(valor)) {
+      var p2 = valor.split('/');
+      return parseInt(p2[0], 10) + '/' + parseInt(p2[1], 10);
+    }
+    return valor.trim();
+  }
+  return String(valor).trim();
+}
+
+function sanearPregunta(p) {
+  var nuevo = {};
+  for (var key in p) { if (p.hasOwnProperty(key)) nuevo[key] = p[key]; }
+  nuevo.enunciado = sanearValor(p.enunciado);
+  nuevo.opcion_a = sanearValor(p.opcion_a);
+  nuevo.opcion_b = sanearValor(p.opcion_b);
+  nuevo.opcion_c = sanearValor(p.opcion_c);
+  nuevo.opcion_d = sanearValor(p.opcion_d);
+  nuevo.explicacion = sanearValor(p.explicacion);
+  nuevo['área'] = sanearValor(p['área'] || p.area);
+  nuevo.area = sanearValor(p.area || p['área']);
+  nuevo.tema = sanearValor(p.tema);
+  nuevo.disciplina = sanearValor(p.disciplina);
+  return nuevo;
+}
+
+function normalizarPregunta(p) {
+  var activa = true;
+  if (p.activa === false || p.activa === 'FALSE' || p.activa === 'false' || p.activa === '0' || p.activa === 0) activa = false;
+  return {
+    id: String(p.id || '').trim(),
+    grado: String(p.grado || '').trim(),
+    disciplina: String(p.disciplina || '').trim(),
+    'área': p['área'] || p.area || p['Área'] || '',
+    area: p.area || p['área'] || p['Área'] || '',
+    tema: String(p.tema || p.Tema || '').trim(),
+    dificultad: String(p.dificultad || p.Dificultad || '').trim(),
+    enunciado: String(p.enunciado || p.Enunciado || '').trim(),
+    opcion_a: String(p.opcion_a || p.opcion_A || '').trim(),
+    opcion_b: String(p.opcion_b || p.opcion_B || '').trim(),
+    opcion_c: String(p.opcion_c || p.opcion_C || '').trim(),
+    opcion_d: String(p.opcion_d || p.opcion_D || '').trim(),
+    correcta: String(p.correcta || p.Correcta || '').trim().toUpperCase(),
+    explicacion: String(p.explicacion || p.Explicacion || '').trim(),
+    activa: activa,
+    fecha_creacion: p.fecha_creacion || '',
+    autor: String(p.autor || p.Autor || '').trim()
+  };
+}
+
 function esDisciplinaDisponible(disciplina, gradoActual) {
-  if (!disciplina.soloGrados) return true; // Sin restricción
-  if (!gradoActual) return true; // Si aún no hay grado seleccionado, mostrar todas
+  if (!disciplina.soloGrados) return true;
+  if (!gradoActual) return true;
   return disciplina.soloGrados.includes(gradoActual);
 }
 
-/**
- * Obtiene el objeto disciplina por nombre
- */
 function obtenerDisciplina(nombre) {
-  return DISCIPLINAS.find(d => d.nombre === nombre);
+  return DISCIPLINAS.find(function(d) { return d.nombre === nombre; });
 }
 
-/**
- * Cuenta cuántas disciplinas están disponibles para el grado actual
- */
 function contarDisciplinasDisponibles(grado) {
-  return DISCIPLINAS.filter(d => esDisciplinaDisponible(d, grado)).length;
+  return DISCIPLINAS.filter(function(d) { return esDisciplinaDisponible(d, grado); }).length;
+}
+
+function mostrarToast(mensaje, tipo, duracion) {
+  tipo = tipo || 'success';
+  duracion = duracion || 3500;
+  var toast = document.createElement('div');
+  toast.className = 'toast ' + tipo;
+  var icono = tipo === 'success' ? '✅' : (tipo === 'error' ? '❌' : '⚠️');
+  toast.textContent = icono + ' ' + mensaje;
+  document.body.appendChild(toast);
+  setTimeout(function() {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    setTimeout(function() { toast.remove(); }, 300);
+  }, duracion);
 }
 
 /* ============================================
-   RENDERIZADO DE TARJETAS
+   CARGA DE PREGUNTAS
    ============================================ */
+function cargarPreguntas() {
+  fetch(API_URL + '?action=getBanco&todas=1', { redirect: 'follow' })
+    .then(function(response) { return response.text(); })
+    .then(function(text) {
+      var data;
+      try { data = JSON.parse(text); }
+      catch (e) { throw new Error('Respuesta no válida del servidor'); }
+      if (data && data.error) throw new Error(data.error);
+      if (!Array.isArray(data)) {
+        if (data.data && Array.isArray(data.data)) data = data.data;
+        else throw new Error('Formato inesperado');
+      }
+      bancoPreguntas = data.map(function(p) { return normalizarPregunta(sanearPregunta(p)); });
+      renderDisciplinas();
+    })
+    .catch(function(err) {
+      console.error('Error al cargar preguntas:', err);
+    });
+}
+
 function renderDisciplinas() {
-  const grid = document.getElementById('disciplines-grid');
-  const gradoActual = document.getElementById('grado').value;
+  var grid = document.getElementById('disciplines-grid');
+  var gradoActual = document.getElementById('grado').value;
   
-  grid.innerHTML = DISCIPLINAS.map(d => {
-    const disponible = esDisciplinaDisponible(d, gradoActual);
-    const disabledClass = disponible ? '' : 'disabled';
+  grid.innerHTML = DISCIPLINAS.map(function(d) {
+    var disponible = esDisciplinaDisponible(d, gradoActual);
+    var disabledClass = disponible ? '' : 'disabled';
     
-    return `
-      <div class="discipline-card ${disabledClass}" 
-           data-disciplina="${d.nombre}"
-           data-disponible="${disponible}">
-        <div class="discipline-icon">${d.icono}</div>
-        <div class="discipline-name">${d.nombre}</div>
-        <div class="discipline-status pending">${disponible ? '⏳ Pendiente' : '🚫 No disponible'}</div>
-      </div>
-    `;
+    return '<div class="discipline-card ' + disabledClass + '" data-disciplina="' + d.nombre + '" data-disponible="' + disponible + '">' +
+      '<div class="discipline-icon">' + d.icono + '</div>' +
+      '<div class="discipline-name">' + d.nombre + '</div>' +
+      '<div class="discipline-status pending">' + (disponible ? '⏳ Pendiente' : '🚫 No disponible') + '</div>' +
+      '</div>';
   }).join('');
   
-  // Asignar eventos solo a las tarjetas disponibles
-  grid.querySelectorAll('.discipline-card').forEach(card => {
-    card.addEventListener('click', () => {
-      // Ignorar clics en tarjetas deshabilitadas
+  grid.querySelectorAll('.discipline-card').forEach(function(card) {
+    card.addEventListener('click', function() {
       if (card.dataset.disponible === 'false') {
         mostrarTooltipRestriccion(card);
         return;
       }
-      
-      // Quitar selección previa
-      grid.querySelectorAll('.discipline-card').forEach(c => c.classList.remove('selected'));
+      grid.querySelectorAll('.discipline-card').forEach(function(c) { c.classList.remove('selected'); });
       card.classList.add('selected');
       document.getElementById('disciplina').value = card.dataset.disciplina;
     });
   });
   
-  // Aplicar estado de exámenes realizados si ya se cargaron
-  if (Object.keys(examenesAlumno).length > 0 || document.getElementById('student-status').style.display === 'block') {
-    actualizarTarjetasDisciplinas();
-  }
-  
-  // Mostrar/ocultar aviso de restricción
-  actualizarAvisoRestriccion();
+  actualizarTarjetasDisciplinas();
 }
 
-/**
- * Muestra temporalmente el tooltip de restricción al hacer clic en una tarjeta deshabilitada
- */
 function mostrarTooltipRestriccion(card) {
-  const disciplina = obtenerDisciplina(card.dataset.disciplina);
-  
-  // Remover tooltip previo si existe
-  const tooltipPrevio = card.querySelector('.card-tooltip');
+  var disciplina = obtenerDisciplina(card.dataset.disciplina);
+  var tooltipPrevio = card.querySelector('.card-tooltip');
   if (tooltipPrevio) tooltipPrevio.remove();
   
-  const tooltip = document.createElement('div');
+  var tooltip = document.createElement('div');
   tooltip.className = 'card-tooltip';
   tooltip.style.opacity = '1';
   tooltip.style.visibility = 'visible';
-  tooltip.innerHTML = `
-    <strong>${disciplina.icono} ${disciplina.nombre}</strong><br>
-    ${disciplina.motivoRestriccion || 'No disponible para tu grado'}
-  `;
+  tooltip.innerHTML = '<strong>' + disciplina.icono + ' ' + disciplina.nombre + '</strong><br>' + (disciplina.motivoRestriccion || 'No disponible para tu grado');
   card.appendChild(tooltip);
   
-  // Ocultar después de 2.5 segundos
-  setTimeout(() => {
+  setTimeout(function() {
     tooltip.style.opacity = '0';
     tooltip.style.visibility = 'hidden';
-    setTimeout(() => tooltip.remove(), 300);
+    setTimeout(function() { tooltip.remove(); }, 300);
   }, 2500);
 }
 
-/**
- * Muestra u oculta el aviso de restricción de Geografía
- */
-function actualizarAvisoRestriccion() {
-  const grado = document.getElementById('grado').value;
-  const aviso = document.getElementById('grade-notice');
-  
-  // Mostrar solo si es 2° o 3°
-  if (grado === '2' || grado === '3') {
-    aviso.classList.add('visible');
-  } else {
-    aviso.classList.remove('visible');
-  }
-}
-
-/* ============================================
-   VERIFICAR EXÁMENES REALIZADOS
-   ============================================ */
-async function verificarExamenesAlumno(matricula) {
-  const icono = document.getElementById('matricula-icon');
-  const statusDiv = document.getElementById('student-status');
-  
-  icono.innerHTML = '<span class="spinner-mini"></span>';
-  statusDiv.className = 'student-status';
-  statusDiv.style.display = 'none';
-  
-  try {
-    const url = `${API_URL}?action=getResultados&id=${encodeURIComponent(matricula)}`;
-    const response = await fetch(url);
-    
-    if (!response.ok) throw new Error('Error de conexión');
-    
-    const data = await response.json();
-    
-    if (data && data.error) throw new Error(data.error);
-    
-    const resultados = Array.isArray(data) ? data : [];
-    
-    examenesAlumno = {};
-    resultados.forEach(r => {
-      if (r.disciplina) {
-        if (!examenesAlumno[r.disciplina] || 
-            new Date(r.fin || r.inicio) > new Date(examenesAlumno[r.disciplina].fin || examenesAlumno[r.disciplina].inicio)) {
-          examenesAlumno[r.disciplina] = {
-            calificacion: r.calificacion,
-            aciertos: r.aciertos,
-            fecha: r.fin || r.inicio,
-            grado: r.grado,
-            grupo: r.grupo
-          };
-        }
-      }
-    });
-    
-    actualizarTarjetasDisciplinas();
-    
-    icono.textContent = '✅';
-    const gradoActual = document.getElementById('grado').value;
-    const total = contarDisciplinasDisponibles(gradoActual);
-    const completadas = Object.keys(examenesAlumno).filter(d => {
-      const disc = obtenerDisciplina(d);
-      return disc && esDisciplinaDisponible(disc, gradoActual);
-    }).length;
-    const pendientes = total - completadas;
-    
-    if (completadas > 0) {
-      statusDiv.className = 'student-status found';
-      statusDiv.innerHTML = `
-        <div>👋 <strong>¡Bienvenido de vuelta!</strong> Hemos encontrado tu historial.</div>
-        <div class="status-summary">
-          <span class="status-count count-done">✓ Completadas: ${completadas}</span>
-          <span class="status-count count-pending">⏳ Pendientes: ${pendientes}</span>
-        </div>
-      `;
-    } else {
-      statusDiv.className = 'student-status not-found';
-      statusDiv.innerHTML = `
-        <div>📝 <strong>Matrícula registrada</strong> - No has realizado evaluaciones previas.</div>
-        <div class="status-summary">
-          <span class="status-count count-pending">⏳ Pendientes: ${total}</span>
-        </div>
-      `;
-    }
-    
-  } catch (error) {
-    icono.textContent = '⚠️';
-    statusDiv.className = 'student-status error';
-    statusDiv.innerHTML = `
-      <div>⚠️ No se pudo verificar tu historial. Puedes continuar sin problemas.</div>
-      <div style="font-size: 0.85rem; opacity: 0.8; margin-top: 4px;">Error: ${error.message}</div>
-    `;
-    examenesAlumno = {};
-    actualizarTarjetasDisciplinas();
-  }
-}
-
-/**
- * Actualiza visualmente las tarjetas según estado + disponibilidad por grado
- */
 function actualizarTarjetasDisciplinas() {
-  const cards = document.querySelectorAll('.discipline-card');
-  const gradoActual = document.getElementById('grado').value;
+  var cards = document.querySelectorAll('.discipline-card');
+  var gradoActual = document.getElementById('grado').value;
   
-  cards.forEach(card => {
-    const disciplinaNombre = card.dataset.disciplina;
-    const disciplina = obtenerDisciplina(disciplinaNombre);
-    const realizado = examenesAlumno[disciplinaNombre];
-    const disponible = esDisciplinaDisponible(disciplina, gradoActual);
+  cards.forEach(function(card) {
+    var disciplinaNombre = card.dataset.disciplina;
+    var disciplina = obtenerDisciplina(disciplinaNombre);
+    var realizado = examenesAlumno[disciplinaNombre];
+    var disponible = esDisciplinaDisponible(disciplina, gradoActual);
     
-    // Remover tooltip previo
-    const tooltipExistente = card.querySelector('.card-tooltip');
+    var tooltipExistente = card.querySelector('.card-tooltip');
     if (tooltipExistente) tooltipExistente.remove();
     
-    // Resetear clases
     card.classList.remove('completed');
-    const statusDiv = card.querySelector('.discipline-status');
+    var statusDiv = card.querySelector('.discipline-status');
     
-    // Si NO está disponible para este grado
     if (!disponible) {
       card.classList.add('disabled');
       card.dataset.disponible = 'false';
@@ -898,36 +803,25 @@ function actualizarTarjetasDisciplinas() {
       statusDiv.className = 'discipline-status not-available';
       statusDiv.textContent = '🚫 No disponible';
       
-      // Tooltip de restricción permanente
-      const tooltip = document.createElement('div');
+      var tooltip = document.createElement('div');
       tooltip.className = 'card-tooltip';
-      tooltip.innerHTML = `
-        <strong>${disciplina.icono} ${disciplina.nombre}</strong><br>
-        ${disciplina.motivoRestriccion || 'No disponible para este grado'}
-      `;
+      tooltip.innerHTML = '<strong>' + disciplina.icono + ' ' + disciplina.nombre + '</strong><br>' + (disciplina.motivoRestriccion || 'No disponible para este grado');
       card.appendChild(tooltip);
       return;
     }
     
-    // Está disponible - quitar disabled
     card.classList.remove('disabled');
     card.dataset.disponible = 'true';
     
     if (realizado) {
       card.classList.add('completed');
       statusDiv.className = 'discipline-status done';
-      statusDiv.textContent = `✓ ${realizado.calificacion}%`;
+      statusDiv.textContent = '✓ ' + realizado.calificacion + '%';
       
-      const tooltip = document.createElement('div');
+      var tooltip = document.createElement('div');
       tooltip.className = 'card-tooltip';
-      const fecha = realizado.fecha ? new Date(realizado.fecha).toLocaleDateString('es-MX') : 'Sin fecha';
-      tooltip.innerHTML = `
-        <strong>${disciplinaNombre}</strong><br>
-        📅 Fecha: ${fecha}<br>
-        🎯 Calificación: ${realizado.calificacion}%<br>
-        ✓ Aciertos: ${realizado.aciertos}/20<br>
-        <span style="font-size:0.7rem; opacity:0.8;">Clic para volver a presentar</span>
-      `;
+      var fecha = realizado.fecha ? new Date(realizado.fecha).toLocaleDateString('es-MX') : 'Sin fecha';
+      tooltip.innerHTML = '<strong>' + disciplinaNombre + '</strong><br>📅 Fecha: ' + fecha + '<br>🎯 Calificación: ' + realizado.calificacion + '%<br>✓ Aciertos: ' + realizado.aciertos + '/20<br><span style="font-size:0.7rem; opacity:0.8;">Clic para volver a presentar</span>';
       card.appendChild(tooltip);
     } else {
       statusDiv.className = 'discipline-status pending';
@@ -935,555 +829,434 @@ function actualizarTarjetasDisciplinas() {
     }
   });
   
-  // Actualizar contadores en el panel de estado
-  const statusDiv = document.getElementById('student-status');
+  var statusDiv = document.getElementById('student-status');
   if (statusDiv.style.display === 'block' && !statusDiv.classList.contains('error')) {
-    const total = contarDisciplinasDisponibles(gradoActual);
-    const completadas = Object.keys(examenesAlumno).filter(d => {
-      const disc = obtenerDisciplina(d);
+    var total = contarDisciplinasDisponibles(gradoActual);
+    var completadas = Object.keys(examenesAlumno).filter(function(d) {
+      var disc = obtenerDisciplina(d);
       return disc && esDisciplinaDisponible(disc, gradoActual);
     }).length;
-    const pendientes = total - completadas;
+    var pendientes = total - completadas;
     
-    const summary = statusDiv.querySelector('.status-summary');
+    var summary = statusDiv.querySelector('.status-summary');
     if (summary) {
-      summary.innerHTML = `
-        <span class="status-count count-done">✓ Completadas: ${completadas}</span>
-        <span class="status-count count-pending">⏳ Pendientes: ${pendientes}</span>
-      `;
+      summary.innerHTML = '<span class="status-count count-done">✓ Completadas: ' + completadas + '</span><span class="status-count count-pending">⏳ Pendientes: ' + pendientes + '</span>';
     }
   }
 }
 
-/* ============================================
-   EVENTOS DE CAMBIO DE GRADO (NUEVO)
-   ============================================ */
-document.getElementById('grado').addEventListener('change', function() {
-  const gradoSeleccionado = this.value;
-  const disciplinaActual = document.getElementById('disciplina').value;
-  
-  // Re-renderizar tarjetas con el nuevo grado
-  renderDisciplinas();
-  
-  // Si la disciplina seleccionada ya no está disponible, deseleccionar
-  if (disciplinaActual) {
-    const disc = obtenerDisciplina(disciplinaActual);
-    if (disc && !esDisciplinaDisponible(disc, gradoSeleccionado)) {
-      document.getElementById('disciplina').value = '';
-      // Aviso al usuario
-      mostrarAvisoTemporal(`⚠️ La disciplina "${disciplinaActual}" no está disponible para ${gradoSeleccionado}° grado. Selecciona otra.`);
-    }
-  }
-  
-  // Si ya había matrícula, recalcular contadores
-  const matricula = document.getElementById('matricula').value.trim();
-  if (matricula.length >= 3 && Object.keys(examenesAlumno).length > 0) {
-    actualizarTarjetasDisciplinas();
-  }
-});
-
-/**
- * Muestra un aviso temporal en la parte superior de la sección de disciplinas
- */
-function mostrarAvisoTemporal(mensaje) {
-  const aviso = document.getElementById('grade-notice');
-  const mensajeOriginal = aviso.innerHTML;
-  
-  aviso.innerHTML = mensaje;
-  aviso.classList.add('visible');
-  
-  setTimeout(() => {
-    actualizarAvisoRestriccion();
-  }, 3500);
-}
-
-/* ============================================
-   DEBOUNCE: evita llamadas excesivas al API
-   ============================================ */
-let debounceTimer = null;
-document.getElementById('matricula').addEventListener('input', function(e) {
-  clearTimeout(debounceTimer);
-  const valor = e.target.value.trim();
-  
-  if (valor.length >= 3) {
-    debounceTimer = setTimeout(() => {
-      verificarExamenesAlumno(valor);
-    }, 600);
+function actualizarAvisoRestriccion() {
+  var grado = document.getElementById('grado').value;
+  var aviso = document.getElementById('grade-notice');
+  if (grado === '2' || grado === '3') {
+    aviso.classList.add('visible');
   } else {
-    document.getElementById('matricula-icon').textContent = '';
-    document.getElementById('student-status').style.display = 'none';
-    examenesAlumno = {};
-    actualizarTarjetasDisciplinas();
-  }
-});
-
-document.getElementById('matricula').addEventListener('blur', function(e) {
-  const valor = e.target.value.trim();
-  if (valor.length >= 3) {
-    clearTimeout(debounceTimer);
-    verificarExamenesAlumno(valor);
-  }
-});
-
-/* ============================================
-   CARGA DE PREGUNTAS
-   ============================================ */
-async function cargarPreguntasDesdeSheets(disciplina, grado) {
-  const url = `${API_URL}?action=getBanco&disciplina=${encodeURIComponent(disciplina)}&grado=${encodeURIComponent(grado)}`;
-  
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Error en la respuesta del servidor');
-    
-    const data = await response.json();
-    
-    if (data && data.error) throw new Error(data.error);
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error(`No hay preguntas disponibles para ${disciplina} - ${grado}°. Consulta a tu docente.`);
-    }
-    
-    return data;
-  } catch (error) {
-    throw error;
+    aviso.classList.remove('visible');
   }
 }
 
-function transformarPregunta(p) {
-  const letras = ['A', 'B', 'C', 'D'];
-  let correctaIdx = 0;
+function verificarExamenesAlumno(matricula) {
+  var icono = document.getElementById('matricula-icon');
+  var statusDiv = document.getElementById('student-status');
   
-  if (typeof p.correcta === 'string') {
-    const letra = p.correcta.trim().toUpperCase();
-    const idx = letras.indexOf(letra);
-    if (idx !== -1) correctaIdx = idx;
-  } else if (typeof p.correcta === 'number') {
-    correctaIdx = p.correcta;
+  icono.innerHTML = '<span class="spinner-mini"></span>';
+  statusDiv.className = 'student-status';
+  statusDiv.style.display = 'none';
+  
+  fetch(API_URL + '?action=getResultados&id=' + encodeURIComponent(matricula), { redirect: 'follow' })
+    .then(function(response) { return response.text(); })
+    .then(function(text) {
+      var data;
+      try { data = JSON.parse(text); }
+      catch (e) { throw new Error('Respuesta no válida'); }
+      if (data && data.error) throw new Error(data.error);
+      
+      var resultados = Array.isArray(data) ? data : [];
+      examenesAlumno = {};
+      
+      resultados.forEach(function(r) {
+        var disciplina = r.disciplina || '';
+        if (disciplina && !examenesAlumno[disciplina]) {
+          examenesAlumno[disciplina] = {
+            calificacion: r.calificacion || 0,
+            aciertos: r.aciertos || 0,
+            fecha: r.fin || r.inicio || ''
+          };
+        }
+      });
+      
+      icono.innerHTML = '✅';
+      statusDiv.className = 'student-status found';
+      statusDiv.style.display = 'block';
+      
+      var total = contarDisciplinasDisponibles(document.getElementById('grado').value);
+      var completadas = Object.keys(examenesAlumno).length;
+      var pendientes = total - completadas;
+      
+      statusDiv.innerHTML = '<strong>📋 Historial encontrado</strong>' +
+        '<div class="status-summary">' +
+        '<span class="status-count count-done">✓ Completadas: ' + completadas + '</span>' +
+        '<span class="status-count count-pending">⏳ Pendientes: ' + pendientes + '</span>' +
+        '</div>';
+      
+      actualizarTarjetasDisciplinas();
+    })
+    .catch(function(err) {
+      icono.innerHTML = '⚠️';
+      statusDiv.className = 'student-status not-found';
+      statusDiv.style.display = 'block';
+      statusDiv.innerHTML = '<strong>ℹ️ Sin historial previo</strong><br>Este alumno no ha realizado evaluaciones anteriormente.';
+    });
+}
+
+document.getElementById('matricula').addEventListener('blur', function() {
+  var matricula = this.value.trim();
+  if (matricula.length >= 3) {
+    verificarExamenesAlumno(matricula);
+  }
+});
+
+document.getElementById('grado').addEventListener('change', function() {
+  actualizarAvisoRestriccion();
+  actualizarTarjetasDisciplinas();
+});
+
+/* ============================================
+   SELECCIÓN DE PREGUNTAS
+   ============================================ */
+function seleccionarPreguntasExamen(preguntas) {
+  var porArea = {};
+  preguntas.forEach(function(p) {
+    var area = p['área'] || p.area || 'General';
+    if (!porArea[area]) porArea[area] = [];
+    porArea[area].push(p);
+  });
+  var areas = Object.keys(porArea);
+  var seleccion = [];
+  if (areas.length === 0) return [];
+  var basePorArea = Math.floor(TOTAL_PREGUNTAS_EXAMEN / areas.length);
+  var extras = TOTAL_PREGUNTAS_EXAMEN % areas.length;
+  areas.forEach(function(area, idx) {
+    var cantidad = basePorArea + (idx < extras ? 1 : 0);
+    var mezcladas = porArea[area].slice().sort(function() { return Math.random() - 0.5; });
+    seleccion = seleccion.concat(mezcladas.slice(0, Math.min(cantidad, mezcladas.length)));
+  });
+  if (seleccion.length < TOTAL_PREGUNTAS_EXAMEN) {
+    var ids = {};
+    seleccion.forEach(function(p) { ids[p.id] = true; });
+    var disponibles = preguntas.filter(function(p) { return !ids[p.id]; });
+    var faltantes = TOTAL_PREGUNTAS_EXAMEN - seleccion.length;
+    seleccion = seleccion.concat(disponibles.sort(function() { return Math.random() - 0.5; }).slice(0, faltantes));
+  }
+  if (seleccion.length > TOTAL_PREGUNTAS_EXAMEN) seleccion = seleccion.sort(function() { return Math.random() - 0.5; }).slice(0, TOTAL_PREGUNTAS_EXAMEN);
+  return seleccion.sort(function() { return Math.random() - 0.5; });
+}
+
+/* ============================================
+   INICIO DEL EXAMEN
+   ============================================ */
+document.getElementById('start-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  var matricula = document.getElementById('matricula').value.trim();
+  var nombre = document.getElementById('nombre').value.trim();
+  var grado = document.getElementById('grado').value;
+  var grupo = document.getElementById('grupo').value;
+  var disciplina = document.getElementById('disciplina').value;
+  
+  if (!matricula || !nombre || !grado || !grupo || !disciplina) {
+    alert('Por favor completa todos los campos obligatorios.');
+    return;
   }
   
-  return {
-    id: p.id,
-    area: p['área'] || p.area || 'General',
-    dificultad: p.dificultad || 'media',
-    enunciado: p.enunciado,
-    opciones: [p.opcion_a, p.opcion_b, p.opcion_c, p.opcion_d],
-    correcta: correctaIdx,
-    explicacion: p.explicacion || ''
+  var disc = obtenerDisciplina(disciplina);
+  if (disc && !esDisciplinaDisponible(disc, grado)) {
+    alert('La disciplina "' + disciplina + '" no está disponible para ' + grado + '° grado.');
+    return;
+  }
+  
+  if (examenesAlumno[disciplina]) {
+    mostrarModalReintento(disciplina);
+    return;
+  }
+  
+  iniciarExamen();
+});
+
+function iniciarExamen() {
+  estado.matricula = document.getElementById('matricula').value.trim();
+  estado.nombre = document.getElementById('nombre').value.trim();
+  estado.grado = document.getElementById('grado').value;
+  estado.grupo = document.getElementById('grupo').value;
+  estado.disciplina = document.getElementById('disciplina').value;
+  estado.inicio = new Date().toISOString();
+  
+  document.getElementById('screen-start').classList.add('hidden');
+  document.getElementById('screen-loading-questions').classList.remove('hidden');
+  document.getElementById('loading-message').textContent = 'Cargando preguntas de ' + estado.disciplina + '...';
+  
+  var preguntasDisponibles = bancoPreguntas.filter(function(p) {
+    return p.activa && compararDisciplinas(p.disciplina, estado.disciplina) && p.grado === estado.grado;
+  });
+  
+  if (preguntasDisponibles.length === 0) {
+    alert('No hay preguntas activas para ' + estado.disciplina + ' en ' + estado.grado + '° grado.');
+    document.getElementById('screen-loading-questions').classList.add('hidden');
+    document.getElementById('screen-start').classList.remove('hidden');
+    return;
+  }
+  
+  setTimeout(function() {
+    estado.preguntas = seleccionarPreguntasExamen(preguntasDisponibles);
+    estado.respuestas = new Array(estado.preguntas.length).fill(null);
+    estado.indice = 0;
+    
+    document.getElementById('screen-loading-questions').classList.add('hidden');
+    document.getElementById('screen-quiz').classList.remove('hidden');
+    document.getElementById('quiz-discipline').textContent = obtenerNombreDisciplinaExamen(estado.disciplina, estado.grado) + ' - ' + estado.grado + '° Grado';
+    document.getElementById('grade-display').textContent = 'Grado ' + estado.grado + '° - Grupo ' + estado.grupo;
+    
+    mostrarPregunta(0);
+  }, 800);
+}
+
+function mostrarModalReintento(disciplina) {
+  var modal = document.getElementById('modal-ya-realizado');
+  var info = document.getElementById('modal-info-anterior');
+  var examen = examenesAlumno[disciplina];
+  
+  var fecha = examen.fecha ? new Date(examen.fecha).toLocaleDateString('es-MX') : 'Sin fecha';
+  info.innerHTML = '<strong>📖 ' + disciplina + '</strong><br>📅 Fecha: ' + fecha + '<br>🎯 Calificación: ' + examen.calificacion + '%<br>✓ Aciertos: ' + examen.aciertos + '/20';
+  
+  modal.classList.add('active');
+  
+  document.getElementById('btn-cancelar-reintento').onclick = function() {
+    modal.classList.remove('active');
+    document.querySelectorAll('.discipline-card').forEach(function(c) { c.classList.remove('selected'); });
+    document.getElementById('disciplina').value = '';
+  };
+  
+  document.getElementById('btn-confirmar-reintento').onclick = function() {
+    modal.classList.remove('active');
+    iniciarExamen();
   };
 }
 
-function seleccionarPreguntas(preguntasRaw) {
-  const preguntas = preguntasRaw.map(transformarPregunta);
-  const porArea = {};
-  preguntas.forEach(p => {
-    if (!porArea[p.area]) porArea[p.area] = [];
-    porArea[p.area].push(p);
-  });
-  
-  const areas = Object.keys(porArea);
-  const seleccion = [];
-  
-  if (areas.length === 0) return [];
-  
-  const basePorArea = Math.floor(TOTAL_PREGUNTAS / areas.length);
-  const extras = TOTAL_PREGUNTAS % areas.length;
-  
-  areas.forEach((area, idx) => {
-    const cantidad = basePorArea + (idx < extras ? 1 : 0);
-    const preguntasArea = porArea[area];
-    const mezcladas = [...preguntasArea].sort(() => Math.random() - 0.5);
-    const tomar = Math.min(cantidad, mezcladas.length);
-    seleccion.push(...mezcladas.slice(0, tomar));
-  });
-  
-  if (seleccion.length < TOTAL_PREGUNTAS) {
-    const idsSeleccionados = new Set(seleccion.map(p => p.id));
-    const disponibles = preguntas.filter(p => !idsSeleccionados.has(p.id));
-    const faltantes = TOTAL_PREGUNTAS - seleccion.length;
-    const extrasPreg = disponibles.sort(() => Math.random() - 0.5).slice(0, faltantes);
-    seleccion.push(...extrasPreg);
-  }
-  
-  return seleccion.sort(() => Math.random() - 0.5).slice(0, TOTAL_PREGUNTAS);
-}
-
-/* ============================================
-   NAVEGACIÓN DEL EXAMEN
-   ============================================ */
 function mostrarPregunta(indice) {
-  const p = estado.preguntas[indice];
-  const total = estado.preguntas.length;
+  var p = estado.preguntas[indice];
+  var total = estado.preguntas.length;
   
-  document.getElementById('question-counter').textContent = `Pregunta ${indice + 1} de ${total}`;
-  document.getElementById('grade-display').textContent = `Grado ${estado.grado}° - Grupo ${estado.grupo}`;
-  document.getElementById('area-badge').textContent = p.area;
-  document.getElementById('difficulty-badge').textContent = p.dificultad.charAt(0).toUpperCase() + p.dificultad.slice(1);
+  document.getElementById('question-counter').textContent = 'Pregunta ' + (indice + 1) + ' de ' + total;
+  document.getElementById('area-badge').textContent = p['área'] || p.area || 'General';
+  document.getElementById('difficulty-badge').textContent = obtenerTextoDificultad(p.dificultad);
   document.getElementById('question-text').textContent = p.enunciado;
-  document.getElementById('progress-bar').style.width = `${((indice + 1) / total) * 100}%`;
+  document.getElementById('progress-bar').style.width = ((indice + 1) / total * 100) + '%';
   
-  const cont = document.getElementById('options-container');
-  cont.innerHTML = '';
-  p.opciones.forEach((op, i) => {
-    const btn = document.createElement('button');
+  var container = document.getElementById('options-container');
+  container.innerHTML = '';
+  
+  var opciones = [p.opcion_a, p.opcion_b, p.opcion_c, p.opcion_d];
+  opciones.forEach(function(opcion, i) {
+    var btn = document.createElement('button');
     btn.className = 'option-btn';
-    btn.textContent = op;
     if (estado.respuestas[indice] === i) btn.classList.add('selected');
-    btn.addEventListener('click', () => seleccionarOpcion(indice, i));
-    cont.appendChild(btn);
+    btn.textContent = opcion;
+    btn.onclick = function() {
+      estado.respuestas[indice] = i;
+      mostrarPregunta(indice);
+    };
+    container.appendChild(btn);
   });
   
   document.getElementById('btn-prev').disabled = indice === 0;
-  document.getElementById('btn-next').classList.toggle('hidden', indice === total - 1);
-  document.getElementById('btn-finish').classList.toggle('hidden', indice !== total - 1);
   
-  document.getElementById('question-text').style.animation = 'slideIn 0.3s ease';
-  setTimeout(() => {
-    document.getElementById('question-text').style.animation = '';
-  }, 300);
+  if (indice === total - 1) {
+    document.getElementById('btn-next').classList.add('hidden');
+    document.getElementById('btn-finish').classList.remove('hidden');
+  } else {
+    document.getElementById('btn-next').classList.remove('hidden');
+    document.getElementById('btn-finish').classList.add('hidden');
+  }
 }
 
-function seleccionarOpcion(preguntaIdx, opcionIdx) {
-  estado.respuestas[preguntaIdx] = opcionIdx;
-  mostrarPregunta(preguntaIdx);
-}
+document.getElementById('btn-prev').addEventListener('click', function() {
+  if (estado.indice > 0) {
+    estado.indice--;
+    mostrarPregunta(estado.indice);
+  }
+});
 
-function siguientePregunta() {
-  if (estado.respuestas[estado.indice] === null || estado.respuestas[estado.indice] === undefined) {
-    alert('⚠️ Por favor selecciona una respuesta antes de continuar.');
+document.getElementById('btn-next').addEventListener('click', function() {
+  if (estado.respuestas[estado.indice] === null) {
+    alert('Por favor selecciona una respuesta antes de continuar.');
     return;
   }
   if (estado.indice < estado.preguntas.length - 1) {
     estado.indice++;
     mostrarPregunta(estado.indice);
   }
-}
-
-function anteriorPregunta() {
-  if (estado.indice > 0) {
-    estado.indice--;
-    mostrarPregunta(estado.indice);
-  }
-}
-
-/* ============================================
-   CÁLCULO DE RESULTADOS
-   ============================================ */
-function calcularResultados() {
-  let aciertos = 0;
-  const resultadosDetalle = [];
-  const aciertosPorArea = {};
-  
-  estado.preguntas.forEach((p, i) => {
-    const respIdx = estado.respuestas[i];
-    const correcta = respIdx === p.correcta;
-    if (correcta) aciertos++;
-    
-    if (!aciertosPorArea[p.area]) {
-      aciertosPorArea[p.area] = { aciertos: 0, total: 0 };
-    }
-    aciertosPorArea[p.area].total++;
-    if (correcta) aciertosPorArea[p.area].aciertos++;
-    
-    resultadosDetalle.push({
-      pregunta: p.enunciado,
-      respuesta: respIdx !== null && respIdx !== undefined ? p.opciones[respIdx] : 'Sin responder',
-      validacion: correcta ? 'Correcta' : 'Incorrecta'
-    });
-  });
-  
-  const total = estado.preguntas.length;
-  return {
-    aciertos,
-    calificacion: total > 0 ? Math.round((aciertos / total) * 100) : 0,
-    aciertosPorArea,
-    detalle: resultadosDetalle
-  };
-}
-
-/* ============================================
-   ENVÍO A GOOGLE SHEETS
-   ============================================ */
-async function enviarResultados(resultados) {
-  const data = {
-    id: estado.matricula,
-    nombre: estado.nombre.toUpperCase(),
-    inicio: estado.inicio,
-    fin: estado.fin,
-    disciplina: estado.disciplina,
-    grado: estado.grado,
-    grupo: estado.grupo,
-    calificacion: resultados.calificacion,
-    aciertos: resultados.aciertos,
-    respuestas: resultados.detalle
-  };
-  
-  try {
-    await fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    return true;
-  } catch (err) {
-    console.error('Error al enviar:', err);
-    alert('⚠️ Hubo un error al enviar los resultados, pero tus respuestas se mostrarán de todas formas.');
-    return false;
-  }
-}
-
-/* ============================================
-   MOSTRAR RESULTADOS
-   ============================================ */
-function mostrarResultados(resultados) {
-  document.getElementById('score-display').textContent = `${resultados.calificacion}%`;
-  document.getElementById('score-subtitle').textContent = `${resultados.aciertos} / ${estado.preguntas.length} aciertos`;
-  
-  const grid = document.getElementById('info-grid');
-  grid.innerHTML = `
-    <div class="info-card"><div class="info-card-label">Matrícula</div><div class="info-card-value">${estado.matricula}</div></div>
-    <div class="info-card"><div class="info-card-label">Nombre</div><div class="info-card-value" style="text-transform:uppercase">${estado.nombre}</div></div>
-    <div class="info-card"><div class="info-card-label">Disciplina</div><div class="info-card-value">${estado.disciplina}</div></div>
-    <div class="info-card"><div class="info-card-label">Grado</div><div class="info-card-value">${estado.grado}°</div></div>
-    <div class="info-card"><div class="info-card-label">Grupo</div><div class="info-card-value">${estado.grupo}</div></div>
-  `;
-  
-  const tbody = document.getElementById('area-tbody');
-  tbody.innerHTML = '';
-  Object.keys(resultados.aciertosPorArea).forEach(area => {
-    const { aciertos, total } = resultados.aciertosPorArea[area];
-    const porcentaje = total > 0 ? Math.round((aciertos / total) * 100) : 0;
-    let colorClass = 'progress-danger';
-    if (porcentaje >= 75) colorClass = 'progress-success';
-    else if (porcentaje >= 50) colorClass = 'progress-warning';
-    
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${area}</td>
-      <td>${aciertos}/${total}</td>
-      <td>${porcentaje}%</td>
-      <td>
-        <div class="area-progress-bar">
-          <div class="area-progress-fill ${colorClass}" style="width:${porcentaje}%"></div>
-        </div>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-  
-  generarRecomendaciones(resultados.aciertosPorArea);
-}
-
-function generarRecomendaciones(aciertosPorArea) {
-  const cont = document.getElementById('recommendations-container');
-  cont.innerHTML = '';
-  const areasBajas = [];
-  
-  Object.keys(aciertosPorArea).forEach(area => {
-    const { aciertos, total } = aciertosPorArea[area];
-    const porcentaje = total > 0 ? Math.round((aciertos / total) * 100) : 0;
-    if (porcentaje < 75) areasBajas.push({ area, porcentaje });
-  });
-  
-  if (areasBajas.length === 0) {
-    const div = document.createElement('div');
-    div.className = 'congrats';
-    div.innerHTML = `<h3>🎉 ¡Felicidades!</h3><p>Has obtenido un excelente desempeño en todas las áreas. Continúa con ese esfuerzo y dedicación.</p>`;
-    cont.appendChild(div);
-  } else {
-    const h3 = document.createElement('h3');
-    h3.textContent = '📚 Áreas de oportunidad';
-    h3.style.margin = '20px 0 15px';
-    cont.appendChild(h3);
-    areasBajas.forEach(({ area, porcentaje }) => {
-      const card = document.createElement('div');
-      card.className = 'recommendation-card';
-      card.innerHTML = `
-        <h4>${area} (${porcentaje}%)</h4>
-        <p>Se recomienda reforzar los contenidos de esta área. Practica con ejercicios adicionales y consulta a tu docente.</p>
-      `;
-      cont.appendChild(card);
-    });
-  }
-}
-
-/* ============================================
-   REINICIO
-   ============================================ */
-function reiniciar() {
-  estado = {
-    inicio: null, fin: null,
-    matricula: '', nombre: '', grado: '', grupo: '', disciplina: '',
-    preguntas: [], respuestas: [], indice: 0
-  };
-  
-  document.getElementById('nombre').value = '';
-  document.getElementById('grado').value = '';
-  document.getElementById('grupo').value = '';
-  document.getElementById('disciplina').value = '';
-  
-  document.querySelectorAll('.discipline-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('screen-results').classList.add('hidden');
-  document.getElementById('screen-start').classList.remove('hidden');
-  window.scrollTo(0, 0);
-  
-  // Re-renderizar tarjetas y actualizar estados
-  renderDisciplinas();
-  
-  const matricula = document.getElementById('matricula').value.trim();
-  if (matricula.length >= 3) {
-    verificarExamenesAlumno(matricula);
-  }
-}
-
-/* ============================================
-   MODAL REINTENTO
-   ============================================ */
-function mostrarModalReintento(disciplina) {
-  const modal = document.getElementById('modal-ya-realizado');
-  const info = document.getElementById('modal-info-anterior');
-  const examen = examenesAlumno[disciplina];
-  
-  const fecha = examen.fecha ? new Date(examen.fecha).toLocaleDateString('es-MX') : 'Sin fecha';
-  info.innerHTML = `
-    <strong>📖 ${disciplina}</strong><br>
-    📅 Fecha: ${fecha}<br>
-    🎯 Calificación: <strong>${examen.calificacion}%</strong><br>
-    ✓ Aciertos: ${examen.aciertos}/20
-  `;
-  
-  modal.classList.add('active');
-  
-  return new Promise((resolve) => {
-    const btnConfirmar = document.getElementById('btn-confirmar-reintento');
-    const btnCancelar = document.getElementById('btn-cancelar-reintento');
-    
-    const handlerConfirmar = () => { cleanup(); resolve(true); };
-    const handlerCancelar = () => { cleanup(); resolve(false); };
-    
-    function cleanup() {
-      btnConfirmar.removeEventListener('click', handlerConfirmar);
-      btnCancelar.removeEventListener('click', handlerCancelar);
-      modal.classList.remove('active');
-    }
-    
-    btnConfirmar.addEventListener('click', handlerConfirmar);
-    btnCancelar.addEventListener('click', handlerCancelar);
-  });
-}
-
-/* ============================================
-   EVENTOS PRINCIPALES
-   ============================================ */
-document.getElementById('nombre').addEventListener('input', function(e) {
-  e.target.value = e.target.value.toUpperCase();
 });
 
-document.getElementById('start-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  
-  const disciplina = document.getElementById('disciplina').value;
-  if (!disciplina) {
-    alert('⚠️ Por favor selecciona una disciplina.');
+document.getElementById('btn-finish').addEventListener('click', function() {
+  if (estado.respuestas[estado.indice] === null) {
+    alert('Por favor selecciona una respuesta antes de finalizar.');
     return;
   }
   
-  const matricula = document.getElementById('matricula').value.trim();
-  const nombre = document.getElementById('nombre').value.trim();
-  const grado = document.getElementById('grado').value;
-  const grupo = document.getElementById('grupo').value;
-  
-  if (!matricula || !nombre || !grado || !grupo) {
-    alert('⚠️ Por favor completa todos los campos obligatorios.');
-    return;
-  }
-  
-  // VALIDACIÓN ADICIONAL: verificar que la disciplina esté disponible para el grado
-  const disc = obtenerDisciplina(disciplina);
-  if (disc && !esDisciplinaDisponible(disc, grado)) {
-    alert(`⚠️ La disciplina "${disciplina}" no está disponible para ${grado}° grado. Selecciona otra disciplina.`);
-    return;
-  }
-  
-  if (examenesAlumno[disciplina]) {
-    const continuar = await mostrarModalReintento(disciplina);
-    if (!continuar) {
-      document.querySelectorAll('.discipline-card').forEach(c => c.classList.remove('selected'));
-      document.getElementById('disciplina').value = '';
-      return;
-    }
-  }
-  
-  estado.matricula = matricula;
-  estado.nombre = nombre;
-  estado.grado = grado;
-  estado.grupo = grupo;
-  estado.disciplina = disciplina;
-  estado.inicio = new Date().toISOString();
-  
-  document.getElementById('screen-start').classList.add('hidden');
-  document.getElementById('screen-loading-questions').classList.remove('hidden');
-  document.getElementById('loading-message').textContent = `Cargando preguntas de ${disciplina}...`;
-  
-  try {
-    const preguntasRaw = await cargarPreguntasDesdeSheets(disciplina, grado);
-    const preguntasSeleccionadas = seleccionarPreguntas(preguntasRaw);
-    
-    if (preguntasSeleccionadas.length === 0) {
-      throw new Error('No se pudieron seleccionar preguntas. Consulta a tu docente.');
-    }
-    
-    estado.preguntas = preguntasSeleccionadas;
-    estado.respuestas = new Array(preguntasSeleccionadas.length).fill(null);
-    estado.indice = 0;
-    
-    document.getElementById('screen-loading-questions').classList.add('hidden');
-    document.getElementById('screen-quiz').classList.remove('hidden');
-    document.getElementById('quiz-discipline').textContent = `📖 ${disciplina} - ${grado}° ${grupo}`;
-    mostrarPregunta(0);
-    
-  } catch (error) {
-    alert(`❌ Error: ${error.message}`);
-    document.getElementById('screen-loading-questions').classList.add('hidden');
-    document.getElementById('screen-start').classList.remove('hidden');
-  }
-});
-
-document.getElementById('btn-prev').addEventListener('click', anteriorPregunta);
-document.getElementById('btn-next').addEventListener('click', siguientePregunta);
-
-document.getElementById('btn-finish').addEventListener('click', async function() {
-  const ultima = estado.preguntas.length - 1;
-  if (estado.respuestas[ultima] === null || estado.respuestas[ultima] === undefined) {
-    alert('⚠️ Debes seleccionar una respuesta para la última pregunta antes de finalizar.');
-    return;
-  }
-  
-  const sinResponder = estado.respuestas.filter(r => r === null || r === undefined).length;
+  var sinResponder = estado.respuestas.filter(function(r) { return r === null; }).length;
   if (sinResponder > 0) {
-    if (!confirm(`⚠️ Tienes ${sinResponder} pregunta(s) sin responder. ¿Deseas finalizar de todos modos?`)) {
+    if (!confirm('Tienes ' + sinResponder + ' pregunta(s) sin responder. ¿Deseas finalizar de todas formas?')) {
       return;
     }
   }
   
   estado.fin = new Date().toISOString();
-  
+  enviarResultados();
+});
+
+function enviarResultados() {
   document.getElementById('screen-quiz').classList.add('hidden');
   document.getElementById('screen-saving').classList.remove('hidden');
   
-  const resultados = calcularResultados();
-  await enviarResultados(resultados);
+  var aciertos = 0;
+  var respuestasDetalle = [];
+  var aciertosPorArea = {};
   
+  estado.preguntas.forEach(function(p, i) {
+    var respuestaIndice = estado.respuestas[i];
+    var esCorrecta = respuestaIndice === ['A', 'B', 'C', 'D'].indexOf(p.correcta);
+    if (esCorrecta) aciertos++;
+    
+    var area = p['área'] || p.area || 'General';
+    if (!aciertosPorArea[area]) aciertosPorArea[area] = { aciertos: 0, total: 0 };
+    aciertosPorArea[area].total++;
+    if (esCorrecta) aciertosPorArea[area].aciertos++;
+    
+    respuestasDetalle.push({
+      pregunta: p.enunciado,
+      respuesta: respuestaIndice !== null ? p.opciones ? p.opciones[respuestaIndice] : ['A', 'B', 'C', 'D'][respuestaIndice] : 'Sin responder',
+      validacion: esCorrecta ? 'Correcta' : 'Incorrecta'
+    });
+  });
+  
+  var calificacion = Math.round((aciertos / estado.preguntas.length) * 100);
+  
+  var data = {
+    action: 'saveResultado',
+    id: estado.matricula,
+    nombre: estado.nombre,
+    inicio: estado.inicio,
+    fin: estado.fin,
+    disciplina: estado.disciplina,
+    grado: estado.grado,
+    grupo: estado.grupo,
+    calificacion: calificacion,
+    aciertos: aciertos,
+    respuestas: respuestasDetalle
+  };
+  
+  fetch(API_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    mostrarResultados(calificacion, aciertos, aciertosPorArea);
+  })
+  .catch(function(err) {
+    console.error('Error:', err);
+    mostrarResultados(calificacion, aciertos, aciertosPorArea);
+  });
+}
+
+function mostrarResultados(calificacion, aciertos, aciertosPorArea) {
   document.getElementById('screen-saving').classList.add('hidden');
   document.getElementById('screen-results').classList.remove('hidden');
-  mostrarResultados(resultados);
-  window.scrollTo(0, 0);
-});
+  
+  document.getElementById('score-display').textContent = calificacion + '%';
+  document.getElementById('score-subtitle').textContent = aciertos + ' / ' + estado.preguntas.length + ' aciertos';
+  
+  document.getElementById('info-grid').innerHTML = 
+    '<div class="info-card"><div class="info-card-label">Matrícula</div><div class="info-card-value">' + estado.matricula + '</div></div>' +
+    '<div class="info-card"><div class="info-card-label">Nombre</div><div class="info-card-value" style="text-transform:uppercase">' + estado.nombre + '</div></div>' +
+    '<div class="info-card"><div class="info-card-label">Disciplina</div><div class="info-card-value">' + obtenerNombreDisciplinaExamen(estado.disciplina, estado.grado) + '</div></div>' +
+    '<div class="info-card"><div class="info-card-label">Grado y Grupo</div><div class="info-card-value">' + estado.grado + '° "' + estado.grupo + '"</div></div>';
+  
+  var tbody = document.getElementById('area-tbody');
+  tbody.innerHTML = '';
+  
+  Object.keys(aciertosPorArea).forEach(function(area) {
+    var datos = aciertosPorArea[area];
+    var porcentaje = datos.total > 0 ? Math.round((datos.aciertos / datos.total) * 100) : 0;
+    var colorClass = porcentaje >= 75 ? 'progress-success' : (porcentaje >= 50 ? 'progress-warning' : 'progress-danger');
+    
+    tbody.innerHTML += '<tr>' +
+      '<td>' + area + '</td>' +
+      '<td>' + datos.aciertos + '/' + datos.total + '</td>' +
+      '<td>' + porcentaje + '%</td>' +
+      '<td><div class="area-progress-bar"><div class="area-progress-fill ' + colorClass + '" style="width:' + porcentaje + '%"></div></div></td>' +
+      '</tr>';
+  });
+  
+  generarRecomendaciones(aciertosPorArea);
+}
 
-document.getElementById('btn-restart').addEventListener('click', reiniciar);
+function generarRecomendaciones(aciertosPorArea) {
+  var container = document.getElementById('recommendations-container');
+  container.innerHTML = '';
+  
+  var areasBajas = Object.keys(aciertosPorArea).filter(function(area) {
+    var datos = aciertosPorArea[area];
+    var porcentaje = datos.total > 0 ? (datos.aciertos / datos.total) * 100 : 0;
+    return porcentaje < 75;
+  });
+  
+  if (areasBajas.length === 0) {
+    container.innerHTML = '<div class="congrats"><h3>🎉 ¡Excelente trabajo!</h3><p>Has demostrado un buen dominio en todas las áreas evaluadas. ¡Sigue así!</p></div>';
+    return;
+  }
+  
+  var html = '<h2 style="margin-top:30px;">📌 Áreas a reforzar</h2>';
+  areasBajas.forEach(function(area) {
+    var datos = aciertosPorArea[area];
+    var porcentaje = Math.round((datos.aciertos / datos.total) * 100);
+    html += '<div class="recommendation-card">' +
+      '<h4>📖 ' + area + ' (' + porcentaje + '%)</h4>' +
+      '<p>Se recomienda reforzar los conocimientos en esta área. Consulta con tu maestro sobre los temas específicos que necesitas repasar.</p>' +
+      '</div>';
+  });
+  
+  container.innerHTML = html;
+}
+
+document.getElementById('btn-restart').addEventListener('click', function() {
+  estado = {
+    inicio: null, fin: null, matricula: '', nombre: '',
+    grado: '', grupo: '', disciplina: '',
+    preguntas: [], respuestas: [], indice: 0
+  };
+  
+  document.getElementById('matricula').value = '';
+  document.getElementById('nombre').value = '';
+  document.getElementById('grado').value = '';
+  document.getElementById('grupo').value = '';
+  document.getElementById('disciplina').value = '';
+  document.getElementById('student-status').style.display = 'none';
+  document.getElementById('matricula-icon').innerHTML = '';
+  document.getElementById('grade-notice').classList.remove('visible');
+  document.getElementById('disciplines-grid').querySelectorAll('.discipline-card').forEach(function(c) {
+    c.classList.remove('selected', 'completed');
+  });
+  
+  document.getElementById('screen-results').classList.add('hidden');
+  document.getElementById('screen-start').classList.remove('hidden');
+});
 
 /* ============================================
    INICIALIZACIÓN
    ============================================ */
+cargarPreguntas();
 renderDisciplinas();
 </script>
 
