@@ -68,6 +68,10 @@
     border-top-color: var(--primary); border-radius: 50%;
     animation: spin 0.8s linear infinite; display: inline-block;
   }
+  
+  /* ============================================
+     SECCIÓN INFORMATIVA - EVALUACIÓN DIAGNÓSTICA
+     ============================================ */
   .info-diagnostica {
     background: linear-gradient(135deg, #eff6ff 0%, #ede9fe 100%);
     border: 2px solid #c7d2fe;
@@ -96,6 +100,214 @@
   .info-item .item-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
   .info-item .item-content strong { display: block; color: var(--text); margin-bottom: 3px; font-size: 0.95rem; }
   .info-item .item-content p { color: var(--text-light); font-size: 0.88rem; line-height: 1.5; }
+  
+  /* ============================================
+     SECCIÓN DE MATRÍCULA ASIGNADA (DESTACADA)
+     ============================================ */
+  .matricula-asignada-box {
+    background: linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%);
+    border: 3px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: none;
+    animation: fadeIn 0.6s ease;
+    box-shadow: var(--shadow-lg);
+  }
+  .matricula-asignada-box.visible { display: block; }
+  .matricula-asignada-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed var(--primary);
+  }
+  .matricula-asignada-header .icono { font-size: 1.5rem; }
+  .matricula-asignada-header .titulo {
+    font-size: 1.1rem; font-weight: 700; color: var(--primary-dark);
+  }
+  .matricula-display {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .matricula-valor {
+    font-family: 'Courier New', monospace;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--primary-dark);
+    letter-spacing: 3px;
+  }
+  .matricula-grupo {
+    background: var(--primary);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .btn-copiar {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-copiar:hover { background: var(--success-dark); transform: scale(1.05); }
+  .btn-copiar.copiado { background: var(--success-dark); }
+  .matricula-nota {
+    background: #fef3c7;
+    border-left: 4px solid var(--warning);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #92400e;
+  }
+  .matricula-nota strong { color: #92400e; }
+  
+  /* ============================================
+     DISCIPLINAS PENDIENTES
+     ============================================ */
+  .disciplinas-pendientes-box {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid var(--warning);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: none;
+    animation: fadeIn 0.6s ease;
+  }
+  .disciplinas-pendientes-box.visible { display: block; }
+  .disciplinas-pendientes-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed var(--warning);
+  }
+  .disciplinas-pendientes-header .icono { font-size: 1.5rem; }
+  .disciplinas-pendientes-header .titulo {
+    font-size: 1.1rem; font-weight: 700; color: #92400e;
+  }
+  .disciplinas-pendientes-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .disciplina-pendiente-item {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-left: 4px solid var(--warning);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #92400e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .disciplina-pendiente-item .icono-pendiente {
+    color: var(--warning);
+    font-size: 1.1rem;
+  }
+  
+  /* ============================================
+     MODAL DE MATRÍCULA ASIGNADA (NUEVO)
+     ============================================ */
+  .modal-matricula-content {
+    text-align: center;
+  }
+  .modal-matricula-icono {
+    font-size: 3rem;
+    margin-bottom: 15px;
+  }
+  .modal-matricula-titulo {
+    font-size: 1.3rem;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+  }
+  .modal-matricula-valor {
+    font-family: 'Courier New', monospace;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--primary-dark);
+    letter-spacing: 5px;
+    background: linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 3px solid var(--primary);
+    margin: 15px 0;
+    box-shadow: var(--shadow);
+  }
+  .modal-matricula-grupo {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+  .modal-matricula-nota {
+    background: #fef3c7;
+    border-left: 4px solid var(--warning);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 0.95rem;
+    color: #92400e;
+    text-align: left;
+  }
+  .modal-matricula-nota strong { color: #92400e; }
+  .modal-matricula-disciplinas {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    text-align: left;
+  }
+  .modal-matricula-disciplinas h4 {
+    color: #166534;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+  .modal-matricula-disciplinas ul {
+    list-style: none;
+    padding: 0;
+  }
+  .modal-matricula-disciplinas li {
+    padding: 5px 0;
+    color: #166534;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .modal-matricula-disciplinas li .icono-ok { color: var(--success); }
+  .modal-matricula-disciplinas li .icono-pendiente { color: var(--warning); }
+  .modal-matricula-botones {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .modal-matricula-botones .btn { flex: 1; }
+  
   .student-status {
     padding: 12px 15px; border-radius: var(--radius); margin-top: 10px;
     font-size: 0.9rem; display: none; animation: slideIn 0.3s ease;
@@ -231,8 +443,10 @@
   .modal-overlay.active { display: flex; }
   .modal {
     background: white; border-radius: var(--radius); padding: 25px;
-    max-width: 450px; width: 100%; box-shadow: var(--shadow-lg);
+    max-width: 500px; width: 100%; box-shadow: var(--shadow-lg);
     animation: fadeIn 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   .modal h3 { color: var(--primary-dark); margin-bottom: 15px; font-size: 1.2rem; }
   .modal p { color: var(--text); margin-bottom: 10px; }
@@ -278,18 +492,6 @@
   }
   .congrats h3 { color: #065f46; margin-bottom: 10px; }
   .congrats p { color: #047857; }
-  .matricula-info {
-    background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
-    border: 1px solid #c7d2fe;
-    border-radius: var(--radius);
-    padding: 12px 15px;
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #1e40af;
-    display: none;
-  }
-  .matricula-info.visible { display: block; animation: slideIn 0.3s ease; }
-  .matricula-info strong { font-size: 1.1rem; color: var(--primary-dark); }
   @media (max-width: 600px) {
     body { padding: 10px; }
     .container { padding: 20px; }
@@ -300,6 +502,11 @@
     .card-tooltip { font-size: 0.7rem; padding: 8px 10px; max-width: 180px; }
     .info-diagnostica { padding: 15px; }
     .info-item .item-content p { font-size: 0.82rem; }
+    .matricula-display { flex-direction: column; text-align: center; }
+    .matricula-valor { font-size: 1.4rem; }
+    .disciplinas-pendientes-lista { grid-template-columns: 1fr; }
+    .modal-matricula-valor { font-size: 1.8rem; letter-spacing: 3px; }
+    .modal-matricula-botones { flex-direction: column; }
   }
 </style>
 </head>
@@ -321,7 +528,33 @@
         <span class="input-icon" id="matricula-icon"></span>
       </div>
       <div id="student-status" class="student-status"></div>
-      <div id="matricula-generada-info" class="matricula-info"></div>
+    </div>
+    
+    <!-- SECCIÓN DE MATRÍCULA ASIGNADA (DESTACADA) -->
+    <div class="matricula-asignada-box" id="matricula-asignada-box">
+      <div class="matricula-asignada-header">
+        <span class="icono">🎫</span>
+        <span class="titulo">Tu Matrícula Asignada</span>
+      </div>
+      <div class="matricula-display">
+        <span class="matricula-valor" id="matricula-display-valor">------</span>
+        <span class="matricula-grupo" id="matricula-display-grupo">Grupo -</span>
+        <button type="button" class="btn-copiar" id="btn-copiar-matricula" onclick="copiarMatricula()">
+          📋 Copiar
+        </button>
+      </div>
+      <div class="matricula-nota">
+        <strong>📝 IMPORTANTE:</strong> Toma nota de esta matrícula y úsala para realizar las evaluaciones de las <strong>demás disciplinas</strong>. Guarda bien estos datos, que los necesitarás para todas las evaluaciones del ciclo escolar.
+      </div>
+    </div>
+    
+    <!-- DISCIPLINAS PENDIENTES -->
+    <div class="disciplinas-pendientes-box" id="disciplinas-pendientes-box">
+      <div class="disciplinas-pendientes-header">
+        <span class="icono">⏳</span>
+        <span class="titulo">Disciplinas que te faltan por completar</span>
+      </div>
+      <div class="disciplinas-pendientes-lista" id="disciplinas-pendientes-lista"></div>
     </div>
     
     <div class="form-group">
@@ -400,6 +633,38 @@
     
     <button type="submit" class="btn" id="btn-start">🚀 Iniciar evaluación</button>
   </form>
+</div>
+
+<!-- MODAL: Matrícula asignada (NUEVO) -->
+<div class="modal-overlay" id="modal-matricula-asignada">
+  <div class="modal">
+    <div class="modal-matricula-content">
+      <div class="modal-matricula-icono">🎫</div>
+      <h3 class="modal-matricula-titulo">¡Tu Matrícula ha sido Asignada!</h3>
+      
+      <div class="modal-matricula-valor" id="modal-matricula-valor">------</div>
+      <div class="modal-matricula-grupo" id="modal-matricula-grupo">Grupo -</div>
+      
+      <button type="button" class="btn-copiar" id="btn-copiar-matricula-modal" onclick="copiarMatriculaModal()" style="margin: 0 auto; display: inline-flex;">
+        📋 Copiar Matrícula
+      </button>
+      
+      <div class="modal-matricula-nota">
+        <strong>📝 MUY IMPORTANTE:</strong><br>
+        Toma nota de esta matrícula y guárdala bien. La necesitarás para realizar las evaluaciones de las <strong>demás disciplinas</strong> durante todo el ciclo escolar.
+      </div>
+      
+      <div class="modal-matricula-disciplinas" id="modal-disciplinas-pendientes">
+        <h4>📋 Disciplinas que te faltan por completar:</h4>
+        <ul id="modal-disciplinas-lista"></ul>
+      </div>
+      
+      <div class="modal-matricula-botones">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModalMatricula()">← Volver</button>
+        <button type="button" class="btn btn-success" onclick="continuarConMatricula()">✅ Continuar con esta matrícula</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL: Examen ya realizado -->
@@ -514,50 +779,32 @@ var estado = {
   preguntas: [], respuestas: [], indice: 0
 };
 var examenesAlumno = {};
+var matriculaGeneradaActual = '';
+var grupoGeneradoActual = '';
+var matriculaGeneradaEnSesion = false;
 
 /* ============================================
    GENERACIÓN DINÁMICA DE MATRÍCULA
    ============================================ */
-
-/**
- * Calcula la generación basada en el año de ingreso y graduación.
- * Los alumnos están 3 años en secundaria.
- * Ejemplo: Ingreso 2026, Graduación 2029 → "2629"
- * 
- * El ciclo escolar inicia en agosto:
- * - Si el mes actual es agosto-diciembre: el año de ingreso es el año actual menos (grado - 1)
- * - Si el mes actual es enero-julio: el año de ingreso es (año actual - 1) menos (grado - 1)
- */
 function calcularGeneracion(grado) {
   var hoy = new Date();
-  var mes = hoy.getMonth() + 1; // 1-12
+  var mes = hoy.getMonth() + 1;
   var anioActual = hoy.getFullYear();
   
   var anioIngreso;
   if (mes >= 8) {
-    // Agosto-Diciembre: el ciclo escolar actual inició este año
     anioIngreso = anioActual - (parseInt(grado) - 1);
   } else {
-    // Enero-Julio: el ciclo escolar actual inició el año pasado
     anioIngreso = (anioActual - 1) - (parseInt(grado) - 1);
   }
   
   var anioGraduacion = anioIngreso + 3;
-  
-  // Formato: últimos 2 dígitos del año de ingreso + últimos 2 dígitos del año de graduación
   var genIngreso = String(anioIngreso).slice(-2);
   var genGraduacion = String(anioGraduacion).slice(-2);
   
   return genIngreso + genGraduacion;
 }
 
-/**
- * Genera la matrícula automáticamente consultando los registros existentes.
- * Formato: [generación][número de lista de 2 dígitos]
- * Ejemplo: 262901, 262902, 262903...
- * 
- * El grupo se alterna: A, B, A, B...
- */
 function generarMatriculaAutomatica(grado) {
   var generacion = calcularGeneracion(grado);
   
@@ -573,61 +820,182 @@ function generarMatriculaAutomatica(grado) {
         else data = [];
       }
       
-      // Filtrar registros que coincidan con la generación
       var registrosGeneracion = data.filter(function(r) {
         return r.id && String(r.id).startsWith(generacion);
       });
       
-      // Determinar el siguiente número de lista
       var siguienteNumero = registrosGeneracion.length + 1;
       
-      // Validar que no exceda 99 alumnos por generación
       if (siguienteNumero > 99) {
-        console.warn('Se excedió el límite de 99 alumnos para la generación ' + generacion);
         siguienteNumero = 99;
       }
       
-      // Formatear número de lista con 2 dígitos (01, 02, 03...)
       var numeroLista = String(siguienteNumero).padStart(2, '0');
-      
-      // Generar matrícula completa
       var matricula = generacion + numeroLista;
-      
-      // Alternar grupo: A, B, A, B...
       var grupo = (registrosGeneracion.length % 2 === 0) ? 'A' : 'B';
       
       return { matricula: matricula, grupo: grupo, generacion: generacion, numeroLista: numeroLista };
     })
     .catch(function(err) {
       console.error('Error al generar matrícula:', err);
-      // Fallback: generar matrícula basada en timestamp si falla la consulta
       var timestamp = Date.now().toString().slice(-4);
-      var matricula = generarGeneracion(grado) + timestamp;
-      return { matricula: matricula, grupo: 'A', generacion: generarGeneracion(grado), numeroLista: timestamp };
+      var generacion = calcularGeneracion(grado);
+      var matricula = generacion + timestamp;
+      return { matricula: matricula, grupo: 'A', generacion: generacion, numeroLista: timestamp };
     });
 }
 
+/* ============================================
+   MODAL DE MATRÍCULA ASIGNADA
+   ============================================ */
+function mostrarModalMatriculaAsignada(matricula, grupo) {
+  matriculaGeneradaActual = matricula;
+  grupoGeneradoActual = grupo;
+  
+  // Actualizar campos del formulario
+  document.getElementById('matricula').value = matricula;
+  document.getElementById('grupo').value = grupo;
+  
+  // Mostrar en el modal
+  document.getElementById('modal-matricula-valor').textContent = matricula;
+  document.getElementById('modal-matricula-grupo').textContent = 'Grupo ' + grupo;
+  
+  // Mostrar disciplinas pendientes en el modal
+  mostrarDisciplinasPendientesEnModal();
+  
+  // Mostrar el modal
+  document.getElementById('modal-matricula-asignada').classList.add('active');
+  
+  // Guardar en localStorage
+  guardarMatriculaEnStorage(matricula, grupo);
+  
+  // Mostrar sección destacada en la pantalla de inicio
+  mostrarMatriculaAsignadaBox(matricula, grupo);
+}
+
+function cerrarModalMatricula() {
+  document.getElementById('modal-matricula-asignada').classList.remove('active');
+  // La sección destacada permanece visible en la pantalla de inicio
+}
+
+function continuarConMatricula() {
+  document.getElementById('modal-matricula-asignada').classList.remove('active');
+  matriculaGeneradaEnSesion = true;
+  iniciarExamen();
+}
+
+function mostrarMatriculaAsignadaBox(matricula, grupo) {
+  document.getElementById('matricula-display-valor').textContent = matricula;
+  document.getElementById('matricula-display-grupo').textContent = 'Grupo ' + grupo;
+  document.getElementById('matricula-asignada-box').classList.add('visible');
+}
+
+function mostrarDisciplinasPendientesEnModal() {
+  var grado = document.getElementById('grado').value;
+  if (!grado) return;
+  
+  var disciplinasDisponibles = DISCIPLINAS.filter(function(d) {
+    return esDisciplinaDisponible(d, grado);
+  });
+  
+  var lista = document.getElementById('modal-disciplinas-lista');
+  lista.innerHTML = '';
+  
+  disciplinasDisponibles.forEach(function(d) {
+    var completada = examenesAlumno[d.nombre];
+    var icono = completada ? '<span class="icono-ok">✓</span>' : '<span class="icono-pendiente">⏳</span>';
+    var texto = completada ? d.nombre + ' (completada)' : d.nombre;
+    lista.innerHTML += '<li>' + icono + ' ' + d.icono + ' ' + texto + '</li>';
+  });
+}
+
 /**
- * Función auxiliar para calcular generación (fallback)
+ * Copia la matrícula al portapapeles (desde el modal)
  */
-function generarGeneracion(grado) {
-  return calcularGeneracion(grado);
+function copiarMatriculaModal() {
+  var matricula = matriculaGeneradaActual || document.getElementById('matricula').value;
+  var grupo = grupoGeneradoActual || document.getElementById('grupo').value;
+  copiarAlPortapapeles(matricula, grupo, 'btn-copiar-matricula-modal');
+}
+
+/**
+ * Copia la matrícula al portapapeles (desde la sección destacada)
+ */
+function copiarMatricula() {
+  var matricula = matriculaGeneradaActual || document.getElementById('matricula').value;
+  var grupo = grupoGeneradoActual || document.getElementById('grupo').value;
+  copiarAlPortapapeles(matricula, grupo, 'btn-copiar-matricula');
+}
+
+function copiarAlPortapapeles(matricula, grupo, botonId) {
+  var textoACopiar = 'Matrícula: ' + matricula + ' | Grupo: ' + grupo;
+  
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(textoACopiar).then(function() {
+      mostrarBotonCopiado(botonId);
+    }).catch(function(err) {
+      fallbackCopiarTexto(textoACopiar, botonId);
+    });
+  } else {
+    fallbackCopiarTexto(textoACopiar, botonId);
+  }
+}
+
+function mostrarBotonCopiado(botonId) {
+  var btn = document.getElementById(botonId);
+  if (btn) {
+    var textoOriginal = btn.innerHTML;
+    btn.classList.add('copiado');
+    btn.innerHTML = '✅ ¡Copiado!';
+    setTimeout(function() {
+      btn.classList.remove('copiado');
+      btn.innerHTML = textoOriginal;
+    }, 2000);
+  }
+}
+
+function fallbackCopiarTexto(texto, botonId) {
+  var textarea = document.createElement('textarea');
+  textarea.value = texto;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    mostrarBotonCopiado(botonId);
+  } catch (err) {
+    alert('Matrícula: ' + texto);
+  }
+  document.body.removeChild(textarea);
+}
+
+function guardarMatriculaEnStorage(matricula, grupo) {
+  try {
+    localStorage.setItem('matricula_diagnostica', matricula);
+    localStorage.setItem('grupo_diagnostico', grupo);
+    localStorage.setItem('matricula_fecha', new Date().toISOString());
+  } catch (e) {
+    console.warn('No se pudo guardar en localStorage:', e);
+  }
+}
+
+function recuperarMatriculaStorage() {
+  try {
+    var matricula = localStorage.getItem('matricula_diagnostica');
+    var grupo = localStorage.getItem('grupo_diagnostico');
+    if (matricula && grupo) {
+      return { matricula: matricula, grupo: grupo };
+    }
+  } catch (e) {
+    console.warn('No se pudo recuperar de localStorage:', e);
+  }
+  return null;
 }
 
 /* ============================================
    FUNCIONES AUXILIARES
    ============================================ */
-function obtenerCicloEscolar() {
-  var hoy = new Date();
-  var mes = hoy.getMonth() + 1;
-  var anio = hoy.getFullYear();
-  if (mes >= 8) {
-    return anio + '-' + (anio + 1);
-  } else {
-    return (anio - 1) + '-' + anio;
-  }
-}
-
 function obtenerNombreDisciplinaExamen(disciplina, grado) {
   if (compararDisciplinas(disciplina, 'Ciencias')) {
     var g = String(grado);
@@ -778,7 +1146,6 @@ function actualizarObligatoriedadCampos() {
   var grupoSelect = document.getElementById('grupo');
   var labelMatricula = document.getElementById('label-matricula');
   var labelGrupo = document.getElementById('label-grupo');
-  var matriculaInfo = document.getElementById('matricula-generada-info');
   
   if (grado === '1') {
     matriculaInput.removeAttribute('required');
@@ -787,8 +1154,6 @@ function actualizarObligatoriedadCampos() {
     labelGrupo.innerHTML = '👥 Grupo (opcional para 1° grado)';
     matriculaInput.placeholder = 'Opcional - se generará automáticamente si se deja vacío';
     grupoSelect.querySelector('option[value=""]').textContent = 'Selecciona tu grupo (opcional)';
-    matriculaInfo.classList.add('visible');
-    matriculaInfo.innerHTML = '💡 Si dejas la matrícula vacía, se generará automáticamente con el formato de tu generación.';
   } else {
     matriculaInput.setAttribute('required', 'required');
     grupoSelect.setAttribute('required', 'required');
@@ -796,7 +1161,8 @@ function actualizarObligatoriedadCampos() {
     labelGrupo.innerHTML = '👥 Grupo *';
     matriculaInput.placeholder = 'Ingresa tu matrícula';
     grupoSelect.querySelector('option[value=""]').textContent = 'Selecciona tu grupo';
-    matriculaInfo.classList.remove('visible');
+    document.getElementById('matricula-asignada-box').classList.remove('visible');
+    document.getElementById('disciplinas-pendientes-box').classList.remove('visible');
   }
 }
 
@@ -897,11 +1263,6 @@ function actualizarTarjetasDisciplinas() {
       }
       statusDiv.className = 'discipline-status not-available';
       statusDiv.textContent = '🚫 No disponible';
-      
-      var tooltip = document.createElement('div');
-      tooltip.className = 'card-tooltip';
-      tooltip.innerHTML = '<strong>' + disciplina.icono + ' ' + disciplina.nombre + '</strong><br>' + (disciplina.motivoRestriccion || 'No disponible para este grado');
-      card.appendChild(tooltip);
       return;
     }
     
@@ -912,32 +1273,11 @@ function actualizarTarjetasDisciplinas() {
       card.classList.add('completed');
       statusDiv.className = 'discipline-status done';
       statusDiv.textContent = '✓ ' + realizado.calificacion + '%';
-      
-      var tooltip = document.createElement('div');
-      tooltip.className = 'card-tooltip';
-      var fecha = realizado.fecha ? new Date(realizado.fecha).toLocaleDateString('es-MX') : 'Sin fecha';
-      tooltip.innerHTML = '<strong>' + disciplinaNombre + '</strong><br>📅 Fecha: ' + fecha + '<br>🎯 Calificación: ' + realizado.calificacion + '%<br>✓ Aciertos: ' + realizado.aciertos + '/20<br><span style="font-size:0.7rem; opacity:0.8;">Clic para volver a presentar</span>';
-      card.appendChild(tooltip);
     } else {
       statusDiv.className = 'discipline-status pending';
       statusDiv.textContent = '⏳ Pendiente';
     }
   });
-  
-  var statusDiv = document.getElementById('student-status');
-  if (statusDiv.style.display === 'block' && !statusDiv.classList.contains('error')) {
-    var total = contarDisciplinasDisponibles(gradoActual);
-    var completadas = Object.keys(examenesAlumno).filter(function(d) {
-      var disc = obtenerDisciplina(d);
-      return disc && esDisciplinaDisponible(disc, gradoActual);
-    }).length;
-    var pendientes = total - completadas;
-    
-    var summary = statusDiv.querySelector('.status-summary');
-    if (summary) {
-      summary.innerHTML = '<span class="status-count count-done">✓ Completadas: ' + completadas + '</span><span class="status-count count-pending">⏳ Pendientes: ' + pendientes + '</span>';
-    }
-  }
 }
 
 function actualizarAvisoRestriccion() {
@@ -1019,6 +1359,24 @@ document.getElementById('grado').addEventListener('change', function() {
   actualizarObligatoriedadCampos();
   actualizarAvisoRestriccion();
   actualizarTarjetasDisciplinas();
+  
+  // Verificar si hay matrícula guardada en localStorage
+  var grado = this.value;
+  if (grado === '1') {
+    var datosGuardados = recuperarMatriculaStorage();
+    if (datosGuardados) {
+      var usarGuardada = confirm('Se encontró una matrícula guardada: ' + datosGuardados.matricula + '\n\n¿Deseas usarla para continuar con tus evaluaciones?');
+      if (usarGuardada) {
+        document.getElementById('matricula').value = datosGuardados.matricula;
+        document.getElementById('grupo').value = datosGuardados.grupo;
+        matriculaGeneradaActual = datosGuardados.matricula;
+        grupoGeneradoActual = datosGuardados.grupo;
+        matriculaGeneradaEnSesion = true;
+        verificarExamenesAlumno(datosGuardados.matricula);
+        mostrarMatriculaAsignadaBox(datosGuardados.matricula, datosGuardados.grupo);
+      }
+    }
+  }
 });
 
 /* ============================================
@@ -1064,13 +1422,11 @@ document.getElementById('start-form').addEventListener('submit', function(e) {
   var grupo = document.getElementById('grupo').value;
   var disciplina = document.getElementById('disciplina').value;
   
-  // Validar campos obligatorios según el grado
   if (!nombre || !grado || !disciplina) {
     alert('Por favor completa todos los campos obligatorios.');
     return;
   }
   
-  // Para 2° y 3° grado, matrícula y grupo son obligatorios
   if (grado !== '1' && !matricula) {
     alert('La matrícula es obligatoria para ' + grado + '° grado.');
     return;
@@ -1087,53 +1443,19 @@ document.getElementById('start-form').addEventListener('submit', function(e) {
     return;
   }
   
-  // Para 1° grado sin matrícula, generar automáticamente
-  if (grado === '1' && !matricula) {
-    // Mostrar indicador de carga
+  // Para 1° grado sin matrícula y no generada en esta sesión, generar automáticamente
+  if (grado === '1' && !matricula && !matriculaGeneradaEnSesion) {
     document.getElementById('btn-start').disabled = true;
     document.getElementById('btn-start').textContent = '⏳ Generando matrícula...';
     
     generarMatriculaAutomatica(grado).then(function(resultado) {
-      matricula = resultado.matricula;
-      grupo = resultado.grupo;
-      
-      // Actualizar los campos del formulario
-      document.getElementById('matricula').value = matricula;
-      document.getElementById('grupo').value = grupo;
-      
-      // Mostrar información de la matrícula generada
-      var matriculaInfo = document.getElementById('matricula-generada-info');
-      matriculaInfo.classList.add('visible');
-      matriculaInfo.innerHTML = '✅ Matrícula generada: <strong>' + matricula + '</strong> | Grupo asignado: <strong>' + grupo + '</strong>';
-      
-      // Restaurar botón
       document.getElementById('btn-start').disabled = false;
       document.getElementById('btn-start').textContent = '🚀 Iniciar evaluación';
       
-      // Verificar si ya tiene exámenes realizados con esta matrícula
-      examenesAlumno = {};
+      // Mostrar el modal con la matrícula asignada
+      mostrarModalMatriculaAsignada(resultado.matricula, resultado.grupo);
       
-      // Continuar con el inicio del examen
-      if (examenesAlumno[disciplina]) {
-        mostrarModalReintento(disciplina);
-      } else {
-        iniciarExamen();
-      }
-    });
-    return;
-  }
-  
-  // Para 1° grado sin grupo, alternar automáticamente
-  if (grado === '1' && !grupo) {
-    generarMatriculaAutomatica(grado).then(function(resultado) {
-      grupo = resultado.grupo;
-      document.getElementById('grupo').value = grupo;
-      
-      if (examenesAlumno[disciplina]) {
-        mostrarModalReintento(disciplina);
-      } else {
-        iniciarExamen();
-      }
+      // NO iniciar el examen todavía - el alumno debe ver su matrícula primero
     });
     return;
   }
@@ -1400,7 +1722,6 @@ document.getElementById('btn-restart').addEventListener('click', function() {
     preguntas: [], respuestas: [], indice: 0
   };
   
-  document.getElementById('matricula').value = '';
   document.getElementById('nombre').value = '';
   document.getElementById('grado').value = '';
   document.getElementById('grupo').value = '';
@@ -1408,10 +1729,21 @@ document.getElementById('btn-restart').addEventListener('click', function() {
   document.getElementById('student-status').style.display = 'none';
   document.getElementById('matricula-icon').innerHTML = '';
   document.getElementById('grade-notice').classList.remove('visible');
-  document.getElementById('matricula-generada-info').classList.remove('visible');
   document.getElementById('disciplines-grid').querySelectorAll('.discipline-card').forEach(function(c) {
     c.classList.remove('selected', 'completed');
   });
+  
+  // Mantener la matrícula si fue generada automáticamente
+  if (matriculaGeneradaActual) {
+    document.getElementById('matricula').value = matriculaGeneradaActual;
+    document.getElementById('grupo').value = grupoGeneradoActual;
+    document.getElementById('matricula-asignada-box').classList.add('visible');
+    verificarExamenesAlumno(matriculaGeneradaActual);
+  } else {
+    document.getElementById('matricula').value = '';
+    document.getElementById('matricula-asignada-box').classList.remove('visible');
+    document.getElementById('disciplinas-pendientes-box').classList.remove('visible');
+  }
   
   actualizarObligatoriedadCampos();
   
