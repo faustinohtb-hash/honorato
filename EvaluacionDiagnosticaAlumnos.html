@@ -68,10 +68,6 @@
     border-top-color: var(--primary); border-radius: 50%;
     animation: spin 0.8s linear infinite; display: inline-block;
   }
-  
-  /* ============================================
-     SECCIÓN INFORMATIVA - EVALUACIÓN DIAGNÓSTICA
-     ============================================ */
   .info-diagnostica {
     background: linear-gradient(135deg, #eff6ff 0%, #ede9fe 100%);
     border: 2px solid #c7d2fe;
@@ -81,56 +77,25 @@
     animation: fadeIn 0.6s ease;
   }
   .info-diagnostica-titulo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--primary-dark);
-    margin-bottom: 15px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 15px;
   }
-  .info-diagnostica-titulo .icono {
-    font-size: 1.5rem;
-  }
-  .info-items {
-    display: grid;
-    gap: 12px;
-  }
+  .info-diagnostica-titulo .icono { font-size: 1.5rem; }
+  .info-items { display: grid; gap: 12px; }
   .info-item {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    background: white;
-    padding: 12px 14px;
-    border-radius: 8px;
+    display: flex; gap: 12px; align-items: flex-start;
+    background: white; padding: 12px 14px; border-radius: 8px;
     border-left: 4px solid var(--primary);
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     transition: var(--transition);
   }
-  .info-item:hover {
-    transform: translateX(4px);
-    box-shadow: var(--shadow);
-  }
+  .info-item:hover { transform: translateX(4px); box-shadow: var(--shadow); }
   .info-item.honestidad { border-left-color: var(--success); }
   .info-item.calificacion { border-left-color: var(--info); }
   .info-item.conciencia { border-left-color: var(--warning); }
-  .info-item .item-icon {
-    font-size: 1.3rem;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .info-item .item-content strong {
-    display: block;
-    color: var(--text);
-    margin-bottom: 3px;
-    font-size: 0.95rem;
-  }
-  .info-item .item-content p {
-    color: var(--text-light);
-    font-size: 0.88rem;
-    line-height: 1.5;
-  }
-  
+  .info-item .item-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+  .info-item .item-content strong { display: block; color: var(--text); margin-bottom: 3px; font-size: 0.95rem; }
+  .info-item .item-content p { color: var(--text-light); font-size: 0.88rem; line-height: 1.5; }
   .student-status {
     padding: 12px 15px; border-radius: var(--radius); margin-top: 10px;
     font-size: 0.9rem; display: none; animation: slideIn 0.3s ease;
@@ -313,6 +278,18 @@
   }
   .congrats h3 { color: #065f46; margin-bottom: 10px; }
   .congrats p { color: #047857; }
+  .matricula-info {
+    background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: var(--radius);
+    padding: 12px 15px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #1e40af;
+    display: none;
+  }
+  .matricula-info.visible { display: block; animation: slideIn 0.3s ease; }
+  .matricula-info strong { font-size: 1.1rem; color: var(--primary-dark); }
   @media (max-width: 600px) {
     body { padding: 10px; }
     .container { padding: 20px; }
@@ -338,12 +315,13 @@
   
   <form id="start-form">
     <div class="form-group">
-      <label for="matricula">🆔 Matrícula *</label>
+      <label for="matricula" id="label-matricula">🆔 Matrícula *</label>
       <div class="input-wrapper">
         <input type="text" id="matricula" required placeholder="Ingresa tu matrícula">
         <span class="input-icon" id="matricula-icon"></span>
       </div>
       <div id="student-status" class="student-status"></div>
+      <div id="matricula-generada-info" class="matricula-info"></div>
     </div>
     
     <div class="form-group">
@@ -362,7 +340,7 @@
     </div>
     
     <div class="form-group">
-      <label for="grupo">👥 Grupo *</label>
+      <label for="grupo" id="label-grupo">👥 Grupo *</label>
       <select id="grupo" required>
         <option value="">Selecciona tu grupo</option>
         <option value="A">A</option>
@@ -370,15 +348,12 @@
       </select>
     </div>
     
-    <!-- ============================================
-         SECCIÓN INFORMATIVA - EVALUACIÓN DIAGNÓSTICA
-         ============================================ -->
+    <!-- SECCIÓN INFORMATIVA - EVALUACIÓN DIAGNÓSTICA -->
     <div class="info-diagnostica">
       <div class="info-diagnostica-titulo">
         <span class="icono">💡</span>
         <span>Antes de comenzar, es importante que sepas:</span>
       </div>
-      
       <div class="info-items">
         <div class="info-item">
           <span class="item-icon">🎯</span>
@@ -387,7 +362,6 @@
             <p>Es una evaluación diagnóstica que nos ayuda a conocer tus conocimientos actuales para que tus maestros puedan apoyarte mejor durante el ciclo escolar.</p>
           </div>
         </div>
-        
         <div class="info-item honestidad">
           <span class="item-icon">🤝</span>
           <div class="item-content">
@@ -395,7 +369,6 @@
             <p>Contesta únicamente lo que tú sabes, sin pedir ayuda a compañeros, familiares ni consultar internet. Tus respuestas honestas nos permiten ayudarte de la mejor manera.</p>
           </div>
         </div>
-        
         <div class="info-item calificacion">
           <span class="item-icon">📝</span>
           <div class="item-content">
@@ -403,7 +376,6 @@
             <p>El resultado de esta evaluación NO se reflejará en tu boleta de calificaciones. Es solo una herramienta para conocer tu punto de partida.</p>
           </div>
         </div>
-        
         <div class="info-item conciencia">
           <span class="item-icon">⭐</span>
           <div class="item-content">
@@ -419,11 +391,9 @@
       <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 10px;">
         ✓ Verde = ya realizado • ⏳ Amarillo = pendiente • 🔒 Gris = no disponible
       </p>
-      
       <div id="grade-notice" class="grade-notice">
         ℹ️ <strong>Nota:</strong> La disciplina de <strong>Geografía</strong> solo se cursa en <strong>1° grado</strong>, por lo que no está disponible para tu grado actual.
       </div>
-      
       <div class="disciplines-grid" id="disciplines-grid"></div>
       <input type="hidden" id="disciplina" required>
     </div>
@@ -545,6 +515,108 @@ var estado = {
 };
 var examenesAlumno = {};
 
+/* ============================================
+   GENERACIÓN DINÁMICA DE MATRÍCULA
+   ============================================ */
+
+/**
+ * Calcula la generación basada en el año de ingreso y graduación.
+ * Los alumnos están 3 años en secundaria.
+ * Ejemplo: Ingreso 2026, Graduación 2029 → "2629"
+ * 
+ * El ciclo escolar inicia en agosto:
+ * - Si el mes actual es agosto-diciembre: el año de ingreso es el año actual menos (grado - 1)
+ * - Si el mes actual es enero-julio: el año de ingreso es (año actual - 1) menos (grado - 1)
+ */
+function calcularGeneracion(grado) {
+  var hoy = new Date();
+  var mes = hoy.getMonth() + 1; // 1-12
+  var anioActual = hoy.getFullYear();
+  
+  var anioIngreso;
+  if (mes >= 8) {
+    // Agosto-Diciembre: el ciclo escolar actual inició este año
+    anioIngreso = anioActual - (parseInt(grado) - 1);
+  } else {
+    // Enero-Julio: el ciclo escolar actual inició el año pasado
+    anioIngreso = (anioActual - 1) - (parseInt(grado) - 1);
+  }
+  
+  var anioGraduacion = anioIngreso + 3;
+  
+  // Formato: últimos 2 dígitos del año de ingreso + últimos 2 dígitos del año de graduación
+  var genIngreso = String(anioIngreso).slice(-2);
+  var genGraduacion = String(anioGraduacion).slice(-2);
+  
+  return genIngreso + genGraduacion;
+}
+
+/**
+ * Genera la matrícula automáticamente consultando los registros existentes.
+ * Formato: [generación][número de lista de 2 dígitos]
+ * Ejemplo: 262901, 262902, 262903...
+ * 
+ * El grupo se alterna: A, B, A, B...
+ */
+function generarMatriculaAutomatica(grado) {
+  var generacion = calcularGeneracion(grado);
+  
+  return fetch(API_URL + '?action=getAll', { redirect: 'follow' })
+    .then(function(response) { return response.text(); })
+    .then(function(text) {
+      var data;
+      try { data = JSON.parse(text); }
+      catch (e) { data = []; }
+      
+      if (!Array.isArray(data)) {
+        if (data.data && Array.isArray(data.data)) data = data.data;
+        else data = [];
+      }
+      
+      // Filtrar registros que coincidan con la generación
+      var registrosGeneracion = data.filter(function(r) {
+        return r.id && String(r.id).startsWith(generacion);
+      });
+      
+      // Determinar el siguiente número de lista
+      var siguienteNumero = registrosGeneracion.length + 1;
+      
+      // Validar que no exceda 99 alumnos por generación
+      if (siguienteNumero > 99) {
+        console.warn('Se excedió el límite de 99 alumnos para la generación ' + generacion);
+        siguienteNumero = 99;
+      }
+      
+      // Formatear número de lista con 2 dígitos (01, 02, 03...)
+      var numeroLista = String(siguienteNumero).padStart(2, '0');
+      
+      // Generar matrícula completa
+      var matricula = generacion + numeroLista;
+      
+      // Alternar grupo: A, B, A, B...
+      var grupo = (registrosGeneracion.length % 2 === 0) ? 'A' : 'B';
+      
+      return { matricula: matricula, grupo: grupo, generacion: generacion, numeroLista: numeroLista };
+    })
+    .catch(function(err) {
+      console.error('Error al generar matrícula:', err);
+      // Fallback: generar matrícula basada en timestamp si falla la consulta
+      var timestamp = Date.now().toString().slice(-4);
+      var matricula = generarGeneracion(grado) + timestamp;
+      return { matricula: matricula, grupo: 'A', generacion: generarGeneracion(grado), numeroLista: timestamp };
+    });
+}
+
+/**
+ * Función auxiliar para calcular generación (fallback)
+ */
+function generarGeneracion(grado) {
+  return calcularGeneracion(grado);
+}
+
+/* ============================================
+   FUNCIONES AUXILIARES
+   ============================================ */
 function obtenerCicloEscolar() {
   var hoy = new Date();
   var mes = hoy.getMonth() + 1;
@@ -580,14 +652,6 @@ function normalizarDificultad(valor) {
   var normalizado = String(valor).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
   var mapa = { 'basica': 'basica', 'media': 'media', 'reto': 'reto', 'intermedia': 'media', 'avanzada': 'reto', 'facil': 'basica', 'dificil': 'reto' };
   return mapa[normalizado] || normalizado;
-}
-
-function obtenerClaseDificultad(dificultad) {
-  var n = normalizarDificultad(dificultad);
-  if (n === 'basica') return 'badge-diff-basica';
-  if (n === 'media') return 'badge-diff-media';
-  if (n === 'reto') return 'badge-diff-reto';
-  return 'badge-diff-media';
 }
 
 function obtenerTextoDificultad(dificultad) {
@@ -703,6 +767,37 @@ function mostrarToast(mensaje, tipo, duracion) {
     toast.style.transform = 'translateX(100%)';
     setTimeout(function() { toast.remove(); }, 300);
   }, duracion);
+}
+
+/* ============================================
+   CAMBIO DE GRADO - MATRÍCULA Y GRUPO OPCIONALES PARA 1°
+   ============================================ */
+function actualizarObligatoriedadCampos() {
+  var grado = document.getElementById('grado').value;
+  var matriculaInput = document.getElementById('matricula');
+  var grupoSelect = document.getElementById('grupo');
+  var labelMatricula = document.getElementById('label-matricula');
+  var labelGrupo = document.getElementById('label-grupo');
+  var matriculaInfo = document.getElementById('matricula-generada-info');
+  
+  if (grado === '1') {
+    matriculaInput.removeAttribute('required');
+    grupoSelect.removeAttribute('required');
+    labelMatricula.innerHTML = '🆔 Matrícula (opcional para 1° grado)';
+    labelGrupo.innerHTML = '👥 Grupo (opcional para 1° grado)';
+    matriculaInput.placeholder = 'Opcional - se generará automáticamente si se deja vacío';
+    grupoSelect.querySelector('option[value=""]').textContent = 'Selecciona tu grupo (opcional)';
+    matriculaInfo.classList.add('visible');
+    matriculaInfo.innerHTML = '💡 Si dejas la matrícula vacía, se generará automáticamente con el formato de tu generación.';
+  } else {
+    matriculaInput.setAttribute('required', 'required');
+    grupoSelect.setAttribute('required', 'required');
+    labelMatricula.innerHTML = '🆔 Matrícula *';
+    labelGrupo.innerHTML = '👥 Grupo *';
+    matriculaInput.placeholder = 'Ingresa tu matrícula';
+    grupoSelect.querySelector('option[value=""]').textContent = 'Selecciona tu grupo';
+    matriculaInfo.classList.remove('visible');
+  }
 }
 
 /* ============================================
@@ -859,6 +954,12 @@ function verificarExamenesAlumno(matricula) {
   var icono = document.getElementById('matricula-icon');
   var statusDiv = document.getElementById('student-status');
   
+  if (!matricula || matricula.length < 3) {
+    icono.innerHTML = '';
+    statusDiv.style.display = 'none';
+    return;
+  }
+  
   icono.innerHTML = '<span class="spinner-mini"></span>';
   statusDiv.className = 'student-status';
   statusDiv.style.display = 'none';
@@ -911,12 +1012,11 @@ function verificarExamenesAlumno(matricula) {
 
 document.getElementById('matricula').addEventListener('blur', function() {
   var matricula = this.value.trim();
-  if (matricula.length >= 3) {
-    verificarExamenesAlumno(matricula);
-  }
+  verificarExamenesAlumno(matricula);
 });
 
 document.getElementById('grado').addEventListener('change', function() {
+  actualizarObligatoriedadCampos();
   actualizarAvisoRestriccion();
   actualizarTarjetasDisciplinas();
 });
@@ -953,7 +1053,7 @@ function seleccionarPreguntasExamen(preguntas) {
 }
 
 /* ============================================
-   INICIO DEL EXAMEN
+   INICIO DEL EXAMEN CON GENERACIÓN DE MATRÍCULA
    ============================================ */
 document.getElementById('start-form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -964,14 +1064,77 @@ document.getElementById('start-form').addEventListener('submit', function(e) {
   var grupo = document.getElementById('grupo').value;
   var disciplina = document.getElementById('disciplina').value;
   
-  if (!matricula || !nombre || !grado || !grupo || !disciplina) {
+  // Validar campos obligatorios según el grado
+  if (!nombre || !grado || !disciplina) {
     alert('Por favor completa todos los campos obligatorios.');
+    return;
+  }
+  
+  // Para 2° y 3° grado, matrícula y grupo son obligatorios
+  if (grado !== '1' && !matricula) {
+    alert('La matrícula es obligatoria para ' + grado + '° grado.');
+    return;
+  }
+  
+  if (grado !== '1' && !grupo) {
+    alert('El grupo es obligatorio para ' + grado + '° grado.');
     return;
   }
   
   var disc = obtenerDisciplina(disciplina);
   if (disc && !esDisciplinaDisponible(disc, grado)) {
     alert('La disciplina "' + disciplina + '" no está disponible para ' + grado + '° grado.');
+    return;
+  }
+  
+  // Para 1° grado sin matrícula, generar automáticamente
+  if (grado === '1' && !matricula) {
+    // Mostrar indicador de carga
+    document.getElementById('btn-start').disabled = true;
+    document.getElementById('btn-start').textContent = '⏳ Generando matrícula...';
+    
+    generarMatriculaAutomatica(grado).then(function(resultado) {
+      matricula = resultado.matricula;
+      grupo = resultado.grupo;
+      
+      // Actualizar los campos del formulario
+      document.getElementById('matricula').value = matricula;
+      document.getElementById('grupo').value = grupo;
+      
+      // Mostrar información de la matrícula generada
+      var matriculaInfo = document.getElementById('matricula-generada-info');
+      matriculaInfo.classList.add('visible');
+      matriculaInfo.innerHTML = '✅ Matrícula generada: <strong>' + matricula + '</strong> | Grupo asignado: <strong>' + grupo + '</strong>';
+      
+      // Restaurar botón
+      document.getElementById('btn-start').disabled = false;
+      document.getElementById('btn-start').textContent = '🚀 Iniciar evaluación';
+      
+      // Verificar si ya tiene exámenes realizados con esta matrícula
+      examenesAlumno = {};
+      
+      // Continuar con el inicio del examen
+      if (examenesAlumno[disciplina]) {
+        mostrarModalReintento(disciplina);
+      } else {
+        iniciarExamen();
+      }
+    });
+    return;
+  }
+  
+  // Para 1° grado sin grupo, alternar automáticamente
+  if (grado === '1' && !grupo) {
+    generarMatriculaAutomatica(grado).then(function(resultado) {
+      grupo = resultado.grupo;
+      document.getElementById('grupo').value = grupo;
+      
+      if (examenesAlumno[disciplina]) {
+        mostrarModalReintento(disciplina);
+      } else {
+        iniciarExamen();
+      }
+    });
     return;
   }
   
@@ -1134,7 +1297,7 @@ function enviarResultados() {
     
     respuestasDetalle.push({
       pregunta: p.enunciado,
-      respuesta: respuestaIndice !== null ? p.opciones ? p.opciones[respuestaIndice] : ['A', 'B', 'C', 'D'][respuestaIndice] : 'Sin responder',
+      respuesta: respuestaIndice !== null ? ['A', 'B', 'C', 'D'][respuestaIndice] : 'Sin responder',
       validacion: esCorrecta ? 'Correcta' : 'Incorrecta'
     });
   });
@@ -1245,9 +1408,12 @@ document.getElementById('btn-restart').addEventListener('click', function() {
   document.getElementById('student-status').style.display = 'none';
   document.getElementById('matricula-icon').innerHTML = '';
   document.getElementById('grade-notice').classList.remove('visible');
+  document.getElementById('matricula-generada-info').classList.remove('visible');
   document.getElementById('disciplines-grid').querySelectorAll('.discipline-card').forEach(function(c) {
     c.classList.remove('selected', 'completed');
   });
+  
+  actualizarObligatoriedadCampos();
   
   document.getElementById('screen-results').classList.add('hidden');
   document.getElementById('screen-start').classList.remove('hidden');
@@ -1258,6 +1424,7 @@ document.getElementById('btn-restart').addEventListener('click', function() {
    ============================================ */
 cargarPreguntas();
 renderDisciplinas();
+actualizarObligatoriedadCampos();
 </script>
 
 </body>
