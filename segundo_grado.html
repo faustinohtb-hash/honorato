@@ -96,12 +96,12 @@
         }
 
         .instruccion {
-            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-            border-left: 5px solid #fb8c00;
+            background: linear-gradient(135deg, #dbeafe, #93c5fd);
+            border-left: 5px solid #2563eb;
             padding: 15px 20px;
             border-radius: 10px;
             margin-bottom: 30px;
-            color: #e65100;
+            color: #1e40af;
             font-weight: 600;
             font-size: 1.05em;
         }
@@ -167,31 +167,6 @@
             font-weight: 700;
         }
 
-        .tipo-documento {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-left: 10px;
-            margin-top: 5px;
-        }
-
-        .original {
-            background: linear-gradient(135deg, #48bb78, #68d391);
-            color: #fff;
-        }
-
-        .copia {
-            background: linear-gradient(135deg, #4299e1, #63b3ed);
-            color: #fff;
-        }
-
-        .ambos {
-            background: linear-gradient(135deg, #ed8936, #f6ad55);
-            color: #fff;
-        }
-
         .download-info {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 2px dashed #f59e0b;
@@ -204,6 +179,40 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .nota-adicional {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 3px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #92400e;
+            font-weight: 700;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .fecha-inscripcion {
+            background: linear-gradient(135deg, #e53935, #ec407a);
+            color: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(229, 57, 53, 0.3);
+        }
+
+        .fecha-inscripcion h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .fecha-inscripcion p {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin: 5px 0;
         }
 
         .botones-container {
@@ -224,11 +233,6 @@
             font-size: 1.8em;
             color: #2d3748;
             margin-bottom: 10px;
-        }
-
-        .botones-titulo p {
-            color: #718096;
-            font-size: 1.05em;
         }
 
         .botones-grid {
@@ -351,6 +355,8 @@
             .requisitos-card, .botones-container { padding: 25px; }
             .titulo-requisitos { margin: -25px -25px 25px -25px; }
             .botones-grid { grid-template-columns: 1fr; }
+            .fecha-inscripcion h3 { font-size: 1.4em; }
+            .fecha-inscripcion p { font-size: 1.1em; }
         }
     </style>
 </head>
@@ -371,37 +377,41 @@
             </div>
 
             <div class="instruccion">
-                📋 Presentar los siguientes documentos en original y/o copia según se indique:
+                📋 Presentar los siguientes documentos en copias en un solo tanto:
             </div>
 
             <div class="seccion-requisitos">
                 <div class="seccion-titulo">
-                    <span>👨‍🎓</span> ALUMNOS
+                    <span>👨‍🎓</span> ALUMNO
                 </div>
 
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
-                        <strong>Firma del Reglamento Escolar.</strong>
-                        <span class="tipo-documento original">Original</span>
+                        <strong>Acta de nacimiento actualizada</strong>
                     </div>
                 </div>
 
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
-                        <strong>2 Fotografías tamaño Infantil</strong>
-                        <span class="tipo-documento original">Original</span>
+                        <strong>Copia de boleta del grado anterior</strong>
                     </div>
                 </div>
 
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
-                        <strong>Cédula de Registro y Actualización de datos</strong>, con 3 contactos para llamadas.
-                        <span class="tipo-documento ambos">Original y Copia</span>
+                        <strong>CURP actualizado</strong>
+                    </div>
+                </div>
+
+                <div class="requisito-item">
+                    <div class="check-icon">✓</div>
+                    <div class="requisito-texto">
+                        <strong>Cédula de registro y actualización de datos completamente requisitada</strong>
                         <div class="download-info">
-                            <span>📥</span> Llenar y Descargar en la parte de abajo
+                            <span>📥</span> Descargar en la parte de abajo
                         </div>
                     </div>
                 </div>
@@ -409,103 +419,59 @@
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
-                        <strong>Carta de Convivencia Aprobatoria</strong>, calificación mayor a 6.0
-                        <span class="tipo-documento original">Original</span>
-                    </div>
-                </div>
-
-                <div class="requisito-item">
-                    <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Reporte de Evaluación 1° de Secundaria.</strong>
-                        <span class="tipo-documento copia">Copia</span>
+                        <strong>Folder beige</strong>
                     </div>
                 </div>
             </div>
 
             <div class="seccion-requisitos">
                 <div class="seccion-titulo">
-                    <span>👨‍👧</span> MADRE, PADRE O TUTOR
+                    <span>👨‍👧</span> PADRE O TUTOR
                 </div>
 
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
-                        <strong>Firma del Reglamento Escolar.</strong>
-                        <span class="tipo-documento original">Original</span>
+                        <strong>CURP</strong>
                     </div>
                 </div>
 
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
-                        <strong>Acta de nacimiento.</strong>
-                        <span class="tipo-documento copia">Copia</span>
+                        <strong>INE</strong>
                     </div>
                 </div>
 
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
-                        <strong>CURP actualizada y con leyenda "Certificada, verificada con el Registro Civil"</strong>
-                        <span class="tipo-documento copia">Copia</span>
+                        <strong>Comprobante de domicilio</strong>
                     </div>
                 </div>
+            </div>
 
-                <div class="requisito-item">
-                    <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Credencial INE vigente.</strong>
-                        <span class="tipo-documento copia">Copia</span>
-                    </div>
-                </div>
+            <div class="nota-adicional">
+                📦 TODO EN COPIAS EN UN SOLO TANTO
+            </div>
 
-                <div class="requisito-item">
-                    <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Comprobante de domicilio</strong>, con 3 referencias para localizar la casa.
-                        <span class="tipo-documento copia">Copia</span>
-                    </div>
-                </div>
-
-                <div class="requisito-item">
-                    <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Directorio del Estudiante</strong>, obligatorio 4 números de contacto.
-                        <span class="tipo-documento ambos">Original y Copia</span>
-                        <div class="download-info">
-                            <span>📥</span> Llenar y Descargar en la parte de abajo
-                        </div>
-                    </div>
-                </div>
-
-                <div class="requisito-item">
-                    <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>1 sobre transparente, tamaño carta.</strong>
-                        <span class="tipo-documento original">Original</span>
-                    </div>
-                </div>
+            <div class="fecha-inscripcion">
+                <h3>📅 FECHA DE INSCRIPCIÓN</h3>
+                <p>MARTES 25 DE AGOSTO</p>
+                <p>DE 8:30 A 12:00 HRS.</p>
             </div>
         </div>
 
         <div class="botones-container">
             <div class="botones-titulo">
                 <h3>📄 Documentos en Línea</h3>
-                <p>Accede a los formularios digitales para completar tu inscripción</p>
             </div>
 
             <div class="botones-grid">
-                <a href="https://faustinohtb-hash.github.io/honorato/Cedula_Registro.html" class="btn-documento">
+                <a href="https://faustinohtb-hash.github.io/honorato/CEDULAREGISTROACTUALIZACIONDATOSALUMNO.pdf" class="btn-documento" target="_blank">
                     <div class="icono">📝</div>
                     <h4>Cédula de Registro y Actualización de datos</h4>
-                    <p>Formulario digital para registrar y actualizar información del alumno<br><strong>📥 Llenar y Descargar</strong></p>
-                </a>
-
-                <a href="https://faustinohtb-hash.github.io/honorato/Directorio.html" class="btn-documento">
-                    <div class="icono">📞</div>
-                    <h4>Directorio del Estudiante</h4>
-                    <p>Registro de contactos de emergencia y familiares del alumno<br><strong>📥 Llenar y Descargar</strong></p>
+                    <p>Formulario para registrar y actualizar información del alumno<br><strong>📥 Descargar PDF</strong></p>
                 </a>
 
                 <a href="https://faustinohtb-hash.github.io/honorato/Pinscripcion.html" class="btn-documento">
