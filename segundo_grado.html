@@ -5,24 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Requisitos 2° Grado - Secundaria Profr. Honorato Tlaseca Barrera</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
+        .container { max-width: 1000px; margin: 0 auto; }
         header {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
@@ -33,7 +23,6 @@
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
         .logo-container {
             display: inline-block;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -42,27 +31,12 @@
             margin-bottom: 15px;
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
-
         .logo-container img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #fff;
-            padding: 5px;
+            width: 80px; height: 80px; border-radius: 50%;
+            background: #fff; padding: 5px;
         }
-
-        header h1 {
-            font-size: 2em;
-            color: #2d3748;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        header p {
-            font-size: 1.1em;
-            color: #718096;
-        }
-
+        header h1 { font-size: 2em; color: #2d3748; margin-bottom: 8px; font-weight: 700; }
+        header p { font-size: 1.1em; color: #718096; }
         .requisitos-card {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
@@ -72,7 +46,6 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
         .titulo-requisitos {
             background: linear-gradient(135deg, #e53935, #ec407a);
             color: #fff;
@@ -82,19 +55,8 @@
             margin: -40px -40px 30px -40px;
             box-shadow: 0 10px 30px rgba(229, 57, 53, 0.3);
         }
-
-        .titulo-requisitos h2 {
-            font-size: 2.5em;
-            margin-bottom: 5px;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
-
-        .titulo-requisitos p {
-            font-size: 1.1em;
-            opacity: 0.95;
-        }
-
+        .titulo-requisitos h2 { font-size: 2.5em; margin-bottom: 5px; font-weight: 800; letter-spacing: 1px; }
+        .titulo-requisitos p { font-size: 1.1em; opacity: 0.95; }
         .instruccion {
             background: linear-gradient(135deg, #dbeafe, #93c5fd);
             border-left: 5px solid #2563eb;
@@ -105,11 +67,7 @@
             font-weight: 600;
             font-size: 1.05em;
         }
-
-        .seccion-requisitos {
-            margin-bottom: 35px;
-        }
-
+        .seccion-requisitos { margin-bottom: 35px; }
         .seccion-titulo {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: #fff;
@@ -122,7 +80,6 @@
             align-items: center;
             gap: 10px;
         }
-
         .requisito-item {
             display: flex;
             align-items: flex-start;
@@ -133,16 +90,13 @@
             border-left: 4px solid #667eea;
             transition: all 0.3s ease;
         }
-
         .requisito-item:hover {
             background: #edf2f7;
             transform: translateX(5px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-
         .check-icon {
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             background: linear-gradient(135deg, #48bb78, #68d391);
             border-radius: 50%;
             display: flex;
@@ -154,19 +108,8 @@
             flex-shrink: 0;
             font-size: 0.9em;
         }
-
-        .requisito-texto {
-            color: #2d3748;
-            font-size: 1em;
-            line-height: 1.5;
-            flex: 1;
-        }
-
-        .requisito-texto strong {
-            color: #1a202c;
-            font-weight: 700;
-        }
-
+        .requisito-texto { color: #2d3748; font-size: 1em; line-height: 1.5; flex: 1; }
+        .requisito-texto strong { color: #1a202c; font-weight: 700; }
         .download-info {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 2px dashed #f59e0b;
@@ -180,7 +123,6 @@
             align-items: center;
             gap: 8px;
         }
-
         .nota-adicional {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 3px solid #f59e0b;
@@ -192,7 +134,6 @@
             text-align: center;
             font-size: 1.2em;
         }
-
         .fecha-inscripcion {
             background: linear-gradient(135deg, #e53935, #ec407a);
             color: #fff;
@@ -202,19 +143,8 @@
             margin-top: 30px;
             box-shadow: 0 10px 30px rgba(229, 57, 53, 0.3);
         }
-
-        .fecha-inscripcion h3 {
-            font-size: 1.8em;
-            margin-bottom: 10px;
-            font-weight: 800;
-        }
-
-        .fecha-inscripcion p {
-            font-size: 1.3em;
-            font-weight: 600;
-            margin: 5px 0;
-        }
-
+        .fecha-inscripcion h3 { font-size: 1.8em; margin-bottom: 10px; font-weight: 800; }
+        .fecha-inscripcion p { font-size: 1.3em; font-weight: 600; margin: 5px 0; }
         .botones-container {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
@@ -223,25 +153,14 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        .botones-titulo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .botones-titulo h3 {
-            font-size: 1.8em;
-            color: #2d3748;
-            margin-bottom: 10px;
-        }
-
+        .botones-titulo { text-align: center; margin-bottom: 30px; }
+        .botones-titulo h3 { font-size: 1.8em; color: #2d3748; margin-bottom: 10px; }
         .botones-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             margin-bottom: 25px;
         }
-
         .btn-documento {
             background: linear-gradient(135deg, #fff 0%, #f7fafc 100%);
             border: 3px solid #667eea;
@@ -256,44 +175,25 @@
             position: relative;
             overflow: hidden;
         }
-
         .btn-documento::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: linear-gradient(135deg, #667eea, #764ba2);
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 0;
         }
-
-        .btn-documento:hover::before {
-            opacity: 1;
-        }
-
+        .btn-documento:hover::before { opacity: 1; }
         .btn-documento:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 20px 50px rgba(102, 126, 234, 0.4);
             border-color: transparent;
         }
-
-        .btn-documento > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-documento:hover h4,
-        .btn-documento:hover p,
-        .btn-documento:hover .icono {
-            color: #fff;
-        }
-
+        .btn-documento > * { position: relative; z-index: 1; }
+        .btn-documento:hover h4, .btn-documento:hover p, .btn-documento:hover .icono { color: #fff; }
         .icono {
-            width: 80px;
-            height: 80px;
+            width: 80px; height: 80px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
@@ -305,27 +205,12 @@
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
             transition: all 0.3s ease;
         }
-
         .btn-documento:hover .icono {
             transform: scale(1.1) rotate(5deg);
             box-shadow: 0 12px 30px rgba(255, 255, 255, 0.4);
         }
-
-        .btn-documento h4 {
-            font-size: 1.3em;
-            color: #2d3748;
-            margin-bottom: 10px;
-            font-weight: 700;
-            transition: color 0.3s ease;
-        }
-
-        .btn-documento p {
-            color: #718096;
-            font-size: 0.95em;
-            line-height: 1.5;
-            transition: color 0.3s ease;
-        }
-
+        .btn-documento h4 { font-size: 1.3em; color: #2d3748; margin-bottom: 10px; font-weight: 700; transition: color 0.3s ease; }
+        .btn-documento p { color: #718096; font-size: 0.95em; line-height: 1.5; transition: color 0.3s ease; }
         footer {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
@@ -336,19 +221,8 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        footer h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            margin-bottom: 8px;
-        }
-
-        footer p {
-            color: #718096;
-            margin: 4px 0;
-            font-size: 0.95em;
-        }
-
+        footer h3 { color: #2d3748; font-size: 1.2em; margin-bottom: 8px; }
+        footer p { color: #718096; margin: 4px 0; font-size: 0.95em; }
         @media (max-width: 768px) {
             header h1 { font-size: 1.5em; }
             .titulo-requisitos h2 { font-size: 2em; }
@@ -384,28 +258,18 @@
                 <div class="seccion-titulo">
                     <span>👨‍🎓</span> ALUMNO
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Acta de nacimiento actualizada</strong>
-                    </div>
+                    <div class="requisito-texto"><strong>Acta de nacimiento actualizada</strong></div>
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Copia de boleta del grado anterior</strong>
-                    </div>
+                    <div class="requisito-texto"><strong>Copia de boleta del grado anterior</strong></div>
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>CURP actualizado</strong>
-                    </div>
+                    <div class="requisito-texto"><strong>CURP actualizado</strong></div>
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
                     <div class="requisito-texto">
@@ -415,12 +279,9 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Folder beige</strong>
-                    </div>
+                    <div class="requisito-texto"><strong>Folder beige</strong></div>
                 </div>
             </div>
 
@@ -428,26 +289,17 @@
                 <div class="seccion-titulo">
                     <span>👨‍👧</span> PADRE O TUTOR
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>CURP</strong>
-                    </div>
+                    <div class="requisito-texto"><strong>CURP</strong></div>
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>INE</strong>
-                    </div>
+                    <div class="requisito-texto"><strong>INE</strong></div>
                 </div>
-
                 <div class="requisito-item">
                     <div class="check-icon">✓</div>
-                    <div class="requisito-texto">
-                        <strong>Comprobante de domicilio</strong>
-                    </div>
+                    <div class="requisito-texto"><strong>Comprobante de domicilio</strong></div>
                 </div>
             </div>
 
@@ -468,10 +320,11 @@
             </div>
 
             <div class="botones-grid">
-                <a href="https://faustinohtb-hash.github.io/honorato/CEDULAREGISTROACTUALIZACIONDATOSALUMNO.pdf" class="btn-documento" target="_blank">
+                <!-- ⚠️ REEMPLAZA EL HREF DE ABAJO CON LA URL QUE OBTUVISTE AL DAR CLIC EN "RAW" EN GITHUB -->
+                <a href="https://raw.githubusercontent.com/faustinohtb-hash/honorato/main/CEDULAREGISTROACTUALIZACIONDATOSALUMNO.pdf" target="_blank" class="btn-documento">
                     <div class="icono">📝</div>
                     <h4>Cédula de Registro y Actualización de datos</h4>
-                    <p>Formulario para registrar y actualizar información del alumno<br><strong>📥 Descargar PDF</strong></p>
+                    <p>Formulario para registrar y actualizar información del alumno<br><strong>📥 Abrir y Descargar PDF</strong></p>
                 </a>
 
                 <a href="https://faustinohtb-hash.github.io/honorato/Pinscripcion.html" class="btn-documento">
