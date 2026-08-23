@@ -62,6 +62,8 @@
   .download-btn{width:100%}
   .download-card.highlight{border:2px solid var(--danger);background:linear-gradient(135deg,#fef2f2,#fee2e2)}
   .download-card.highlight h4{color:var(--danger)}
+  .download-card.grupo{border:2px solid var(--info);background:linear-gradient(135deg,#eff6ff,#dbeafe)}
+  .download-card.grupo h4{color:var(--info)}
   .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:20px}
   .stat-card{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:18px;border-radius:var(--radius);box-shadow:var(--shadow)}
   .stat-card.green{background:linear-gradient(135deg,var(--success),#059669)}
@@ -264,10 +266,15 @@
         <div class="download-card"><h4>📖 Por Disciplina</h4><div class="download-options"><select id="download-disciplina"><option value="all">Todas</option><option>Español</option><option>Inglés</option><option>Matemáticas</option><option>Ciencias</option><option>Historia</option><option>Geografía</option><option>Formación Cívica y Ética</option><option>Educación Socioemocional</option><option>Educación Física</option><option>Artes</option><option>Tecnología</option></select></div><button class="btn btn-warning download-btn" onclick="descargarPorDisciplina()">📥 Descargar por Disciplina</button></div>
         <div class="download-card highlight">
           <h4>🔍 Análisis de Errores por Alumno</h4>
-          <p>Orden: <strong>calificación (mayor→menor)</strong> → nombre → disciplina. Incluye área y tema de cada error.</p>
+          <p>Orden: calificación (mayor→menor) → nombre → disciplina. Incluye área y tema de cada error.</p>
           <div class="download-options"><select id="download-errores-disciplina"><option value="all">Todas</option><option>Español</option><option>Inglés</option><option>Matemáticas</option><option>Ciencias</option><option>Historia</option><option>Geografía</option><option>Formación Cívica y Ética</option><option>Educación Socioemocional</option><option>Educación Física</option><option>Artes</option><option>Tecnología</option></select></div>
           <div class="download-options"><select id="download-errores-grado"><option value="all">Todos</option><option value="1">1°</option><option value="2">2°</option><option value="3">3°</option></select></div>
           <button class="btn btn-danger download-btn" onclick="descargarAnalisisErrores()">🔍 Descargar Análisis de Errores</button>
+        </div>
+        <div class="download-card grupo">
+          <h4>👥 Grupo de Primer Grado</h4>
+          <p>Forma 2 grupos balanceados con la <strong>mayor calificación</strong> de cada alumno (una sola vez), ordenados de mayor a menor. Incluye N° progresivo para conocer el total de alumnos.</p>
+          <button class="btn btn-info download-btn" onclick="descargarGrupoPrimerGrado()">👥 Grupo de Primer Grado</button>
         </div>
       </div>
     </div>
@@ -403,7 +410,7 @@
 <iframe id="iframe-examen" title="Examen para imprimir"></iframe>
 
 <script>
-/* ===== URLs con respaldo (evita "Load failed") ===== */
+/* ===== URLs con respaldo ===== */
 var API_URLS = [
   'https://script.google.com/macros/s/AKfycbwK_YRPfajX3NUftNnThasdRxiXGl7E5EBehIpuE7Tuyi8owEk3CjAxruShVdcPs2jHJw/exec',
   'https://script.google.com/macros/s/AKfycbxkZ8YrL7TCjZ68A7HYnSja532O9nvIimNAE1yhJoABqXMXlqS2Yhz1ilTWO1mqY49h1g/exec',
@@ -441,7 +448,6 @@ async function postConRespaldo(data){
   throw ultimo||new Error('No se pudo guardar');
 }
 
-/* ===== Saneado de fracciones/decimales convertidos en fechas ===== */
 function sanearValor(valor){
   if(valor===null||valor===undefined) return '';
   if(valor instanceof Date){
@@ -481,7 +487,6 @@ function obtenerCicloEscolar(){ var h=new Date(),m=h.getMonth()+1,a=h.getFullYea
 function obtenerNombreDisciplinaExamen(d,g){ if(compararDisciplinas(d,'Ciencias')){ if(g==='1')return 'Biología'; if(g==='2')return 'Física'; if(g==='3')return 'Química'; } return d; }
 function mostrarToast(msg,tipo){ tipo=tipo||'success'; var t=document.createElement('div'); t.className='toast '+tipo; t.textContent=(tipo==='success'?'✅ ':tipo==='error'?'❌ ':'⚠️ ')+msg; document.body.appendChild(t); setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ t.remove(); },300); },3500); }
 
-/* ===== Tabs ===== */
 document.querySelectorAll('.tab').forEach(function(tab){
   tab.addEventListener('click',function(){
     document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
@@ -493,7 +498,6 @@ document.querySelectorAll('.tab').forEach(function(tab){
   });
 });
 
-/* ===== Banco ===== */
 function normalizarPregunta(p){
   var activa=true;
   if(p.activa===false||p.activa==='FALSE'||p.activa==='false'||p.activa==='0'||p.activa===0) activa=false;
@@ -660,7 +664,6 @@ function limpiarFiltrosBanco(){ ['f-disciplina','f-grado','f-area','f-dificultad
   document.getElementById(id).addEventListener('change',renderBanco);
 });
 
-/* ===== Generador de examen ===== */
 function abrirModalExamen(){
   if(!bancoPreguntas.length){ mostrarToast('Primero carga el banco','warning'); return; }
   document.getElementById('exam-disciplina').value=(document.getElementById('f-disciplina').value!=='all')?document.getElementById('f-disciplina').value:'';
@@ -735,7 +738,6 @@ function generarExamenPDF(){
   mostrarToast('Examen generado con '+proc.length+' preguntas');
 }
 
-/* ===== Análisis ===== */
 async function sincronizarDatos(){
   var st=document.getElementById('sync-status'), txt=document.getElementById('sync-status-text');
   st.className='sync-status loading'; txt.textContent='Sincronizando...';
@@ -868,7 +870,6 @@ function renderVistaIndividual(d){
   document.getElementById('resultados-analisis').innerHTML=html;
 }
 
-/* ===== Descargas ===== */
 function esc(v){ return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'; }
 function descargarCSV(rows,headers,nombre){
   var csv=[headers.join(',')].concat(rows).join('\n');
@@ -904,40 +905,62 @@ function descargarPorDisciplina(){
   descargarCSV(d.map(filaResultado),HEAD_RES,'resultados_'+(x==='all'?'todas':x.toLowerCase().replace(/\s+/g,'_'))+'_'+new Date().toISOString().slice(0,10)+'.csv');
   mostrarToast('Descargados '+d.length+' registros');
 }
-
-/* ===== ANÁLISIS DE ERRORES =====
-   ORDEN: calificación (mayor→menor) → nombre → disciplina → n° pregunta */
 function descargarAnalisisErrores(){
-  var errs=obtenerErroresPorAlumno({
-    disciplina: document.getElementById('download-errores-disciplina').value,
-    grado: document.getElementById('download-errores-grado').value
-  });
+  var errs=obtenerErroresPorAlumno({ disciplina:document.getElementById('download-errores-disciplina').value, grado:document.getElementById('download-errores-grado').value });
   if(!errs.length){ mostrarToast('No se encontraron errores con esos filtros','warning'); return; }
-
   errs.sort(function(a,b){
-    // 1) Calificación de MAYOR a MENOR
     if(b.calificacion!==a.calificacion) return b.calificacion-a.calificacion;
-    // 2) Nombre (alfabético)
     if(a.nombre!==b.nombre) return a.nombre.localeCompare(b.nombre);
-    // 3) Disciplina (alfabético)
     if(a.disciplina!==b.disciplina) return a.disciplina.localeCompare(b.disciplina);
-    // 4) N° de pregunta (mantiene los errores de cada alumno en orden)
     return a.numero-b.numero;
   });
-
   var rows=errs.map(function(e){
-    return [
-      esc(e.idAlumno), esc(e.nombre),
-      esc(obtenerNombreDisciplinaExamen(e.disciplina,e.grado)),
-      esc(e.grado), esc(e.grupo), (e.calificacion/10).toFixed(1),
-      e.numero, esc(e.pregunta), esc(e.respuestaDada),
-      esc(e.area), esc(e.tema), esc(e.dificultad)
-    ].join(',');
+    return [ esc(e.idAlumno), esc(e.nombre), esc(obtenerNombreDisciplinaExamen(e.disciplina,e.grado)), esc(e.grado), esc(e.grupo), (e.calificacion/10).toFixed(1), e.numero, esc(e.pregunta), esc(e.respuestaDada), esc(e.area), esc(e.tema), esc(e.dificultad) ].join(',');
   });
-  descargarCSV(rows,
-    ['ID Alumno','Nombre','Disciplina','Grado','Grupo','Calificación','N° Pregunta','Pregunta','Respuesta Dada','Área','Tema','Dificultad'],
-    'analisis_errores_'+new Date().toISOString().slice(0,10)+'.csv');
+  descargarCSV(rows,['ID Alumno','Nombre','Disciplina','Grado','Grupo','Calificación','N° Pregunta','Pregunta','Respuesta Dada','Área','Tema','Dificultad'],'analisis_errores_'+new Date().toISOString().slice(0,10)+'.csv');
   mostrarToast('Descargados '+errs.length+' errores');
+}
+
+/* ===== GRUPO DE PRIMER GRADO =====
+   - Solo alumnos de 1° grado
+   - Una sola vez por alumno (mayor calificación y su disciplina)
+   - Ordenados de mayor a menor calificación
+   - NUEVO: columna N° progresiva al inicio (el último N° = total de alumnos)
+   - 2 grupos balanceados (draft serpentina A,B,B,A,...) */
+function descargarGrupoPrimerGrado(){
+  var primeros = datosEstudiantes.filter(function(e){ return String(e.grado)==='1'; });
+  if(!primeros.length){ mostrarToast('No hay registros de 1er grado','warning'); return; }
+
+  // Una sola entrada por alumno: conservar la mayor calificación y su disciplina
+  var porAlumno = {};
+  primeros.forEach(function(e){
+    var key = e.nombre;
+    var cal = e.calificacion;
+    if(!porAlumno[key] || cal > porAlumno[key].calificacion){
+      porAlumno[key] = { nombre:e.nombre, disciplina:e.disciplina, calificacion:cal };
+    }
+  });
+  var alumnos = Object.keys(porAlumno).map(function(k){ return porAlumno[k]; });
+
+  // Ordenar de mayor a menor calificación
+  alumnos.sort(function(a,b){ return (b.calificacion - a.calificacion) || a.nombre.localeCompare(b.nombre); });
+
+  // Draft serpentina para 2 grupos balanceados: A, B, B, A, A, B, B, A ...
+  var patron = ['A','B','B','A'];
+  alumnos.forEach(function(a,i){ a.grupoAsignado = patron[i % 4]; });
+
+  // CSV con N° progresivo al inicio: N°, Nombre, Disciplina, Calificación, Grupo
+  var rows = alumnos.map(function(a, i){
+    return [ (i+1), esc(a.nombre), esc(a.disciplina), (a.calificacion/10).toFixed(1), a.grupoAsignado ].join(',');
+  });
+  descargarCSV(rows, ['N°','Nombre','Disciplina','Calificación','Grupo'], 'grupo_primer_grado_'+new Date().toISOString().slice(0,10)+'.csv');
+
+  // Resumen de balance
+  var gA = alumnos.filter(function(a){return a.grupoAsignado==='A';});
+  var gB = alumnos.filter(function(a){return a.grupoAsignado==='B';});
+  var promA = gA.length ? (gA.reduce(function(s,a){return s+a.calificacion;},0)/gA.length/10).toFixed(1) : '0.0';
+  var promB = gB.length ? (gB.reduce(function(s,a){return s+a.calificacion;},0)/gB.length/10).toFixed(1) : '0.0';
+  mostrarToast('👥 Total alumnos: '+alumnos.length+' | Grupo A: '+gA.length+' (prom '+promA+') | Grupo B: '+gB.length+' (prom '+promB+')');
 }
 
 function limpiarDatos(){
