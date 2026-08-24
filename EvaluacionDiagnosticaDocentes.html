@@ -273,7 +273,7 @@
         </div>
         <div class="download-card grupo">
           <h4>👥 Grupo de Primer Grado</h4>
-          <p>Forma 2 grupos balanceados con la <strong>mayor calificación</strong> de cada alumno (una sola vez), ordenados de mayor a menor. Incluye N° progresivo para conocer el total de alumnos.</p>
+          <p>Forma 2 grupos balanceados usando la <strong>mayor calificación de Español o Matemáticas</strong> (ignora otros exámenes), una sola vez por alumno, ordenados de mayor a menor con N° progresivo.</p>
           <button class="btn btn-info download-btn" onclick="descargarGrupoPrimerGrado()">👥 Grupo de Primer Grado</button>
         </div>
       </div>
@@ -923,17 +923,24 @@ function descargarAnalisisErrores(){
 
 /* ===== GRUPO DE PRIMER GRADO =====
    - Solo alumnos de 1° grado
-   - Una sola vez por alumno (mayor calificación y su disciplina)
-   - Ordenados de mayor a menor calificación
-   - NUEVO: columna N° progresiva al inicio (el último N° = total de alumnos)
+   - SOLO considera la mayor calificación de ESPAÑOL o MATEMÁTICAS
+     (ignora cualquier otro examen aunque sea más alto)
+   - Una sola vez por alumno
+   - Ordenados de mayor a menor, N° progresivo al inicio
    - 2 grupos balanceados (draft serpentina A,B,B,A,...) */
 function descargarGrupoPrimerGrado(){
   var primeros = datosEstudiantes.filter(function(e){ return String(e.grado)==='1'; });
   if(!primeros.length){ mostrarToast('No hay registros de 1er grado','warning'); return; }
 
-  // Una sola entrada por alumno: conservar la mayor calificación y su disciplina
+  // Filtrar SOLO Español y Matemáticas (ignora el resto de disciplinas)
+  var core = primeros.filter(function(e){
+    return compararDisciplinas(e.disciplina,'Español') || compararDisciplinas(e.disciplina,'Matemáticas');
+  });
+  if(!core.length){ mostrarToast('No hay calificaciones de Español o Matemáticas en 1er grado','warning'); return; }
+
+  // Una sola entrada por alumno: la MAYOR calificación entre Español/Matemáticas y su disciplina
   var porAlumno = {};
-  primeros.forEach(function(e){
+  core.forEach(function(e){
     var key = e.nombre;
     var cal = e.calificacion;
     if(!porAlumno[key] || cal > porAlumno[key].calificacion){
@@ -950,7 +957,7 @@ function descargarGrupoPrimerGrado(){
   alumnos.forEach(function(a,i){ a.grupoAsignado = patron[i % 4]; });
 
   // CSV con N° progresivo al inicio: N°, Nombre, Disciplina, Calificación, Grupo
-  var rows = alumnos.map(function(a, i){
+  var rows = alumnos.map(function(a,i){
     return [ (i+1), esc(a.nombre), esc(a.disciplina), (a.calificacion/10).toFixed(1), a.grupoAsignado ].join(',');
   });
   descargarCSV(rows, ['N°','Nombre','Disciplina','Calificación','Grupo'], 'grupo_primer_grado_'+new Date().toISOString().slice(0,10)+'.csv');
