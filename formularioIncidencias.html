@@ -5,1455 +5,492 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reporte de Incidencias</title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            position: relative;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .logo {
-            max-width: 80px;
-            height: auto;
-            margin-right: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .header-content {
-            flex: 1;
-            text-align: left;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-        }
-        .header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-        }
-        .form-content {
-            padding: 30px;
-        }
-        .form-group {
-            margin-bottom: 22px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e5eb;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        input:focus, textarea:focus, select:focus {
-            border-color: #667eea;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-        }
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        .btn {
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            display: inline-block;
-            text-align: center;
-            text-decoration: none;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .btn:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            width: 100%;
-        }
-        .btn-retry {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-        .btn-manual {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-        .btn-cors {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-        .btn-home {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            padding: 10px 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .form-footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            color: #6c757d;
-            font-size: 14px;
-        }
-        .hidden {
-            display: none;
-        }
-        .severity-display {
-            background-color: #f8f9fa;
-            border: 2px solid #e1e5eb;
-            border-radius: 8px;
-            padding: 12px 15px;
-            font-weight: 600;
-            color: #495057;
-            text-align: center;
-            font-size: 18px;
-        }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            max-width: 420px;
-            word-wrap: break-word;
-        }
-        .notification.show {
-            transform: translateX(0);
-        }
-        .notification .close-btn {
-            margin-left: 15px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .notification.error {
-            background: #f44336;
-        }
-        .notification.warning {
-            background: #ff9800;
-        }
-        .notification.info {
-            background: #2196F3;
-        }
-        .info-panel {
-            background-color: #f8f9fa;
-            border: 2px solid #e1e5eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .info-panel h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #495057;
-            font-size: 18px;
-        }
-        .copy-notice {
-            background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
-            border: 2px solid #ffc107;
-            border-left: 5px solid #ff8f00;
-            border-radius: 8px;
-            padding: 14px 18px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-        .copy-notice svg {
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        .copy-notice-text {
-            flex: 1;
-        }
-        .copy-notice-text strong {
-            color: #e65100;
-            font-size: 14px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .copy-notice-text span {
-            color: #5d4037;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        .destinatarios-lista {
-            background: white;
-            border: 2px solid #e1e5eb;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-top: 12px;
-        }
-        .destinatarios-lista ul {
-            margin: 0;
-            padding-left: 20px;
-            list-style: none;
-        }
-        .destinatarios-lista ul li {
-            padding: 6px 0;
-            font-size: 14px;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .destinatarios-lista ul li .icon-check {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-            fill: #2e7d32;
-        }
-        .popup-warning {
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            border: 2px solid #ef5350;
-            border-left: 5px solid #c62828;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-top: 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-        .popup-warning svg {
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        .popup-warning-text {
-            flex: 1;
-        }
-        .popup-warning-text strong {
-            color: #b71c1c;
-            font-size: 13px;
-            display: block;
-            margin-bottom: 3px;
-        }
-        .popup-warning-text span {
-            color: #4e342e;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid #667eea;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .error-container {
-            text-align: center;
-            padding: 20px;
-            color: #f44336;
-        }
-        .error-container p {
-            margin-bottom: 15px;
-        }
-        .manual-entry {
-            background-color: #f8f9fa;
-            border: 2px solid #e1e5eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-        .manual-entry h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #495057;
-            font-size: 18px;
-        }
-        .debug-info {
-            background-color: #f8f9fa;
-            border: 2px solid #e1e5eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            font-family: monospace;
-            font-size: 12px;
-            white-space: pre-wrap;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .cors-info {
-            background-color: #f8f9fa;
-            border: 2px solid #e1e5eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-        .cors-info h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #495057;
-            font-size: 18px;
-        }
-        .cors-info code {
-            background-color: #e9ecef;
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-        .cors-info ol {
-            padding-left: 20px;
-        }
-        .cors-info li {
-            margin-bottom: 8px;
-        }
-        .cors-info p {
-            margin-bottom: 10px;
-        }
-        .cors-info .highlight {
-            background-color: #fff3cd;
-            padding: 10px;
-            border-radius: 4px;
-            border-left: 4px solid #ffc107;
-            margin: 15px 0;
-        }
-        .submit-container {
-            position: relative;
-        }
-        .submit-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-        }
-        .report-summary {
-            background-color: #f8f9fa;
-            border: 2px solid #e1e5eb;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 20px;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .report-summary h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #495057;
-            text-align: center;
-            font-size: 24px;
-        }
-        .report-summary .summary-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .report-summary .summary-header h3 {
-            margin: 0;
-            font-size: 18px;
-        }
-        .report-summary .summary-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        .report-summary .summary-item {
-            background-color: white;
-            border: 1px solid #e1e5eb;
-            border-radius: 8px;
-            padding: 15px;
-        }
-        .report-summary .summary-item.full-width {
-            grid-column: 1 / -1;
-        }
-        .report-summary .summary-item label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        .report-summary .summary-item .value {
-            color: #333;
-            font-size: 16px;
-        }
-        .report-summary .summary-actions {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .report-summary .btn-close {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin-right: 10px;
-        }
-        .report-summary .btn-print {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-        }
-        .btn-tutor {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-            width: 100%;
-            display: none;
-            font-size: 15px;
-        }
-        .btn-docente {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            width: 100%;
-            display: none;
-            font-size: 15px;
-        }
-        .btn-directora {
-            background: linear-gradient(135deg, #e65100 0%, #ff9800 100%);
-            width: 100%;
-            display: none;
-            font-size: 15px;
-        }
-        @media (max-width: 600px) {
-            .header {
-                flex-direction: column;
-            }
-            .header-left {
-                flex-direction: column;
-                width: 100%;
-            }
-            .logo {
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-            .header-content {
-                text-align: center;
-                margin-bottom: 15px;
-            }
-            .report-summary .summary-content {
-                grid-template-columns: 1fr;
-            }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f0f2f5; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #007bff; padding-bottom: 20px; }
+        .header img { max-width: 120px; margin-bottom: 15px; }
+        .header h2 { margin: 10px 0 5px; color: #0056b3; }
+        .header p { margin: 5px 0; color: #666; }
+        .header a { display: inline-block; margin-top: 10px; color: #007bff; text-decoration: none; font-weight: bold; }
+        
+        .form-section { margin-bottom: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff; }
+        .form-section h3 { margin-top: 0; color: #0056b3; font-size: 1.1em; }
+        
+        label { display: block; margin-top: 12px; font-weight: 600; font-size: 0.9em; color: #444; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        input:focus, select:focus, textarea:focus { border-color: #007bff; outline: none; }
+        
+        .search-hint { font-size: 0.85em; color: #6c757d; font-style: italic; margin-top: 3px; }
+        
+        .btn { margin-top: 20px; padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
+        .btn:hover { background-color: #0056b3; }
+        .btn:disabled { background-color: #6c757d; cursor: not-allowed; }
+        .btn-secondary { background-color: #6c757d; margin-top: 10px; }
+        .btn-sm { padding: 8px 12px; font-size: 14px; width: auto; display: inline-block; margin-right: 5px; margin-top: 10px; }
+        
+        .loading, .error-msg { text-align: center; padding: 15px; color: #666; }
+        .error-msg { color: #dc3545; background: #f8d7da; border-radius: 5px; }
+        
+        .manual-entry { display: none; background: #fff3cd; padding: 15px; border-radius: 5px; margin-top: 10px; border: 1px solid #ffeaa7; }
+        
+        #resumenReporte { display: none; border: 2px solid #28a745; padding: 25px; margin-top: 20px; border-radius: 8px; background-color: #e9f7ef; }
+        .folio-destacado { color: #d32f2f; font-weight: 900; font-size: 1.5em; letter-spacing: 1px; background: #fff; padding: 5px 15px; border-radius: 4px; border: 2px dashed #d32f2f; display: inline-block; margin: 10px 0; }
+        
+        .btn-whatsapp { background-color: #25D366; color: white; text-decoration: none; padding: 10px 15px; border-radius: 5px; display: inline-block; margin-top: 5px; font-size: 14px; font-weight: bold; text-align: center; width: 100%; box-sizing: border-box; }
+        .btn-whatsapp:hover { background-color: #128C7E; }
+        .wa-notice { font-size: 0.85em; color: #666; background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px; border-left: 3px solid #ffc107; }
+        .aviso-sin-telefono { color: #dc3545; font-weight: bold; background: #f8d7da; padding: 10px; border-radius: 5px; margin-top: 10px; text-align: center; display: none; }
+
+        @media print {
+            .no-print, .btn, .header a, .aviso-sin-telefono { display: none !important; }
+            #resumenReporte { display: block !important; border: 1px solid #000; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="header-left">
-                <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela Secundaria Profesor Honorato Tlaseca Barrera" class="logo">
-                <div class="header-content">
-                    <h1>Reporte de Incidencias</h1>
-                    <p>Escuela Secundaria Profesor Honorato Tlaseca Barrera</p>
-                    <p>Sistema de Registro de Incidentes Escolares</p>
-                </div>
-            </div>
-            <a href="https://faustinohtb-hash.github.io/honorato/Incidencias_escolares.html" class="btn btn-home">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-                    <path d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z"/>
-                    <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 0-.5.5V6h-2.5a.5.5 0 0 0 0 1H6v2.5a.5.5 0 0 0 1 0V7h2.5a.5.5 0 0 0 0-1H7V3.5a.5.5 0 0 0-.5-.5z"/>
-                </svg>
-                Regresar
-            </a>
+            <img src="https://honoratotb.synology.me/imagenes/logo_escuela.png" alt="Logo Escuela">
+            <h2>Reporte de Incidencias</h2>
+            <p><strong>Escuela Secundaria Profesor Honorato Tlaseca Barrera</strong></p>
+            <p>Sistema de Registro de Incidentes Escolares</p>
+            <a href="https://honoratotb.synology.me/Inicio.html" class="no-print">← Menú Principal</a>
         </div>
-        <form class="form-content" id="incidenceForm">
-            <div class="form-group">
-                <label for="date">Fecha del Incidente</label>
-                <input type="date" id="date" name="date" required>
+
+        <form id="formIncidencia">
+            <div class="form-section">
+                <h3>📅 Fecha del Incidente</h3>
+                <input type="date" id="fechaIncidente" required>
             </div>
-            <div class="form-group">
-                <label for="student">Alumno(a) Involucrado(a)</label>
-                <select id="student" name="student" required aria-describedby="studentError">
-                    <option value="">Cargando datos de alumnos...</option>
+
+            <div class="form-section">
+                <h3>👨‍🎓 Alumno(a) Involucrado(a)</h3>
+                <div id="alumnoLoading" class="loading">Cargando datos de alumnos...</div>
+                <div id="alumnoError" class="error-msg" style="display: none;">
+                    No se pudieron cargar los datos de alumnos.
+                    <br>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="cargarAlumnos()">Reintentar</button>
+                    <button type="button" class="btn btn-sm" style="background-color: #ffc107; color: #000;" onclick="mostrarEntradaManual('alumno')">Ingresar manualmente</button>
+                </div>
+                
+                <div id="alumnoSelectContainer" style="display: none;">
+                    <label for="buscarAlumno">🔍 Buscar Alumno</label>
+                    <input type="text" id="buscarAlumno" list="listaAlumnos" placeholder="Escriba el nombre o grado-grupo..." autocomplete="off" oninput="buscarYRellenarAlumno()">
+                    <datalist id="listaAlumnos"></datalist>
+                    <p class="search-hint">💡 Escriba al menos 2 letras para ver coincidencias.</p>
+                </div>
+
+                <div id="manualAlumno" class="manual-entry">
+                    <h4>Datos del alumno (Manual)</h4>
+                    <label>Nombre completo</label><input type="text" id="manualNombreAlumno">
+                    <label>Matrícula</label><input type="text" id="manualMatricula">
+                    <label>Matrícula ID (Completa)</label><input type="text" id="manualMatriculaCompleta">
+                    <div style="display: flex; gap: 10px;">
+                        <div style="flex: 1;"><label>Grado</label><select id="manualGrado"><option value="1">1°</option><option value="2">2°</option><option value="3">3°</option></select></div>
+                        <div style="flex: 1;"><label>Grupo</label><select id="manualGrupo"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></div>
+                        <div style="flex: 1;"><label>Lista (Butaca)</label><input type="number" id="manualNumeroLista"></div>
+                    </div>
+                    <label>Nombre del tutor</label><input type="text" id="manualNombreTutor">
+                    <label>Celular del tutor (10 dígitos)</label><input type="tel" id="manualCelularTutor" placeholder="Ej. 5512345678">
+                    <button type="button" class="btn" style="background-color: #28a745;" onclick="guardarDatosManuales('alumno')">Guardar</button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>👨‍🏫 Docente/Personal que Reporta</h3>
+                <div id="docenteLoading" class="loading">Cargando datos de docentes...</div>
+                <div id="docenteError" class="error-msg" style="display: none;">
+                    No se pudieron cargar los datos de docentes.
+                    <br>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="cargarDocentes()">Reintentar</button>
+                    <button type="button" class="btn btn-sm" style="background-color: #ffc107; color: #000;" onclick="mostrarEntradaManual('docente')">Ingresar manualmente</button>
+                </div>
+
+                <div id="docenteSelectContainer" style="display: none;">
+                    <label for="buscarDocente">🔍 Buscar Docente</label>
+                    <input type="text" id="buscarDocente" list="listaDocentes" placeholder="Escriba el nombre..." autocomplete="off" oninput="buscarYRellenarDocente()">
+                    <datalist id="listaDocentes"></datalist>
+                </div>
+
+                <div id="manualDocente" class="manual-entry">
+                    <h4>Datos del docente (Manual)</h4>
+                    <label>Nombre completo</label><input type="text" id="manualNombreDocente">
+                    <label>Rol/Cargo</label><input type="text" id="manualRolDocente">
+                    <button type="button" class="btn" style="background-color: #28a745;" onclick="guardarDatosManuales('docente')">Guardar</button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>⚠️ Detalles de la Incidencia</h3>
+                <label>Tipo de Indisciplina</label>
+                <select id="tipoIndisciplina" required>
+                    <option value="">Seleccione...</option>
+                    <option value="1. Conductas de indisciplina leves">1. Conductas de indisciplina leves</option>
+                    <option value="2. Conductas que perturban el orden">2. Conductas que perturban el orden</option>
+                    <option value="3. Conductas altamente perturbadoras del orden">3. Conductas altamente perturbadoras del orden</option>
+                    <option value="4. Conductas que provocan peligro">4. Conductas que provocan peligro</option>
+                    <option value="5. Conductas discriminatorias">5. Conductas discriminatorias</option>
+                    <option value="6. Conductas violentas">6. Conductas violentas</option>
+                    <option value="7. Conductas agresivas de índole sexual">7. Conductas agresivas de índole sexual</option>
+                    <option value="8. Conductas de riesgo por posesión, consumo o distribución de sustancias tóxico adictivas">8. Conductas de riesgo por sustancias</option>
+                    <option value="9. Conductas de riesgo por posesión y/o uso de armas blancas">9. Posesión/uso de armas blancas</option>
+                    <option value="10. Conductas de riesgo por posesión y/o uso de armas de fuego y explosivos">10. Posesión/uso de armas de fuego/explosivos</option>
                 </select>
-                <div id="retryContainer" class="error-container hidden" role="alert" aria-live="assertive">
-                    <p>No se pudieron cargar los datos de alumnos. Por favor, intente nuevamente.</p>
-                    <button type="button" id="retryBtn" class="btn btn-retry">Reintentar</button>
-                    <button type="button" id="corsBtn" class="btn btn-cors">Ver solución de problemas</button>
-                    <button type="button" id="manualBtn" class="btn btn-manual">Ingresar datos manualmente</button>
-                </div>
-                <div id="corsContainer" class="cors-info hidden">
-                    <h3>Solución de problemas - Error de conexión</h3>
-                    <p>El error "Load failed" suele estar relacionado con problemas de CORS (Cross-Origin Resource Sharing) o con la configuración del script de Google.</p>
-                    <div class="highlight">
-                        <strong>Solución recomendada:</strong> Utilizar un proxy CORS para evitar problemas de conexión. Hemos implementado esta solución en el botón "Usar proxy CORS".
-                    </div>
-                    <h4>Alternativas:</h4>
-                    <ol>
-                        <li><strong>Usar proxy CORS:</strong> Esta opción redirige la solicitud a través de un servicio que evita los problemas de CORS.</li>
-                        <li><strong>Configurar el script de Google:</strong>
-                            <ul>
-                                <li>Asegúrate de que el script de Google Apps Script esté publicado como "Aplicación web"</li>
-                                <li>En la configuración de publicación, selecciona "Ejecutar como: Yo"</li>
-                                <li>Asegúrate de que la opción "Quién tiene acceso" esté configurada como "Cualquier persona, incluso anónima"</li>
-                            </ul>
-                        </li>
-                        <li><strong>Ingresar datos manualmente:</strong> Si ninguna de las opciones anteriores funciona, puedes ingresar los datos del alumno manualmente.</li>
-                    </ol>
-                    <p>URL del script: <code>https://script.google.com/macros/s/AKfycbwBl2pjwTOHVIfjmGERMBwE9_FlfQc3OF5KUYUjv8XAIF1o3LtYgj2TVb1a6fZg1eZ4/exec</code></p>
-                    <div style="margin-top: 15px;">
-                        <button type="button" id="proxyBtn" class="btn btn-cors">Usar proxy CORS</button>
-                        <button type="button" id="backBtn" class="btn btn-manual">Volver</button>
-                    </div>
-                </div>
-                <div id="manualEntryContainer" class="manual-entry hidden">
-                    <h3>Ingresar datos del alumno manualmente</h3>
-                    <div class="form-group">
-                        <label for="manualNombre">Nombre completo del alumno</label>
-                        <input type="text" id="manualNombre" placeholder="Nombre completo del alumno" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualMatricula">Matrícula</label>
-                        <input type="text" id="manualMatricula" placeholder="Matrícula del alumno" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualMatriculaCompleta">Matrícula Completa</label>
-                        <input type="text" id="manualMatriculaCompleta" placeholder="Matrícula completa del alumno" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualGrado">Grado</label>
-                        <input type="text" id="manualGrado" placeholder="Grado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualGrupo">Grupo</label>
-                        <input type="text" id="manualGrupo" placeholder="Grupo" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualNumero">Número de Lista</label>
-                        <input type="text" id="manualNumero" placeholder="Número de lista" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualTutor">Nombre del tutor</label>
-                        <input type="text" id="manualTutor" placeholder="Nombre del tutor" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualCelular">Número de celular del tutor</label>
-                        <input type="tel" id="manualCelular" placeholder="Número de celular con código de país" required>
-                    </div>
-                    <button type="button" id="saveManualBtn" class="btn btn-manual">Guardar datos</button>
-                </div>
-                <div id="debugContainer" class="debug-info hidden"></div>
-                <div id="studentError" class="error-message hidden"></div>
-            </div>
-            <div class="form-group">
-                <label for="teacher">Docente/Personal que Reporta</label>
-                <select id="teacher" name="teacher" required aria-describedby="teacherError">
-                    <option value="">Cargando datos de docentes...</option>
-                </select>
-                <div id="teacherRetryContainer" class="error-container hidden" role="alert" aria-live="assertive">
-                    <p>No se pudieron cargar los datos de docentes. Por favor, intente nuevamente.</p>
-                    <button type="button" id="teacherRetryBtn" class="btn btn-retry">Reintentar</button>
-                    <button type="button" id="teacherCorsBtn" class="btn btn-cors">Ver solución de problemas</button>
-                    <button type="button" id="teacherManualBtn" class="btn btn-manual">Ingresar datos manualmente</button>
-                </div>
-                <div id="teacherCorsContainer" class="cors-info hidden">
-                    <h3>Solución de problemas - Error de conexión</h3>
-                    <p>El error "Load failed" suele estar relacionado con problemas de CORS (Cross-Origin Resource Sharing) o con la configuración del script de Google.</p>
-                    <div class="highlight">
-                        <strong>Solución recomendada:</strong> Utilizar un proxy CORS para evitar problemas de conexión. Hemos implementado esta solución en el botón "Usar proxy CORS".
-                    </div>
-                    <h4>Alternativas:</h4>
-                    <ol>
-                        <li><strong>Usar proxy CORS:</strong> Esta opción redirige la solicitud a través de un servicio que evita los problemas de CORS.</li>
-                        <li><strong>Configurar el script de Google:</strong>
-                            <ul>
-                                <li>Asegúrate de que el script de Google Apps Script esté publicado como "Aplicación web"</li>
-                                <li>En la configuración de publicación, selecciona "Ejecutar como: Yo"</li>
-                                <li>Asegúrate de que la opción "Quién tiene acceso" esté configurada como "Cualquier persona, incluso anónima"</li>
-                            </ul>
-                        </li>
-                        <li><strong>Ingresar datos manualmente:</strong> Si ninguna de las opciones anteriores funciona, puedes ingresar los datos del docente manualmente.</li>
-                    </ol>
-                    <p>URL del script: <code>https://script.google.com/macros/s/AKfycbzPUWFLXhFAoC9w_Yqo5shO9TRyquOYYvzg8ovKB1mdFNh4dUhK7MKLOs1ITupLxb-hXQ/exec</code></p>
-                    <div style="margin-top: 15px;">
-                        <button type="button" id="teacherProxyBtn" class="btn btn-cors">Usar proxy CORS</button>
-                        <button type="button" id="teacherBackBtn" class="btn btn-manual">Volver</button>
-                    </div>
-                </div>
-                <div id="teacherManualEntryContainer" class="manual-entry hidden">
-                    <h3>Ingresar datos del docente manualmente</h3>
-                    <div class="form-group">
-                        <label for="manualTeacherName">Nombre completo del docente/personal</label>
-                        <input type="text" id="manualTeacherName" placeholder="Nombre completo del docente o personal" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualTeacherRole">Rol/Cargo</label>
-                        <input type="text" id="manualTeacherRole" placeholder="Rol o cargo (ej. Docente, Director, etc.)" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualTeacherDepartment">Departamento/Área</label>
-                        <input type="text" id="manualTeacherDepartment" placeholder="Departamento o área de trabajo" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="manualTeacherPhone">Teléfono del docente/personal</label>
-                        <input type="tel" id="manualTeacherPhone" placeholder="Número de teléfono con código de país" required>
-                    </div>
-                    <button type="button" id="saveTeacherManualBtn" class="btn btn-manual">Guardar datos</button>
-                </div>
-                <div id="teacherDebugContainer" class="debug-info hidden"></div>
-                <div id="teacherError" class="error-message hidden"></div>
-            </div>
-            <div class="form-group">
-                <label for="indiscipline">Tipo de Indisciplina</label>
-                <select id="indiscipline" name="indiscipline" required>
-                    <option value="">Seleccione un tipo de indisciplina</option>
-                    <option value="leves">1. Conductas de indisciplina leves</option>
-                    <option value="perturban_orden">2. Conductas que perturban el orden</option>
-                    <option value="altamente_perturbadoras">3. Conductas altamente perturbadoras del orden</option>
-                    <option value="provocan_peligro">4. Conductas que provocan peligro</option>
-                    <option value="discriminatorias">5. Conductas discriminatorias</option>
-                    <option value="violentas">6. Conductas violentas</option>
-                    <option value="agresivas_sexuales">7. Conductas agresivas de índole sexual</option>
-                    <option value="sustancias_toxicas">8. Conductas de riesgo por posesión, consumo o distribución de sustancias tóxico adictivas</option>
-                    <option value="armas_blancas">9. Conductas de riesgo por posesión y/o uso de armas blancas</option>
-                    <option value="armas_fuego">10. Conductas de riesgo por posesión y/o uso de armas de fuego y explosivos</option>
-                </select>
-            </div>
-            <div class="form-group">
+
                 <label>Nivel de Gravedad</label>
-                <div id="severityDisplay" class="severity-display">
-                    Seleccione un tipo de indisciplina
-                </div>
-                <input type="hidden" id="severity" name="severity">
-            </div>
-            <div id="conductasContainer" class="form-group hidden">
-                <label for="conducta">Conducta Específica</label>
-                <select id="conducta" name="conducta" required>
+                <select id="nivelGravedad" required>
+                    <option value="">Seleccione primero un tipo</option>
+                    <option value="Leve">Leve</option>
+                    <option value="Moderado">Moderado</option>
+                    <option value="Grave">Grave</option>
                 </select>
+
+                <label>Conducta Específica</label>
+                <select id="conductaEspecifica" required>
+                    <option value="">Seleccione primero un tipo</option>
+                </select>
+
+                <label>Descripción de la Falta</label>
+                <textarea id="descripcionFalta" rows="4" required placeholder="Describa los hechos..."></textarea>
+                <input type="hidden" id="observaciones" value="Reporte generado desde el sistema web">
+                <input type="hidden" id="compromiso" value="">
             </div>
-            <div class="form-group">
-                <label for="description">Descripción de la Falta</label>
-                <textarea id="description" name="description" placeholder="Describa detalladamente lo ocurrido, circunstancias, personas involucradas..." required></textarea>
-            </div>
-            <div class="info-panel">
-                <h3>Envío de Notificación por WhatsApp</h3>
-                <div class="copy-notice">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#e65100" viewBox="0 0 16 16">
-                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 1.96-.42h.285l-.088.416z"/>
-                        <path d="M8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                    </svg>
-                    <div class="copy-notice-text">
-                        <strong>Se enviará una copia del reporte a los siguientes destinatarios:</strong>
-                        <span>Al generar el reporte se habilitarán los botones para enviar por WhatsApp una copia al tutor del alumno, al docente que realiza el reporte y a la Directora Laura Cholula Rivera.</span>
-                    </div>
-                </div>
-                <div class="destinatarios-lista">
-                    <ul>
-                        <li>
-                            <svg class="icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                            </svg>
-                            Tutor del alumno
-                        </li>
-                        <li>
-                            <svg class="icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                            </svg>
-                            Docente/Personal que realiza el reporte
-                        </li>
-                        <li>
-                            <svg class="icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                            </svg>
-                            Directora Laura Cholula Rivera
-                        </li>
-                    </ul>
-                </div>
-                <div class="popup-warning">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#c62828" viewBox="0 0 16 16">
-                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                    </svg>
-                    <div class="popup-warning-text">
-                        <strong>Importante: Permitir ventanas emergentes</strong>
-                        <span>Si su navegador bloquea las ventanas de WhatsApp, permita las ventanas emergentes para este sitio. En la barra de dirección busque el ícono de "bloqueado" y seleccione "Permitir siempre".</span>
-                    </div>
+
+            <div class="form-section no-print">
+                <h3>📱 Envío de Notificación por WhatsApp</h3>
+                <p>Se habilitará el botón para enviar el reporte <strong>exclusivamente al tutor del alumno</strong>.</p>
+                <div class="wa-notice">
+                    <strong>Importante:</strong> Permita las ventanas emergentes (pop-ups) en su navegador para WhatsApp.
                 </div>
             </div>
-            <div class="submit-container">
-                <button type="button" class="btn btn-submit" id="submitBtn">Generar Reporte</button>
-                <div class="submit-loading" id="submitLoading">
-                    <div class="spinner"></div>
-                    <span>Enviando reporte...</span>
-                </div>
-            </div>
+
+            <button type="submit" id="btnGenerarReporte" class="btn no-print">Generar Reporte</button>
         </form>
-        <div class="report-summary" id="reportSummary">
-            <div class="summary-header">
-                <h3>¡Reporte Enviado Exitosamente!</h3>
-                <p>El reporte ha sido registrado en el sistema correctamente.</p>
+
+        <div id="resumenReporte">
+            <h3>✅ ¡Reporte Enviado Exitosamente!</h3>
+            <p style="text-align: center;">Registrado en el sistema correctamente.</p>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="margin: 0; font-size: 1.1em; color: #333;">Folio Asignado:</p>
+                <span id="resumenFolio" class="folio-destacado">---</span>
             </div>
-            <h2>Resumen del Reporte</h2>
-<li><strong>Folio Asignado:</strong> <span id="resumenFolio" style="color: #d32f2f; font-weight: bold; font-size: 1.3em;">---</span></li>
-            <div class="summary-content">
-                <div class="summary-item">
-                    <label>Fecha del Incidente</label>
-                    <div class="value" id="summaryDate"></div>
-                </div>
-                <div class="summary-item">
-                    <label>Alumno Involucrado</label>
-                    <div class="value" id="summaryStudent"></div>
-                </div>
-                <div class="summary-item">
-                    <label>Matrícula</label>
-                    <div class="value" id="summaryMatricula"></div>
-                </div>
-                <div class="summary-item">
-                    <label>Matrícula ID</label>
-                    <div class="value" id="summaryMatriculaId"></div>
-                </div>
-                <div class="summary-item">
-                    <label>Ciclo Escolar</label>
-                    <div class="value" id="summaryCycle">2025-2026</div>
-                </div>
-                <div class="summary-item">
-                    <label>Grado y Grupo</label>
-                    <div class="value" id="summaryGradeGroup"></div>
-                </div>
-                <div class="summary-item">
-                    <label>Docente/Personal que Reporta</label>
-                    <div class="value" id="summaryTeacher"></div>
-                </div>
-                <div class="summary-item">
-                    <label>Tipo de Indisciplina</label>
-                    <div class="value" id="summaryIndiscipline"></div>
-                </div>
-                <div class="summary-item full-width">
-                    <label>Conducta Específica</label>
-                    <div class="value" id="summaryConducta"></div>
-                </div>
-                <div class="summary-item full-width">
-                    <label>Descripción de la Falta</label>
-                    <div class="value" id="summaryDescription"></div>
-                </div>
+
+            <h4 style="border-bottom: 1px solid #28a745; padding-bottom: 5px;">Resumen</h4>
+            <ul style="line-height: 1.8;">
+                <li><strong>Fecha:</strong> <span id="resumenFecha"></span></li>
+                <li><strong>Alumno:</strong> <span id="resumenAlumno"></span></li>
+                <li><strong>Matrícula ID:</strong> <span id="resumenMatriculaId"></span></li>
+                <li><strong>Ciclo Escolar:</strong> 2026-2027</li>
+                <li><strong>Grado/Grupo:</strong> <span id="resumenGradoGrupo"></span></li>
+                <li><strong>Docente:</strong> <span id="resumenDocente"></span></li>
+                <li><strong>Tipo:</strong> <span id="resumenTipo"></span></li>
+                <li><strong>Conducta:</strong> <span id="resumenConducta"></span></li>
+                <li><strong>Gravedad:</strong> <span id="resumenGravedad"></span></li>
+                <li><strong>Descripción:</strong> <span id="resumenDescripcion"></span></li>
+            </ul>
+
+            <div class="whatsapp-section no-print" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #c3e6cb;">
+                <h4>📱 Enviar al Tutor</h4>
+                <a href="#" id="btnWaTutor" target="_blank" class="btn-whatsapp">Enviar WhatsApp al Tutor del Alumno</a>
+                <p id="avisoSinTelefono" class="aviso-sin-telefono">
+                    ⚠️ No se cuenta con el número de celular del tutor en la base de datos. No es posible enviar el mensaje de WhatsApp.
+                </p>
             </div>
-            <div class="summary-actions">
-                <button type="button" class="btn btn-close" id="closeSummaryBtn">Cerrar Resumen</button>
-                <button type="button" class="btn btn-print" id="printSummaryBtn">Imprimir Resumen</button>
-            </div>
+
+            <!-- ✅ BOTÓN DE IMPRIMIR ELIMINADO, SOLO QUEDA CERRAR -->
+            <button onclick="cerrarResumen()" class="btn btn-secondary no-print">❌ Cerrar y Limpiar Formulario</button>
         </div>
-        <button id="sendTutorBtn" class="btn btn-tutor">Enviar WhatsApp al Tutor del Alumno</button>
-        <button id="sendDocenteBtn" class="btn btn-docente">Enviar Copia por WhatsApp al Docente que Reporta</button>
-        <button id="sendDirectoraBtn" class="btn btn-directora">Enviar Copia por WhatsApp a la Directora Laura Cholula Rivera</button>
-        <div class="form-footer">
-            <p>© 2025-2026 Sistema de Gestión Escolar | Escuela Secundaria Profesor Honorato Tlaseca Barrera | Todos los derechos reservados</p>
+
+        <div class="footer" style="text-align: center; margin-top: 30px; font-size: 0.85em; color: #777; border-top: 1px solid #ddd; padding-top: 15px;">
+            © 2026-2027 Escuela Secundaria Profesor Honorato Tlaseca Barrera
         </div>
     </div>
-    <div id="notification" class="notification" role="alert" aria-live="assertive">
-        <span id="notificationMessage"></span>
-        <span class="close-btn" onclick="closeNotification()" aria-label="Cerrar notificación">&times;</span>
-    </div>
+
     <script>
-        (function() {
-            console.log = function() {};
-            console.error = function() {};
-            console.warn = function() {};
-            console.info = function() {};
-            console.debug = function() {};
-            
-            window.addEventListener('keydown', function(e) {
-                if (e.keyCode === 123 || 
-                    (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
-                    (e.ctrlKey && e.shiftKey && e.keyCode === 74) || 
-                    (e.ctrlKey && e.shiftKey && e.keyCode === 67)) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
-        })();
-        
-        var DIRECTORA_PHONE = '522751025480';
-        
-        document.getElementById('date').valueAsDate = new Date();
-        
-        function convertirFecha(fechaOriginal) {
-            if (!fechaOriginal || !fechaOriginal.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                return null;
-            }
-            var partes = fechaOriginal.split('-');
-            return partes[2] + '/' + partes[1] + '/' + partes[0];
-        }
-        
-        var conductasPorNivel = {
-            "1": [
-                { value: "1.1", text: "1. Inasistencia injustificada a la escuela." },
-                { value: "1.2", text: "2. No entrar a una clase estando en en la escuela." },
-                { value: "1.3", text: "3. Llegar tarde a la escuela o a las clases sin justificación" },
-                { value: "1.4", text: "4. Utilizar dentro de la escuela sin autorización objetos y equipos o materiales prohibidos (por ejemplo, teléfono celular, u otro tipo de dispositivo electrónicos para la comunicación y el entretenimiento)." },
-                { value: "1.5", text: "5. Permanecer en áreas que no corresponda a sus actividades escolares dentro del plantel." },
-                { value: "1.6", text: "6. No portar la credencial escolar." },
-                { value: "1.7", text: "7. Usar las computadoras, máquinas de fax, teléfonos y otros equipos o dispositivos electrónicos de la escuela sin la correspondiente autorización." }
-            ],
-            "2": [
-                { value: "2.8", text: "8. Utilizar cerillo y/o encendedores." },
-                { value: "2.9", text: "9. Apostar y/o participar en juegos de azar." },
-                { value: "2.10", text: "10. Mentir, dar información falsa o engañar al personal escolar." },
-                { value: "2.11", text: "11. Hacer uso de las pertenencias de otros sin autorización." },
-                { value: "2.12", text: "12. Coportarse de una manera que perturbe el proceso educativo (por ejemplo, hacer ruido excesivo, gritar, aventar objetos en el aula, la biblioteca o en los pasillos)." }
-            ],
-            "3": [
-                { value: "3.13", text: "13. Salir de la clase sin permiso del docente frete a grupo, o de la escuela sin la autorización de alguna autoridad educativa." },
-                { value: "3.14", text: "14. Ingresar o intentar ingresar a clase sin permiso del docente frente a grupo o a la escuela sin la autorización de alguna autoridad educativa, fuera de los horarios establecidos." },
-                { value: "3.15", text: "15. Asistir a la escuela con personas no autorizadas." },
-                { value: "3.16", text: "16. Dañar, cambiar o modificar un registro o documento escolar aplicacndo cualquier método, incluyendo - en forma no exhaustiva- el acceso a las computadoras u otros medios electrónicos." },
-                { value: "3.17", text: "17. Apropiarse o sustraer intencionalmente objetos que pertenecen a otra persona sin autorización." },
-                { value: "3.18", text: "18. Violar el reglamento sobre el uso de internet (por ejemplo, uso de su sistema para fines no educativos, violaciones de seguridad o privacidad)." },
-                { value: "3.19", text: "19. Incurrir en conductas de deshonestidad académica, las cuales incluyen, en forma no limitativa, lo siguiente: A. Engañar (por ejemplo, copiar del examen de otro estudiante, utilizar durante un examen materila no autorizado por la persona que está aplicando el examen, colaborar sin autorización con otro estudiante durante el examen, utilizar, comprar, ofrecer para la venta, hurtar, transportar u ofrecer en forma intencional, ya sea total o parcialmente, los contenidos de un examen que aún no se haya aplicado, tomar el lugar de otro estudiante, sobornar a otra persona para obtener un beneficio o ventaja). B. Plagiar (por ejemplo, apropiarse del trabajo de otro y utilizarlo para su propio crédito sin realizar la cita correspondiente, copiar trabajos escritos de internet u otra fuente). C. Coludirse, (por ejemplo, incurrir en colaboración fraudulenta con otra persona para la preparación de trabajos escritos que otorgan créditos)." }
-            ],
-            "4": [
-                { value: "4.20", text: "20. Activar injustificadamente las alarmas (incendios o sismos)." },
-                { value: "4.21", text: "21. Realizar una amenaza de bomba." },
-                { value: "4.22", text: "22. Provocar la combustión, detonación de objetos o el riesgo de incendio." },
-                { value: "4.23", text: "23. Realizar actos de vandalismo o daño intencional a los bienes de la escuela o bienes pertenecientes al personal, estudiantes o terceros." }
-            ],
-            "5": [
-                { value: "5.24", text: "24. Emplear insultos relacionados con la apariencia, raza, etnia, nacionalidad o ciudadanía, religión, sexo, identidad, expresión u orientación sexual, discapacidad o características físicas." },
-                { value: "5.25", text: "25. Realizar actos de intimidación como amenazar o desafiar a lagún miembro de la comunidad escolar, por consideraciones vinculadas a la apariencia, raza, color, etnia, nacionalidad, religión,sexo, identidad, expresión u orientación sexual o discapacidad o características físicas diferentes." },
-                { value: "5.26", text: "26. Tratar de infligir o causar daños físicos emocionales y psicológicos a un estudiante o miembro del personal por motivos referidos a la apariencia, raza, color, etnia, nacionalidad, religión,sexo, identidad sexual, expresión sexual, orientación sexual o discapacidad o características físicas diferentes." }
-            ],
-            "6": [
-                { value: "6.27", text: "27. Utilizar expresiones verbales groseras o irrespetuosas, lenguaje o gestos irreverentes, obsenos, vulgares o insultantes, dirigidos a alguna persona de la comunidad escolar." },
-                { value: "6.28", text: "28. Empujar, dar empujones o demostrar conductas de agresión física o similar, como juegos bruscos o disputas menores, arrojar objetos o escupir a otras personas." },
-                { value: "6.29", text: "29. Colocar o distribuir escritos, gráficos y/o videos, materiales que contengan calcomanías, amenazas, violencia, lesiones o daño, prejuicios o que describan acciones violentas u obscenas, imágenes vulgares, (incluye colocar dicho material en internet en redes sociales) en contra de algún integrante de la comunidad escolar." },
-                { value: "6.30", text: "30. Participar en un altercado, incurrir en conductas de agresión física y/o juegos o bromas, que impliquen un riego sustantivo de provocar o de hecho provocar lesiones o heridas leves." },
-                { value: "6.31", text: "31. Participar en actos de coersión o amenazas que impliquen violencia, daños o perjuicios a algún miembro de la comunidad escolar." },
-                { value: "6.32", text: "32. Planear, participar y realizar u ordenar actos de acoso escolar o bullyng, incluyendo el bullyng cibernético (por ejemplo: amenazar, acechar, perseguir, coercitivamente, obligar a un compañero a hacer algo; incurrir en acciones físicas o verbales que amenacen a otros con lesionarios. Burlarse y/o intimidar incluyendo el uso de apodos ofensivos o calumnias que involucren consideraciones de apariencia, raza, etnia, color, nacionalidad, estatus migratorio, religión, sexo, identidad de género, orientación sexual o discapacidad)." },
-                { value: "6.33", text: "33. Crear riesgo de lesiones ya sea mediante conductas imprudentes o la utilización de objetos que aparentemente podrían causar un daño físico (por ejemplo, encendedores, hebillas de cinturón, bóxer, fajillas, cinturones, navajas, entre otros)." },
-                { value: "6.34", text: "34. Incitar o causar disturbios." },
-                { value: "6.35", text: "35. Utilizar la fuerza o amenazar utilizando la fuerza para apropiarse de los bienes de otros." },
-                { value: "6.36", text: "36. Utilizar la fuerza contra algún miembro de la comundad escolar o intentar infringirles serios daños físicos, emocionales o psicológicos." },
-                { value: "6.37", text: "37. Participar en un incidente de violencia grupal." },
-                { value: "6.38", text: "38. Participar en riñas dentro y fuera del plantel." },
-                { value: "6.39", text: "39. Causar una lesión utilizando objetos que aparentemente podrían causar un daño físico (por ejemplo encendedores, hebillas de cinturón, bóxer, fajillas, cinturones, navajas)." }
-            ],
-            "7": [
-                { value: "7.40", text: "40. Emitir comentario, insinuaciones o proposiciones verbales o no verbales con alguna sugerencia sexual, o incurrir en conducta física de naturaleza sexual inapropiado e indeseado (por ejemplo, tocar, acariciar o pellizcar, o presentar comportamientos públicos lascivos, obscenos o indecentes o enviar imágenes o menssages sexualmente sugerentes o explícitos)." },
-                { value: "7.41", text: "41. Planear y realizar actos de agresión sexual física de manera individual o en grupo, u obligar o forzar a otros a participar de una actividad sexual." }
-            ],
-            "8": [
-                { value: "8.42", text: "42. Posesión de sustancias tóxico-adictivas ( cigarros, bebidas con contenido etílico)." },
-                { value: "8.43", text: "43. Consumo de sustancias tóxico-adictivas (cigarros, bebidas con contenido etílico)." },
-                { value: "8.44", text: "44. Distribución de sustancias tóxico-adictivas (cigarros, bebidas con contenido etílico)." },
-                { value: "8.45", text: "45. Posesión de sustancias tóxico-adictivas (inhalables, marihuana, cocaína, crack, anfetaminas, metanfetaminas, heroína, éxtasis, etc.)." },
-                { value: "8.46", text: "46. Consumo de sustancias tóxico-adictivas (inhalables, marihuana, cocaína, crack, anfetaminas, metanfetaminas, heroína, éxtasis, etc.)." },
-                { value: "8.47", text: "47. Distribución de sustancias tóxico-adictivas (inhalables, marihuana, cocaína, crack, anfetaminas, metanfetaminas, heroína, éxtasis, etc.)." }
-            ],
-            "9": [
-                { value: "9.48", text: "48. Posesión de armas blancas (navajas, puñales, dagas, cuchillos, etc.)." },
-                { value: "9.49", text: "49. Uso de armas blancas (navajas, puñales, dagas, cuchillos, etc.)." }
-            ],
-            "10": [
-                { value: "10.50", text: "50. Posesión de armas de fuego y explosivos." },
-                { value: "10.51", text: "51. Uso de armas de fuego y explosivos." }
-            ]
+        const SCRIPT_ALUMNOS = "https://script.google.com/macros/s/AKfycbyQ4XfTgp-qhfi_1BSUW_c6JmXDoAmr9W0y915QT977BhN6ZzU5IL7gxsDLriE8Egbv/exec";
+        const SCRIPT_DOCENTES = "https://script.google.com/macros/s/AKfycbzPUWFLXhFAoC9w_Yqo5shO9TRyquOYYvzg8ovKB1mdFNh4dUhK7MKLOs1ITupLxb-hXQ/exec";
+        const SCRIPT_ENVIO = "https://script.google.com/macros/s/AKfycbwH9z2Snoiu7gBBOzkR5lmvM00ZO2Z0GBJSpHZfa0VMm2rSeiJPZLuW_JySG6eCrThJ/exec";
+
+        let datosAlumnos = [];
+        let datosDocentes = [];
+
+        const conductasPorTipo = {
+            "1. Conductas de indisciplina leves": { gravedad: "Leve", conductas: ["Interrumpir constantemente", "No portar uniforme completo", "No traer materiales", "Masticar chicle", "Uso no autorizado de electrónicos"] },
+            "2. Conductas que perturban el orden": { gravedad: "Moderado", conductas: ["Gritar o hacer ruidos molestos", "Salir del salón sin permiso", "Faltar al respeto con palabras", "Desobediencia reiterada"] },
+            "3. Conductas altamente perturbadoras del orden": { gravedad: "Moderado", conductas: ["Provocar desorden colectivo", "Falsificación de documentos", "Daño intencional a mobiliario"] },
+            "4. Conductas que provocan peligro": { gravedad: "Grave", conductas: ["Correr o jugar brusco en escaleras", "Actos que pongan en riesgo la integridad", "Salir de la escuela sin autorización"] },
+            "5. Conductas discriminatorias": { gravedad: "Grave", conductas: ["Burlas o apodos ofensivos", "Exclusión intencional", "Discriminación por género, etnia o religión"] },
+            "6. Conductas violentas": { gravedad: "Grave", conductas: ["Agresión física", "Amenazas verbales o físicas", "Vandalismo grave"] },
+            "7. Conductas agresivas de índole sexual": { gravedad: "Grave", conductas: ["Acoso o comentarios sexuales", "Tocamientos indebidos", "Exhibicionismo"] },
+            "8. Conductas de riesgo por posesión, consumo o distribución de sustancias tóxico adictivas": { gravedad: "Grave", conductas: ["Portar o consumir vapeadores/cigarros", "Portar o consumir alcohol", "Portar o distribuir drogas"] },
+            "9. Conductas de riesgo por posesión y/o uso de armas blancas": { gravedad: "Grave", conductas: ["Portar objetos punzocortantes", "Amenazar con armas blancas"] },
+            "10. Conductas de riesgo por posesión y/o uso de armas de fuego y explosivos": { gravedad: "Grave", conductas: ["Portar armas de fuego", "Portar explosivos o artefactos peligrosos"] }
         };
-        
-        var studentsUrl = "https://script.google.com/macros/s/AKfycbwBl2pjwTOHVIfjmGERMBwE9_FlfQc3OF5KUYUjv8XAIF1o3LtYgj2TVb1a6fZg1eZ4/exec";
-        var teachersUrl = "https://script.google.com/macros/s/AKfycbzPUWFLXhFAoC9w_Yqo5shO9TRyquOYYvzg8ovKB1mdFNh4dUhK7MKLOs1ITupLxb-hXQ/exec";
-        var reportUrl = "https://script.google.com/macros/s/AKfycbzcnY7c-UqC7SRXBo1q0_3wVkHC3eoWQGzC7kGIno5fksRtDn3CME8KNoaE59R5366d/exec";
-        
-        function loadStudents() {
-            var studentSelect = document.getElementById('student');
-            var retryContainer = document.getElementById('retryContainer');
-            var corsContainer = document.getElementById('corsContainer');
-            var debugContainer = document.getElementById('debugContainer');
-            var studentError = document.getElementById('studentError');
-            studentSelect.innerHTML = '<option value="">Cargando datos de alumnos...</option>';
-            studentSelect.disabled = true;
-            retryContainer.classList.add('hidden');
-            corsContainer.classList.add('hidden');
-            debugContainer.classList.add('hidden');
-            studentError.classList.add('hidden');
-            fetch(studentsUrl)
-                .then(function(response) {
-                    if (!response.ok) { throw new Error('Error HTTP: ' + response.status); }
-                    return response.json();
-                })
-                .then(function(data) {
-                    studentSelect.innerHTML = '<option value="">Seleccione un alumno</option>';
-                    studentSelect.disabled = false;
-                    if (data && data.length > 0) {
-                        data.forEach(function(student) {
-                            var option = document.createElement('option');
-                            option.value = JSON.stringify(student);
-                            option.textContent = student.nombre + ' - ' + student.grado + ' ' + student.grupo;
-                            studentSelect.appendChild(option);
-                        });
-                    } else {
-                        studentSelect.innerHTML = '<option value="">No se encontraron alumnos</option>';
-                    }
-                })
-                .catch(function(error) {
-                    debugContainer.textContent = 'Error: ' + error.message + '\nURL: ' + studentsUrl + '\nHora: ' + new Date().toLocaleString();
-                    debugContainer.classList.remove('hidden');
-                    studentError.textContent = 'No se pudieron cargar los datos de alumnos. Por favor, intente nuevamente.';
-                    studentError.classList.remove('hidden');
-                    retryContainer.classList.remove('hidden');
-                    studentSelect.innerHTML = '<option value="">Error al cargar datos</option>';
-                    studentSelect.disabled = false;
-                });
-        }
-        
-        function loadTeachers() {
-            var teacherSelect = document.getElementById('teacher');
-            var retryContainer = document.getElementById('teacherRetryContainer');
-            var corsContainer = document.getElementById('teacherCorsContainer');
-            var debugContainer = document.getElementById('teacherDebugContainer');
-            var teacherError = document.getElementById('teacherError');
-            teacherSelect.innerHTML = '<option value="">Cargando datos de docentes...</option>';
-            teacherSelect.disabled = true;
-            retryContainer.classList.add('hidden');
-            corsContainer.classList.add('hidden');
-            debugContainer.classList.add('hidden');
-            teacherError.classList.add('hidden');
-            fetch(teachersUrl)
-                .then(function(response) {
-                    if (!response.ok) { throw new Error('Error HTTP: ' + response.status); }
-                    return response.json();
-                })
-                .then(function(data) {
-                    teacherSelect.innerHTML = '<option value="">Seleccione un docente/personal</option>';
-                    teacherSelect.disabled = false;
-                    if (data && data.length > 0) {
-                        data.forEach(function(teacher) {
-                            var option = document.createElement('option');
-                            option.value = JSON.stringify(teacher);
-                            option.textContent = teacher.nombre;
-                            teacherSelect.appendChild(option);
-                        });
-                    } else {
-                        teacherSelect.innerHTML = '<option value="">No se encontraron docentes</option>';
-                    }
-                })
-                .catch(function(error) {
-                    debugContainer.textContent = 'Error: ' + error.message + '\nURL: ' + teachersUrl + '\nHora: ' + new Date().toLocaleString();
-                    debugContainer.classList.remove('hidden');
-                    teacherError.textContent = 'No se pudieron cargar los datos de docentes. Por favor, intente nuevamente.';
-                    teacherError.classList.remove('hidden');
-                    retryContainer.classList.remove('hidden');
-                    teacherSelect.innerHTML = '<option value="">Error al cargar datos</option>';
-                    teacherSelect.disabled = false;
-                });
-        }
-        
-        function loadStudentsWithProxy() {
-            var studentSelect = document.getElementById('student');
-            var retryContainer = document.getElementById('retryContainer');
-            var corsContainer = document.getElementById('corsContainer');
-            var debugContainer = document.getElementById('debugContainer');
-            var studentError = document.getElementById('studentError');
-            studentSelect.innerHTML = '<option value="">Cargando datos de alumnos (usando proxy)...</option>';
-            studentSelect.disabled = true;
-            retryContainer.classList.add('hidden');
-            corsContainer.classList.add('hidden');
-            debugContainer.classList.add('hidden');
-            studentError.classList.add('hidden');
-            var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            fetch(proxyUrl + studentsUrl)
-                .then(function(response) {
-                    if (!response.ok) { throw new Error('Error HTTP: ' + response.status); }
-                    return response.json();
-                })
-                .then(function(data) {
-                    studentSelect.innerHTML = '<option value="">Seleccione un alumno</option>';
-                    studentSelect.disabled = false;
-                    if (data && data.length > 0) {
-                        data.forEach(function(student) {
-                            var option = document.createElement('option');
-                            option.value = JSON.stringify(student);
-                            option.textContent = student.nombre + ' - ' + student.grado + ' ' + student.grupo;
-                            studentSelect.appendChild(option);
-                        });
-                        showNotification('Datos cargados correctamente usando proxy CORS', 'success');
-                    } else {
-                        studentSelect.innerHTML = '<option value="">No se encontraron alumnos</option>';
-                    }
-                })
-                .catch(function(error) {
-                    debugContainer.textContent = 'Error con proxy: ' + error.message + '\nHora: ' + new Date().toLocaleString();
-                    debugContainer.classList.remove('hidden');
-                    studentError.textContent = 'No se pudieron cargar los datos con proxy. Intente ingresar los datos manualmente.';
-                    studentError.classList.remove('hidden');
-                    retryContainer.classList.remove('hidden');
-                    studentSelect.innerHTML = '<option value="">Error al cargar datos con proxy</option>';
-                    studentSelect.disabled = false;
-                    showNotification('No se pudo cargar los datos ni siquiera con proxy.', 'error');
-                });
-        }
-        
-        function loadTeachersWithProxy() {
-            var teacherSelect = document.getElementById('teacher');
-            var retryContainer = document.getElementById('teacherRetryContainer');
-            var corsContainer = document.getElementById('teacherCorsContainer');
-            var debugContainer = document.getElementById('teacherDebugContainer');
-            var teacherError = document.getElementById('teacherError');
-            teacherSelect.innerHTML = '<option value="">Cargando datos de docentes (usando proxy)...</option>';
-            teacherSelect.disabled = true;
-            retryContainer.classList.add('hidden');
-            corsContainer.classList.add('hidden');
-            debugContainer.classList.add('hidden');
-            teacherError.classList.add('hidden');
-            var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            fetch(proxyUrl + teachersUrl)
-                .then(function(response) {
-                    if (!response.ok) { throw new Error('Error HTTP: ' + response.status); }
-                    return response.json();
-                })
-                .then(function(data) {
-                    teacherSelect.innerHTML = '<option value="">Seleccione un docente/personal</option>';
-                    teacherSelect.disabled = false;
-                    if (data && data.length > 0) {
-                        data.forEach(function(teacher) {
-                            var option = document.createElement('option');
-                            option.value = JSON.stringify(teacher);
-                            option.textContent = teacher.nombre;
-                            teacherSelect.appendChild(option);
-                        });
-                        showNotification('Datos de docentes cargados correctamente usando proxy CORS', 'success');
-                    } else {
-                        teacherSelect.innerHTML = '<option value="">No se encontraron docentes</option>';
-                    }
-                })
-                .catch(function(error) {
-                    debugContainer.textContent = 'Error con proxy: ' + error.message + '\nHora: ' + new Date().toLocaleString();
-                    debugContainer.classList.remove('hidden');
-                    teacherError.textContent = 'No se pudieron cargar los datos de docentes con proxy.';
-                    teacherError.classList.remove('hidden');
-                    retryContainer.classList.remove('hidden');
-                    teacherSelect.innerHTML = '<option value="">Error al cargar datos con proxy</option>';
-                    teacherSelect.disabled = false;
-                    showNotification('No se pudo cargar los datos de docentes ni siquiera con proxy.', 'error');
-                });
-        }
-        
-        function showNotification(message, type) {
-            var notification = document.getElementById('notification');
-            var notificationMessage = document.getElementById('notificationMessage');
-            notificationMessage.textContent = message;
-            notification.className = 'notification';
-            if (type === 'error') notification.classList.add('error');
-            else if (type === 'warning') notification.classList.add('warning');
-            else if (type === 'info') notification.classList.add('info');
-            notification.classList.add('show');
-            setTimeout(function() { notification.classList.remove('show'); }, 5000);
-        }
-        
-        function closeNotification() {
-            document.getElementById('notification').classList.remove('show');
-        }
-        
-        function showReportSummary(data) {
-            document.getElementById('summaryDate').textContent = data.fecha || 'No especificado';
-            document.getElementById('summaryStudent').textContent = data.nombreAlumno || 'No especificado';
-            document.getElementById('summaryMatricula').textContent = data.matricula || 'No especificado';
-            document.getElementById('summaryMatriculaId').textContent = data.matriculacompleta || 'No especificado';
-            document.getElementById('summaryCycle').textContent = '2025-2026';
-            document.getElementById('summaryGradeGroup').textContent = 
-                (data.grado && data.grupo) ? data.grado + ' ' + data.grupo : 'No especificado';
-            document.getElementById('summaryTeacher').textContent = data.docente || 'No especificado';
-            document.getElementById('summaryIndiscipline').textContent = data.indisciplineText || 'No especificado';
-            document.getElementById('summaryConducta').textContent = data.conductaText || 'No especificado';
-            document.getElementById('summaryDescription').textContent = data.observaciones || 'No especificado';
+
+        document.getElementById('tipoIndisciplina').addEventListener('change', function() {
+            const tipo = this.value;
+            const selectConducta = document.getElementById('conductaEspecifica');
+            const selectGravedad = document.getElementById('nivelGravedad');
+            selectConducta.innerHTML = '<option value="">Seleccione...</option>';
             
-            var reportSummary = document.getElementById('reportSummary');
-            reportSummary.style.display = 'block';
-            reportSummary.offsetHeight;
-            setTimeout(function() { reportSummary.scrollIntoView({ behavior: 'smooth' }); }, 100);
-        }
-        
-        function validateForm() {
-            if (!document.getElementById('student').value) { showNotification('Por favor, seleccione un alumno', 'error'); return false; }
-            if (!document.getElementById('teacher').value) { showNotification('Por favor, seleccione un docente/personal', 'error'); return false; }
-            if (!document.getElementById('indiscipline').value) { showNotification('Por favor, seleccione un tipo de indisciplina', 'error'); return false; }
-            if (!document.getElementById('conducta').value) { showNotification('Por favor, seleccione una conducta específica', 'error'); return false; }
-            if (!document.getElementById('description').value.trim()) { showNotification('Por favor, ingrese una descripción de la falta', 'error'); return false; }
-            return true;
-        }
-        
-        function collectFormData() {
-            var data = {};
-            try {
-                var studentData = JSON.parse(document.getElementById('student').value);
-                data.nombreAlumno = studentData.nombre;
-                data.matricula = studentData.matricula || '';
-                data.matriculacompleta = studentData.matriculacompleta || studentData.matriculaCompleta || studentData.matricula_id || studentData.matriculaId || studentData.matriculaID || '';
-                data.ciclo = '2025-2026';
-                data.grado = studentData.grado;
-                data.grupo = studentData.grupo;
-                data.numero = studentData.numero || '';
-                data.tutorName = studentData.tutor;
-                // Se obtiene el teléfono del campo celular_tutor, con fallback a celular
-                data.tutorPhone = studentData.celular_tutor || studentData.celular || '';
-            } catch (e) {
-                data.nombreAlumno = document.getElementById('manualNombre').value;
-                data.matricula = document.getElementById('manualMatricula').value;
-                data.matriculacompleta = document.getElementById('manualMatriculaCompleta').value;
-                data.ciclo = '2025-2026';
-                data.grado = document.getElementById('manualGrado').value;
-                data.grupo = document.getElementById('manualGrupo').value;
-                data.numero = document.getElementById('manualNumero').value;
-                data.tutorName = document.getElementById('manualTutor').value;
-                data.tutorPhone = document.getElementById('manualCelular').value;
+            if (tipo && conductasPorTipo[tipo]) {
+                selectGravedad.value = conductasPorTipo[tipo].gravedad;
+                conductasPorTipo[tipo].conductas.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c; opt.textContent = c;
+                    selectConducta.appendChild(opt);
+                });
+            } else {
+                selectGravedad.value = "";
             }
-            try {
-                var teacherData = JSON.parse(document.getElementById('teacher').value);
-                data.docente = teacherData.nombre;
-                data.docenteRol = teacherData.rol || teacherData.cargo || 'Docente';
-                data.docenteDepartamento = teacherData.departamento || teacherData.area || '';
-                data.docentePhone = teacherData.telefono || teacherData.celular || teacherData.phone || teacherData.telefono_contacto || '';
-            } catch (e) {
-                data.docente = document.getElementById('manualTeacherName').value;
-                data.docenteRol = document.getElementById('manualTeacherRole').value;
-                data.docenteDepartamento = document.getElementById('manualTeacherDepartment').value;
-                data.docentePhone = document.getElementById('manualTeacherPhone').value;
-            }
-            
-            var fechaOriginal = document.getElementById('date').value;
-            data.fecha = convertirFecha(fechaOriginal);
-            
-            var indisciplineSelect = document.getElementById('indiscipline');
-            data.descripcionFalta = indisciplineSelect.options[indisciplineSelect.selectedIndex].text;
-            data.indiscipline = document.getElementById('indiscipline').value;
-            data.conducta = document.getElementById('conducta').value;
-            
-            var conductaSelect = document.getElementById('conducta');
-            data.nivelGravedad = conductaSelect.options[conductaSelect.selectedIndex].text;
-            
-            data.observaciones = document.getElementById('description').value.trim();
-            
-            data.indisciplineText = indisciplineSelect.options[indisciplineSelect.selectedIndex].text;
-            data.conductaText = conductaSelect.options[conductaSelect.selectedIndex].text;
-            
-            return data;
-        }
-        
-        function buildMensajeTutor(data) {
-            var now = new Date();
-            var fechaReporte = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            var horaReporte = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            return 'REPORTE DE INCIDENCIAS ' + data.grado + '\u00B0 ' + data.grupo + '\n' +
-                'Fecha del reporte: ' + fechaReporte + ' ' + horaReporte + '\n' +
-                'Docente/Personal que reporta: ' + data.docente + '\n' +
-                'Alumno que tuvo una conducta inapropiada: ' + data.nombreAlumno + '\n' +
-                'Tipo de indisciplina: ' + data.indisciplineText + '\n' +
-                'Conducta espec\u00EDfica: ' + data.conductaText + '\n' +
-                'Descripci\u00F3n: ' + data.observaciones + '\n' +
-                'Se le comparte para informarle sobre la situaci\u00F3n que se present\u00F3 con su hijo(a) en clase. El prop\u00F3sito es que pueda dialogar con \u00E9l/ella y apoyarlo(a) para mejorar su comportamiento y conducta. Agradezco de antemano su atenci\u00F3n y colaboraci\u00F3n.';
-        }
-        
-        function buildMensajeDocente(data) {
-            var now = new Date();
-            var fechaReporte = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            var horaReporte = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            return '[COPIA PARA DOCENTE QUE REPORTA]\n\n' +
-                'REPORTE DE INCIDENCIAS ' + data.grado + '\u00B0 ' + data.grupo + '\n' +
-                'Fecha del reporte: ' + fechaReporte + ' ' + horaReporte + '\n' +
-                'Docente/Personal que reporta: ' + data.docente + '\n' +
-                'Alumno que tuvo una conducta inapropiada: ' + data.nombreAlumno + '\n' +
-                'Tipo de indisciplina: ' + data.indisciplineText + '\n' +
-                'Conducta espec\u00EDfica: ' + data.conductaText + '\n' +
-                'Descripci\u00F3n: ' + data.observaciones + '\n\n' +
-                '---\nCopia enviada autom\u00E1ticamente al reportar la incidencia para su registro y seguimiento.';
-        }
-        
-        function buildMensajeDirectora(data) {
-            var now = new Date();
-            var fechaReporte = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            var horaReporte = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            return '[COPIA PARA DIRECTORA]\n\n' +
-                'REPORTE DE INCIDENCIAS ' + data.grado + '\u00B0 ' + data.grupo + '\n' +
-                'Fecha del reporte: ' + fechaReporte + ' ' + horaReporte + '\n' +
-                'Docente/Personal que reporta: ' + data.docente + '\n' +
-                'Alumno que tuvo una conducta inapropiada: ' + data.nombreAlumno + '\n' +
-                'Tipo de indisciplina: ' + data.indisciplineText + '\n' +
-                'Conducta espec\u00EDfica: ' + data.conductaText + '\n' +
-                'Descripci\u00F3n: ' + data.observaciones + '\n\n' +
-                '---\nCopia enviada autom\u00E1ticamente al reportar la incidencia.';
-        }
-        
-        function sendReport(data) {
-            var submitBtn = document.getElementById('submitBtn');
-            var submitLoading = document.getElementById('submitLoading');
-            submitBtn.disabled = true;
-            submitLoading.style.display = 'flex';
-            
-            fetch(reportUrl, {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json' },
-                mode: 'no-cors'
-            })
-            .then(function(response) {
-                submitBtn.disabled = false;
-                submitLoading.style.display = 'none';
-                document.getElementById('sendTutorBtn').style.display = 'block';
-                document.getElementById('sendDocenteBtn').style.display = 'block';
-                document.getElementById('sendDirectoraBtn').style.display = 'block';
-                showNotification('Reporte enviado correctamente. Ahora puede enviar los mensajes por WhatsApp.', 'success');
-                setTimeout(function() {
-                    document.getElementById('sendTutorBtn').scrollIntoView({ behavior: 'smooth' });
-                }, 500);
-            })
-            .catch(function(error) {
-                submitBtn.disabled = false;
-                submitLoading.style.display = 'none';
-                showNotification('Error al enviar el reporte: ' + error.message, 'error');
-                document.getElementById('sendTutorBtn').style.display = 'block';
-                document.getElementById('sendDocenteBtn').style.display = 'block';
-                document.getElementById('sendDirectoraBtn').style.display = 'block';
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            loadStudents();
-            loadTeachers();
-            
-            document.getElementById('retryBtn').addEventListener('click', loadStudents);
-            document.getElementById('corsBtn').addEventListener('click', function() {
-                document.getElementById('corsContainer').classList.remove('hidden');
-            });
-            document.getElementById('proxyBtn').addEventListener('click', loadStudentsWithProxy);
-            document.getElementById('backBtn').addEventListener('click', function() {
-                document.getElementById('corsContainer').classList.add('hidden');
-            });
-            document.getElementById('manualBtn').addEventListener('click', function() {
-                document.getElementById('manualEntryContainer').classList.remove('hidden');
-            });
-            document.getElementById('saveManualBtn').addEventListener('click', function() {
-                var nombre = document.getElementById('manualNombre').value;
-                var matricula = document.getElementById('manualMatricula').value;
-                var matriculacompleta = document.getElementById('manualMatriculaCompleta').value;
-                var grado = document.getElementById('manualGrado').value;
-                var grupo = document.getElementById('manualGrupo').value;
-                var numero = document.getElementById('manualNumero').value;
-                var tutor = document.getElementById('manualTutor').value;
-                var celular = document.getElementById('manualCelular').value;
-                
-                if (nombre && matricula && matriculacompleta && grado && grupo && numero && tutor && celular) {
-                    var student = { nombre: nombre, matricula: matricula, matriculacompleta: matriculacompleta, ciclo: '2025-2026', grado: grado, grupo: grupo, numero: numero, tutor: tutor, celular_tutor: celular };
-                    var studentSelect = document.getElementById('student');
-                    studentSelect.innerHTML = '<option value="">Seleccione un alumno</option>';
-                    var option = document.createElement('option');
-                    option.value = JSON.stringify(student);
-                    option.textContent = nombre + ' - ' + grado + ' ' + grupo;
-                    studentSelect.appendChild(option);
-                    studentSelect.value = option.value;
-                    document.getElementById('manualEntryContainer').classList.add('hidden');
-                    document.getElementById('retryContainer').classList.add('hidden');
-                    showNotification('Datos del alumno guardados correctamente', 'success');
-                } else {
-                    showNotification('Por favor, complete todos los campos', 'error');
-                }
-            });
-            
-            document.getElementById('teacherRetryBtn').addEventListener('click', loadTeachers);
-            document.getElementById('teacherCorsBtn').addEventListener('click', function() {
-                document.getElementById('teacherCorsContainer').classList.remove('hidden');
-            });
-            document.getElementById('teacherProxyBtn').addEventListener('click', loadTeachersWithProxy);
-            document.getElementById('teacherBackBtn').addEventListener('click', function() {
-                document.getElementById('teacherCorsContainer').classList.add('hidden');
-            });
-            document.getElementById('teacherManualBtn').addEventListener('click', function() {
-                document.getElementById('teacherManualEntryContainer').classList.remove('hidden');
-            });
-            document.getElementById('saveTeacherManualBtn').addEventListener('click', function() {
-                var nombre = document.getElementById('manualTeacherName').value;
-                var rol = document.getElementById('manualTeacherRole').value;
-                var departamento = document.getElementById('manualTeacherDepartment').value;
-                var telefono = document.getElementById('manualTeacherPhone').value;
-                
-                if (nombre && rol && departamento && telefono) {
-                    var teacher = { nombre: nombre, rol: rol, departamento: departamento, telefono: telefono };
-                    var teacherSelect = document.getElementById('teacher');
-                    teacherSelect.innerHTML = '<option value="">Seleccione un docente/personal</option>';
-                    var option = document.createElement('option');
-                    option.value = JSON.stringify(teacher);
-                    option.textContent = nombre;
-                    teacherSelect.appendChild(option);
-                    teacherSelect.value = option.value;
-                    document.getElementById('teacherManualEntryContainer').classList.add('hidden');
-                    document.getElementById('teacherRetryContainer').classList.add('hidden');
-                    showNotification('Datos del docente guardados correctamente', 'success');
-                } else {
-                    showNotification('Por favor, complete todos los campos', 'error');
-                }
-            });
-            
-            document.getElementById('indiscipline').addEventListener('change', function() {
-                var indisciplineType = this.value;
-                var severityDisplay = document.getElementById('severityDisplay');
-                var severityInput = document.getElementById('severity');
-                var conductasContainer = document.getElementById('conductasContainer');
-                var conductaSelect = document.getElementById('conducta');
-                
-                var severityMap = {
-                    'leves': '1', 'perturban_orden': '2', 'altamente_perturbadoras': '3',
-                    'provocan_peligro': '4', 'discriminatorias': '5', 'violentas': '6',
-                    'agresivas_sexuales': '7', 'sustancias_toxicas': '8', 'armas_blancas': '9', 'armas_fuego': '10'
-                };
-                
-                if (indisciplineType && severityMap[indisciplineType]) {
-                    var severityLevel = severityMap[indisciplineType];
-                    severityDisplay.textContent = 'Nivel ' + severityLevel;
-                    severityInput.value = severityLevel;
-                    conductasContainer.classList.remove('hidden');
-                    conductaSelect.innerHTML = '<option value="">Seleccione una conducta espec\u00EDfica</option>';
-                    if (conductasPorNivel[severityLevel]) {
-                        conductasPorNivel[severityLevel].forEach(function(conducta) {
-                            var option = document.createElement('option');
-                            option.value = conducta.value;
-                            option.textContent = conducta.text;
-                            conductaSelect.appendChild(option);
-                        });
-                    }
-                } else {
-                    severityDisplay.textContent = 'Seleccione un tipo de indisciplina';
-                    severityInput.value = '';
-                    conductasContainer.classList.add('hidden');
-                }
-            });
-            
-            document.getElementById('closeSummaryBtn').addEventListener('click', function() {
-                document.getElementById('reportSummary').style.display = 'none';
-            });
-            
-            document.getElementById('printSummaryBtn').addEventListener('click', function() {
-                window.print();
-            });
-            
-            document.getElementById('submitBtn').addEventListener('click', function() {
-                try {
-                    if (!validateForm()) return;
-                    var data = collectFormData();
-                    showReportSummary(data);
-                    sendReport(data);
-                } catch (error) {
-                    showNotification('Error al procesar el formulario: ' + error.message, 'error');
-                }
-            });
-            
-            document.getElementById('sendTutorBtn').addEventListener('click', function() {
-                try {
-                    var data = collectFormData();
-                    var message = buildMensajeTutor(data);
-                    var phoneNumber = data.tutorPhone;
-                    
-                    if (!phoneNumber) {
-                        showNotification('No se encontr\u00F3 n\u00FAmero de tel\u00E9fono del tutor (campo celular_tutor). Verifique los datos del alumno.', 'error');
-                        return;
-                    }
-                    
-                    var encodedMessage = encodeURIComponent(message);
-                    var whatsappUrl = 'https://wa.me/' + phoneNumber + '?text=' + encodedMessage;
-                    window.open(whatsappUrl, '_blank');
-                    
-                    showNotification('Abriendo WhatsApp para el tutor del alumno.', 'info');
-                } catch (error) {
-                    showNotification('Error al enviar mensaje: ' + error.message, 'error');
-                }
-            });
-            
-            document.getElementById('sendDocenteBtn').addEventListener('click', function() {
-                try {
-                    var data = collectFormData();
-                    var message = buildMensajeDocente(data);
-                    var phoneNumber = data.docentePhone;
-                    
-                    if (!phoneNumber) {
-                        showNotification('No se encontr\u00F3 n\u00FAmero de tel\u00E9fono del docente. Verifique los datos del docente.', 'error');
-                        return;
-                    }
-                    
-                    var encodedMessage = encodeURIComponent(message);
-                    var whatsappUrl = 'https://wa.me/' + phoneNumber + '?text=' + encodedMessage;
-                    window.open(whatsappUrl, '_blank');
-                    
-                    showNotification('Copia enviada al docente ' + data.docente + '.', 'success');
-                } catch (error) {
-                    showNotification('Error al enviar copia al docente: ' + error.message, 'error');
-                }
-            });
-            
-            document.getElementById('sendDirectoraBtn').addEventListener('click', function() {
-                try {
-                    var data = collectFormData();
-                    var message = buildMensajeDirectora(data);
-                    
-                    var encodedMessage = encodeURIComponent(message);
-                    var whatsappUrl = 'https://wa.me/' + DIRECTORA_PHONE + '?text=' + encodedMessage;
-                    window.open(whatsappUrl, '_blank');
-                    
-                    showNotification('Copia enviada a la Directora Laura Cholula Rivera.', 'success');
-                } catch (error) {
-                    showNotification('Error al enviar copia a la Directora: ' + error.message, 'error');
-                }
-            });
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('fechaIncidente').valueAsDate = new Date();
+            cargarAlumnos();
+            cargarDocentes();
+        });
+
+        async function cargarAlumnos() {
+            document.getElementById('alumnoLoading').style.display = 'block';
+            document.getElementById('alumnoError').style.display = 'none';
+            document.getElementById('alumnoSelectContainer').style.display = 'none';
+            try {
+                const response = await fetch(SCRIPT_ALUMNOS);
+                if (!response.ok) throw new Error("Load failed");
+                const text = await response.text();
+                if (text.trim().startsWith('<!DOCTYPE')) throw new Error("AUTH_REQUIRED");
+                
+                datosAlumnos = JSON.parse(text);
+                const datalist = document.getElementById('listaAlumnos');
+                datalist.innerHTML = '';
+                datosAlumnos.forEach((alumno, index) => {
+                    const nombre = alumno.nombre || alumno.Nombre || "";
+                    const grado = alumno.grado || alumno.Grado || "";
+                    const grupo = alumno.grupo || alumno.Grupo || "";
+                    const option = document.createElement('option');
+                    option.value = `${nombre} - ${grado}${grupo}`;
+                    option.setAttribute('data-index', index);
+                    datalist.appendChild(option);
+                });
+                document.getElementById('alumnoLoading').style.display = 'none';
+                document.getElementById('alumnoSelectContainer').style.display = 'block';
+            } catch (error) {
+                document.getElementById('alumnoLoading').style.display = 'none';
+                document.getElementById('alumnoError').style.display = 'block';
+                if (error.message === "AUTH_REQUIRED") {
+                    alert("⚠️ ERROR DE PERMISOS: El script de alumnos requiere configuración 'Cualquier persona' en la implementación.");
+                }
+            }
+        }
+
+        async function cargarDocentes() {
+            document.getElementById('docenteLoading').style.display = 'block';
+            document.getElementById('docenteError').style.display = 'none';
+            document.getElementById('docenteSelectContainer').style.display = 'none';
+            try {
+                const response = await fetch(SCRIPT_DOCENTES);
+                if (!response.ok) throw new Error("Load failed");
+                const text = await response.text();
+                if (text.trim().startsWith('<!DOCTYPE')) throw new Error("AUTH_REQUIRED");
+                
+                datosDocentes = JSON.parse(text);
+                const datalist = document.getElementById('listaDocentes');
+                datalist.innerHTML = '';
+                datosDocentes.forEach((docente, index) => {
+                    const option = document.createElement('option');
+                    option.value = docente.Nombre || docente.nombre || docente;
+                    option.setAttribute('data-index', index);
+                    datalist.appendChild(option);
+                });
+                document.getElementById('docenteLoading').style.display = 'none';
+                document.getElementById('docenteSelectContainer').style.display = 'block';
+            } catch (error) {
+                document.getElementById('docenteLoading').style.display = 'none';
+                document.getElementById('docenteError').style.display = 'block';
+            }
+        }
+
+        function buscarYRellenarAlumno() {
+            const texto = document.getElementById('buscarAlumno').value.toLowerCase().trim();
+            const opciones = document.getElementById('listaAlumnos').options;
+            for (let i = 0; i < opciones.length; i++) {
+                if (opciones[i].value.toLowerCase() === texto) {
+                    const idx = parseInt(opciones[i].getAttribute('data-index'));
+                    const a = datosAlumnos[idx];
+                    document.getElementById('manualNombreAlumno').value = a.nombre || a.Nombre || "";
+                    document.getElementById('manualMatricula').value = a.matricula || a.Matricula || "";
+                    document.getElementById('manualMatriculaCompleta').value = a.matricula_id || a.MatriculaCompleta || "";
+                    document.getElementById('manualGrado').value = a.grado || a.Grado || "1";
+                    document.getElementById('manualGrupo').value = a.grupo || a.Grupo || "A";
+                    document.getElementById('manualNumeroLista').value = a.butaca || a.Numero || "";
+                    document.getElementById('manualNombreTutor').value = a.tutor || a.Tutor || "";
+                    document.getElementById('manualCelularTutor').value = a.celular_tutor || a.Celular || "";
+                    return;
+                }
+            }
+        }
+
+        function buscarYRellenarDocente() {
+            const texto = document.getElementById('buscarDocente').value.toLowerCase().trim();
+            const opciones = document.getElementById('listaDocentes').options;
+            for (let i = 0; i < opciones.length; i++) {
+                if (opciones[i].value.toLowerCase() === texto) {
+                    const idx = parseInt(opciones[i].getAttribute('data-index'));
+                    const d = datosDocentes[idx];
+                    document.getElementById('manualNombreDocente').value = d.Nombre || d.nombre || d;
+                    document.getElementById('manualRolDocente').value = d.Rol || d.rol || "";
+                    return;
+                }
+            }
+        }
+
+        function mostrarEntradaManual(tipo) {
+            if (tipo === 'alumno') {
+                document.getElementById('manualAlumno').style.display = 'block';
+                document.getElementById('alumnoError').style.display = 'none';
+                document.getElementById('alumnoSelectContainer').style.display = 'none';
+            } else {
+                document.getElementById('manualDocente').style.display = 'block';
+                document.getElementById('docenteError').style.display = 'none';
+                document.getElementById('docenteSelectContainer').style.display = 'none';
+            }
+        }
+
+        function guardarDatosManuales(tipo) {
+            document.getElementById(tipo === 'alumno' ? 'manualAlumno' : 'manualDocente').style.display = 'none';
+            alert("Datos guardados temporalmente.");
+        }
+
+        document.getElementById('formIncidencia').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const btn = document.getElementById('btnGenerarReporte');
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+
+            const formData = {
+                nombreAlumno: document.getElementById('manualNombreAlumno').value,
+                matricula: document.getElementById('manualMatriculaCompleta').value,
+                matriculacompleta: document.getElementById('manualMatriculaCompleta').value,
+                nombreTutor: document.getElementById('manualNombreTutor').value,
+                grado: document.getElementById('manualGrado').value,
+                grupo: document.getElementById('manualGrupo').value,
+                numero: document.getElementById('manualNumeroLista').value,
+                fecha: document.getElementById('fechaIncidente').value,
+                docente: document.getElementById('manualNombreDocente').value,
+                descripcionFalta: document.getElementById('descripcionFalta').value,
+                nivelGravedad: document.getElementById('nivelGravedad').value,
+                conductaEspecifica: document.getElementById('conductaEspecifica').value,
+                observaciones: document.getElementById('observaciones').value,
+                compromiso: document.getElementById('compromiso').value
+            };
+
+            try {
+                const response = await fetch(SCRIPT_ENVIO, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+                
+                const text = await response.text();
+                if (text.trim().startsWith('<!DOCTYPE')) throw new Error("AUTH_REQUIRED_ENVIO");
+
+                const result = JSON.parse(text);
+                
+                if (result.status === "success") {
+                    document.getElementById('resumenFolio').textContent = result.folio;
+                    document.getElementById('resumenFecha').textContent = formData.fecha;
+                    document.getElementById('resumenAlumno').textContent = formData.nombreAlumno;
+                    document.getElementById('resumenMatriculaId').textContent = formData.matricula;
+                    document.getElementById('resumenGradoGrupo').textContent = formData.grado + "° " + formData.grupo + " (Lista: " + formData.numero + ")";
+                    document.getElementById('resumenDocente').textContent = formData.docente;
+                    document.getElementById('resumenTipo').textContent = document.getElementById('tipoIndisciplina').value;
+                    document.getElementById('resumenConducta').textContent = formData.conductaEspecifica;
+                    document.getElementById('resumenGravedad').textContent = formData.nivelGravedad;
+                    document.getElementById('resumenDescripcion').textContent = formData.descripcionFalta;
+
+                    const celularTutorRaw = document.getElementById('manualCelularTutor').value.replace(/\D/g, '');
+                    let numeroWhatsApp = '';
+                    let sinTelefono = false;
+
+                    if (celularTutorRaw.length === 10) {
+                        numeroWhatsApp = '52' + celularTutorRaw;
+                    } else if (celularTutorRaw.length === 13 && celularTutorRaw.startsWith('521')) {
+                        numeroWhatsApp = '52' + celularTutorRaw.substring(3);
+                    } else if (celularTutorRaw.length === 12 && celularTutorRaw.startsWith('52')) {
+                        numeroWhatsApp = celularTutorRaw;
+                    } else {
+                        sinTelefono = true;
+                    }
+
+                    const nombreTutorLimpio = (formData.nombreTutor || "Tutor").trim();
+                    
+                    const mensajeTutor = 
+                        `*REPORTE DE INCIDENCIA ESCOLAR - FOLIO: ${result.folio}*` + "\n\n" +
+                        `*Escuela Secundaria Profesor Honorato Tlaseca Barrera*` + "\n\n" +
+                        `Estimado(a) Sr./Sra. ${nombreTutorLimpio},` + "\n\n" +
+                        `Le informamos que su hijo(a) *${formData.nombreAlumno}* (${formData.grado}° ${formData.grupo}) incurrió en una falta el día ${formData.fecha}.` + "\n\n" +
+                        `*Detalles de la falta:*` + "\n" +
+                        `• Tipo: ${document.getElementById('tipoIndisciplina').value}` + "\n" +
+                        `• Conducta: ${formData.conductaEspecifica}` + "\n" +
+                        `• Gravedad: ${formData.nivelGravedad}` + "\n" +
+                        `• Descripción: ${formData.descripcionFalta}` + "\n\n" +
+                        `*Recomendación:* Le sugerimos dialogar con su hijo(a) en casa sobre la importancia de respetar el reglamento escolar y mejorar su conducta.` + "\n\n" +
+                        `*Nota:* En esta instancia, si no recibe una llamada telefónica de la escuela, no es necesario que acuda presencialmente, confiando en que con su apoyo en casa el alumno mejorará su comportamiento.` + "\n\n" +
+                        `*Importante:* Le hacemos de su conocimiento que, en caso de reincidencia o dependiendo de la gravedad de futuras faltas, será necesario convocarlo a una reunión en Dirección para tratar el asunto de manera conjunta.` + "\n\n" +
+                        `Atentamente,` + "\n" +
+                        `*Dirección Escolar*`;
+
+                    if (sinTelefono) {
+                        document.getElementById('btnWaTutor').style.display = 'none';
+                        document.getElementById('avisoSinTelefono').style.display = 'block';
+                    } else {
+                        document.getElementById('btnWaTutor').href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeTutor)}`;
+                        document.getElementById('btnWaTutor').style.display = 'block';
+                        document.getElementById('avisoSinTelefono').style.display = 'none';
+                    }
+
+                    document.getElementById('formIncidencia').style.display = 'none';
+                    document.getElementById('resumenReporte').style.display = 'block';
+                    document.getElementById('resumenReporte').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert("Error del servidor: " + (result.message || "Desconocido"));
+                }
+            } catch (error) {
+                console.error(error);
+                if (error.message === "AUTH_REQUIRED_ENVIO") {
+                    alert("⚠️ ERROR CRÍTICO DE PERMISOS:\n\nEl script de envío está bloqueando el acceso anónimo.\n\nSOLUCIÓN:\n1. Ve a Google Apps Script (el de incidencias).\n2. Clic en 'Implementar' > 'Administrar implementaciones'.\n3. Clic en el lápiz (Editar).\n4. En 'Quién tiene acceso', selecciona EXACTAMENTE: 'Cualquier persona'.\n5. Clic en 'Implementar'.\n6. Recarga esta página.");
+                } else {
+                    alert("Error de conexión: " + error.message);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Generar Reporte';
+            }
+        });
+
+        // ✅ FUNCIÓN ACTUALIZADA: Cierra el resumen y LIMPIA el formulario para un nuevo registro
+        function cerrarResumen() {
+            document.getElementById('resumenReporte').style.display = 'none';
+            document.getElementById('formIncidencia').style.display = 'block';
+            
+            // 1. Limpia todos los campos del formulario
+            document.getElementById('formIncidencia').reset();
+            
+            // 2. Restablece la fecha al día de hoy
+            document.getElementById('fechaIncidente').valueAsDate = new Date();
+            
+            // 3. Restablece los selectores dependientes a su estado inicial
+            document.getElementById('conductaEspecifica').innerHTML = '<option value="">Seleccione primero un tipo</option>';
+            document.getElementById('nivelGravedad').value = "";
+            
+            // 4. Oculta elementos de WhatsApp para el siguiente reporte
+            document.getElementById('avisoSinTelefono').style.display = 'none';
+            document.getElementById('btnWaTutor').style.display = 'none';
+            
+            // 5. Regresa al inicio de la página suavemente
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
