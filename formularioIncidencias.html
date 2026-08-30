@@ -50,7 +50,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://honoratotb.synology.me/imagenes/logo_escuela.png" alt="Logo Escuela">
+            <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela">
             <h2>Reporte de Incidencias</h2>
             <p><strong>Escuela Secundaria Profesor Honorato Tlaseca Barrera</strong></p>
             <p>Sistema de Registro de Incidentes Escolares</p>
@@ -198,7 +198,6 @@
                 </p>
             </div>
 
-            <!-- ✅ BOTÓN DE IMPRIMIR ELIMINADO, SOLO QUEDA CERRAR -->
             <button onclick="cerrarResumen()" class="btn btn-secondary no-print">❌ Cerrar y Limpiar Formulario</button>
         </div>
 
@@ -469,26 +468,15 @@
             }
         });
 
-        // ✅ FUNCIÓN ACTUALIZADA: Cierra el resumen y LIMPIA el formulario para un nuevo registro
         function cerrarResumen() {
             document.getElementById('resumenReporte').style.display = 'none';
             document.getElementById('formIncidencia').style.display = 'block';
-            
-            // 1. Limpia todos los campos del formulario
             document.getElementById('formIncidencia').reset();
-            
-            // 2. Restablece la fecha al día de hoy
             document.getElementById('fechaIncidente').valueAsDate = new Date();
-            
-            // 3. Restablece los selectores dependientes a su estado inicial
             document.getElementById('conductaEspecifica').innerHTML = '<option value="">Seleccione primero un tipo</option>';
             document.getElementById('nivelGravedad').value = "";
-            
-            // 4. Oculta elementos de WhatsApp para el siguiente reporte
             document.getElementById('avisoSinTelefono').style.display = 'none';
             document.getElementById('btnWaTutor').style.display = 'none';
-            
-            // 5. Regresa al inicio de la página suavemente
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
