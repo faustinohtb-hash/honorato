@@ -20,12 +20,74 @@
         input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
         input:focus, select:focus, textarea:focus { border-color: #007bff; outline: none; }
         
+        .gravedad-readonly { background-color: #e9ecef; font-weight: bold; cursor: not-allowed; color: #495057; }
+        .gravedad-Leve { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .gravedad-Moderado { background-color: #fff3cd; color: #856404; border-color: #ffeaa7; }
+        .gravedad-Grave { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        
         .search-hint { font-size: 0.85em; color: #6c757d; font-style: italic; margin-top: 3px; }
+        
+        .reincidencias-panel {
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+            display: none;
+        }
+        .reincidencias-panel h4 {
+            margin: 0 0 12px 0;
+            color: #0056b3;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .reincidencias-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .reincidencia-card {
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .card-leve { background-color: #d4edda; border: 2px solid #28a745; }
+        .card-moderado { background-color: #fff3cd; border: 2px solid #ffc107; }
+        .card-grave { background-color: #f8d7da; border: 2px solid #dc3545; }
+        .reincidencia-count {
+            font-size: 1.8em;
+            font-weight: 900;
+            display: block;
+        }
+        .card-leve .reincidencia-count { color: #155724; }
+        .card-moderado .reincidencia-count { color: #856404; }
+        .card-grave .reincidencia-count { color: #721c24; }
+        .reincidencia-label {
+            font-size: 0.85em;
+            font-weight: 600;
+            display: block;
+            margin-top: 4px;
+        }
+        .reincidencia-total {
+            text-align: center;
+            padding: 8px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .reincidencia-total span { font-size: 1.2em; }
         
         .btn { margin-top: 20px; padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
         .btn:hover { background-color: #0056b3; }
         .btn:disabled { background-color: #6c757d; cursor: not-allowed; }
         .btn-secondary { background-color: #6c757d; margin-top: 10px; }
+        .btn-medidas { background-color: #fd7e14; margin-top: 10px; }
+        .btn-medidas:hover { background-color: #e36407; }
         .btn-sm { padding: 8px 12px; font-size: 14px; width: auto; display: inline-block; margin-right: 5px; margin-top: 10px; }
         
         .loading, .error-msg { text-align: center; padding: 15px; color: #666; }
@@ -41,8 +103,46 @@
         .wa-notice { font-size: 0.85em; color: #666; background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px; border-left: 3px solid #ffc107; }
         .aviso-sin-telefono { color: #dc3545; font-weight: bold; background: #f8d7da; padding: 10px; border-radius: 5px; margin-top: 10px; text-align: center; display: none; }
 
+        .modal-medidas {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-medidas-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .modal-medidas-content h3 {
+            color: #fd7e14;
+            border-bottom: 3px solid #fd7e14;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .medida-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 10px 0;
+            border-left: 4px solid #fd7e14;
+            border-radius: 4px;
+            line-height: 1.5;
+        }
+        .medida-item strong { color: #d35400; }
+
         @media print {
-            .no-print, .btn, .header a, .aviso-sin-telefono { display: none !important; }
+            .no-print, .btn, .header a, .aviso-sin-telefono, .reincidencias-panel { display: none !important; }
             #resumenReporte { display: block !important; border: 1px solid #000; }
         }
     </style>
@@ -78,6 +178,27 @@
                     <input type="text" id="buscarAlumno" list="listaAlumnos" placeholder="Escriba el nombre o grado-grupo..." autocomplete="off" oninput="buscarYRellenarAlumno()">
                     <datalist id="listaAlumnos"></datalist>
                     <p class="search-hint">💡 Escriba al menos 2 letras para ver coincidencias.</p>
+                    
+                    <div id="reincidenciasPanel" class="reincidencias-panel">
+                        <h4>📊 Historial de Incidencias del Alumno (Ciclo Actual)</h4>
+                        <div class="reincidencias-grid">
+                            <div class="reincidencia-card card-leve">
+                                <span id="countLeve" class="reincidencia-count">0</span>
+                                <span class="reincidencia-label">Leves</span>
+                            </div>
+                            <div class="reincidencia-card card-moderado">
+                                <span id="countModerado" class="reincidencia-count">0</span>
+                                <span class="reincidencia-label">Moderadas</span>
+                            </div>
+                            <div class="reincidencia-card card-grave">
+                                <span id="countGrave" class="reincidencia-count">0</span>
+                                <span class="reincidencia-label">Graves</span>
+                            </div>
+                        </div>
+                        <div class="reincidencia-total">
+                            Total de incidencias registradas: <span id="countTotal">0</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="manualAlumno" class="manual-entry">
@@ -125,25 +246,13 @@
                 <label>Tipo de Indisciplina</label>
                 <select id="tipoIndisciplina" required>
                     <option value="">Seleccione...</option>
-                    <option value="1. Conductas de indisciplina leves">1. Conductas de indisciplina leves</option>
-                    <option value="2. Conductas que perturban el orden">2. Conductas que perturban el orden</option>
-                    <option value="3. Conductas altamente perturbadoras del orden">3. Conductas altamente perturbadoras del orden</option>
-                    <option value="4. Conductas que provocan peligro">4. Conductas que provocan peligro</option>
-                    <option value="5. Conductas discriminatorias">5. Conductas discriminatorias</option>
-                    <option value="6. Conductas violentas">6. Conductas violentas</option>
-                    <option value="7. Conductas agresivas de índole sexual">7. Conductas agresivas de índole sexual</option>
-                    <option value="8. Conductas de riesgo por posesión, consumo o distribución de sustancias tóxico adictivas">8. Conductas de riesgo por sustancias</option>
-                    <option value="9. Conductas de riesgo por posesión y/o uso de armas blancas">9. Posesión/uso de armas blancas</option>
-                    <option value="10. Conductas de riesgo por posesión y/o uso de armas de fuego y explosivos">10. Posesión/uso de armas de fuego/explosivos</option>
+                    <option value="CONDUCTAS DE INDISCIPLINA LEVE">CONDUCTAS DE INDISCIPLINA LEVE</option>
+                    <option value="CONDUCTAS QUE PERTURBAN EL ORDEN">CONDUCTAS QUE PERTURBAN EL ORDEN</option>
+                    <option value="CONDUCTAS DE VIOLENCIA GRAVE">CONDUCTAS DE VIOLENCIA GRAVE</option>
                 </select>
 
                 <label>Nivel de Gravedad</label>
-                <select id="nivelGravedad" required>
-                    <option value="">Seleccione primero un tipo</option>
-                    <option value="Leve">Leve</option>
-                    <option value="Moderado">Moderado</option>
-                    <option value="Grave">Grave</option>
-                </select>
+                <input type="text" id="nivelGravedad" class="gravedad-readonly" readonly placeholder="Se asigna automáticamente según el tipo de indisciplina">
 
                 <label>Conducta Específica</label>
                 <select id="conductaEspecifica" required>
@@ -198,7 +307,17 @@
                 </p>
             </div>
 
-            <button onclick="cerrarResumen()" class="btn btn-secondary no-print">❌ Cerrar y Limpiar Formulario</button>
+            <button onclick="mostrarMedidas()" class="btn btn-medidas no-print">📋 MEDIDAS FORMATIVAS Y DE ATENCIÓN</button>
+
+            <button onclick="cerrarResumen()" class="btn btn-secondary no-print">❌ Cerrar y Preparar Nuevo Registro</button>
+        </div>
+
+        <div id="modalMedidas" class="modal-medidas">
+            <div class="modal-medidas-content">
+                <h3>📋 MEDIDAS FORMATIVAS Y DE ATENCIÓN</h3>
+                <div id="contenidoMedidas"></div>
+                <button onclick="cerrarModalMedidas()" class="btn btn-secondary">❌ Cerrar</button>
+            </div>
         </div>
 
         <div class="footer" style="text-align: center; margin-top: 30px; font-size: 0.85em; color: #777; border-top: 1px solid #ddd; padding-top: 15px;">
@@ -210,38 +329,126 @@
         const SCRIPT_ALUMNOS = "https://script.google.com/macros/s/AKfycbyQ4XfTgp-qhfi_1BSUW_c6JmXDoAmr9W0y915QT977BhN6ZzU5IL7gxsDLriE8Egbv/exec";
         const SCRIPT_DOCENTES = "https://script.google.com/macros/s/AKfycbzPUWFLXhFAoC9w_Yqo5shO9TRyquOYYvzg8ovKB1mdFNh4dUhK7MKLOs1ITupLxb-hXQ/exec";
         const SCRIPT_ENVIO = "https://script.google.com/macros/s/AKfycbwH9z2Snoiu7gBBOzkR5lmvM00ZO2Z0GBJSpHZfa0VMm2rSeiJPZLuW_JySG6eCrThJ/exec";
+        const SCRIPT_HISTORIAL = "https://script.google.com/macros/s/AKfycbwH9z2Snoiu7gBBOzkR5lmvM00ZO2Z0GBJSpHZfa0VMm2rSeiJPZLuW_JySG6eCrThJ/exec";
 
         let datosAlumnos = [];
         let datosDocentes = [];
+        let datosIncidencias = [];
+        let gravedadActual = "";
+        let alumnoSeleccionadoNombre = ""; // ✅ Variable para guardar el nombre real del alumno seleccionado
 
         const conductasPorTipo = {
-            "1. Conductas de indisciplina leves": { gravedad: "Leve", conductas: ["Interrumpir constantemente", "No portar uniforme completo", "No traer materiales", "Masticar chicle", "Uso no autorizado de electrónicos"] },
-            "2. Conductas que perturban el orden": { gravedad: "Moderado", conductas: ["Gritar o hacer ruidos molestos", "Salir del salón sin permiso", "Faltar al respeto con palabras", "Desobediencia reiterada"] },
-            "3. Conductas altamente perturbadoras del orden": { gravedad: "Moderado", conductas: ["Provocar desorden colectivo", "Falsificación de documentos", "Daño intencional a mobiliario"] },
-            "4. Conductas que provocan peligro": { gravedad: "Grave", conductas: ["Correr o jugar brusco en escaleras", "Actos que pongan en riesgo la integridad", "Salir de la escuela sin autorización"] },
-            "5. Conductas discriminatorias": { gravedad: "Grave", conductas: ["Burlas o apodos ofensivos", "Exclusión intencional", "Discriminación por género, etnia o religión"] },
-            "6. Conductas violentas": { gravedad: "Grave", conductas: ["Agresión física", "Amenazas verbales o físicas", "Vandalismo grave"] },
-            "7. Conductas agresivas de índole sexual": { gravedad: "Grave", conductas: ["Acoso o comentarios sexuales", "Tocamientos indebidos", "Exhibicionismo"] },
-            "8. Conductas de riesgo por posesión, consumo o distribución de sustancias tóxico adictivas": { gravedad: "Grave", conductas: ["Portar o consumir vapeadores/cigarros", "Portar o consumir alcohol", "Portar o distribuir drogas"] },
-            "9. Conductas de riesgo por posesión y/o uso de armas blancas": { gravedad: "Grave", conductas: ["Portar objetos punzocortantes", "Amenazar con armas blancas"] },
-            "10. Conductas de riesgo por posesión y/o uso de armas de fuego y explosivos": { gravedad: "Grave", conductas: ["Portar armas de fuego", "Portar explosivos o artefactos peligrosos"] }
+            "CONDUCTAS DE INDISCIPLINA LEVE": {
+                gravedad: "Leve",
+                conductas: [
+                    "Inasistencia injustificada",
+                    "No entrar a una clase estando en la escuela",
+                    "Llegar tarde a la escuela (después de los primeros 20 minutos de la hora de entrada) o a las clases sin justificación",
+                    "Utilizar dentro de la escuela sin autorización objetos y equipos materiales prohibidos (teléfono celular, dispositivos electrónicos para comunicación y entretenimiento)",
+                    "Permanecer en áreas que no corresponda a sus actividades escolares dentro del plantel",
+                    "No portar la credencial escolar",
+                    "Realizar actividades que distraigan su atención, distintas de las solicitadas por el docente para su aprendizaje (no concluir sus trabajos por estar jugando o platicando)",
+                    "Llegar a la escuela sin los libros de texto gratuitos o los materiales básicos de trabajo para el aprendizaje"
+                ]
+            },
+            "CONDUCTAS QUE PERTURBAN EL ORDEN": {
+                gravedad: "Moderado",
+                conductas: [
+                    "Retardos",
+                    "Llevar a la escuela objetos que distraigan su atención e interfieran con su aprendizaje",
+                    "Utilizar cerillos y/o encendedores sin autorización",
+                    "Apostar y/o participar en juegos de azar",
+                    "Mentir, dar información falsa o engañar al personal escolar",
+                    "Hacer uso de las pertenencias de otros sin autorización",
+                    "Comportarse de una manera que perturbe el proceso educativo (hacer ruido excesivo, gritar, aventar objetos en el aula, biblioteca o pasillos)",
+                    "Colocar o distribuir material en las instalaciones escolares que violen las reglas de la escuela o lo dispuesto por las Autoridades Educativas",
+                    "Utilizar rudeza verbal o comportarse de manera irrespetuosa",
+                    "Salir de clase o la escuela sin autorización",
+                    "Ingresar a clase fuera de los horarios establecidos sin autorización",
+                    "Asistir a la escuela con personas no autorizadas",
+                    "Dañar, cambiar o modificar un registro o documento escolar",
+                    "Apropiarse o sustraer intencionalmente objetos que pertenecen a otra persona sin autorización",
+                    "Emplear los equipos del plantel para razones diferentes a los educativos sin autorización",
+                    "Incurrir en conductas de deshonestidad académica: Engañar (copiar del examen de otro estudiante, utilizar material no autorizado, colaborar sin autorización, ofrecer contenidos de un examen no aplicado, tomar el lugar de otro estudiante, sobornar)",
+                    "Incurrir en conductas de deshonestidad académica: Plagiar (apropiarse del trabajo de otro sin citar, copiar trabajos de internet u otra fuente)",
+                    "Incurrir en conductas de deshonestidad académica: Coludirse (colaboración fraudulenta con otra persona para la preparación de trabajos escritos que otorgan créditos)"
+                ]
+            },
+            "CONDUCTAS DE VIOLENCIA GRAVE": {
+                gravedad: "Grave",
+                conductas: [
+                    "Activar injustificadamente las alarmas (incendios o sismos)",
+                    "Realizar una amenaza de bomba",
+                    "Provocar la combustión, detonación de objetos o el riesgo de incendio",
+                    "Realizar actos de vandalismo físico y digital o daño intencional a los bienes de la escuela o bienes pertenecientes al personal, estudiantes o terceros",
+                    "Introducir y usar cualquier sustancia, objeto o medicamento que ponga en riesgo la integridad física, psicológica o la salud de los miembros de la comunidad educativa (sustancias tóxicas, estupefacientes, psicotrópicos y productos químicos de alta peligrosidad no supervisados)",
+                    "Emplear insultos relacionados con la apariencia, raza, etnia, nacionalidad o ciudadanía, religión, sexo, identidad, expresión u orientación sexual, discapacidad o características físicas",
+                    "Realizar actos de intimidación, tratar de infligir o causar daños físicos, emocionales y psicológicos, amenazar, coerción o desafiar a algún miembro de la comunidad escolar por consideraciones de apariencia, raza, etnia, nacionalidad, religión, sexo, identidad, expresión u orientación sexual o discapacidad",
+                    "Utilizar expresiones verbales groseras o irrespetuosas, lenguaje o gestos irreverentes, obscenos, vulgares o insultantes, dirigidos a alguna persona de la comunidad escolar",
+                    "Empujar o demostrar conductas de agresión física o similar, como juegos bruscos o disputas menores, arrojar objetos o escupir a otras personas",
+                    "Colocar o distribuir escritos, gráficos y/o videos, materiales que contengan calcomanías, amenazas, violencia, lesiones o daño, prejuicios o que describan acciones violentas u obscenas, imágenes vulgares (incluye colocar dicho material en internet o redes sociales)",
+                    "Participar en un altercado, incurrir en conductas de agresión física y/o juegos o bromas que impliquen un riesgo sustantivo de provocar lesiones o heridas leves",
+                    "Planear, participar y realizar u ordenar actos de acoso escolar o bullying, incluyendo el bullying cibernético (amenazar, acechar, perseguir coercitivamente, obligar a un compañero a hacer algo, incurrir en acciones físicas o verbales que amenacen a otros)",
+                    "Burlarse y/o intimidar incluyendo el uso de apodos ofensivos o calumnias que involucren consideraciones de apariencia, raza, etnia, color, nacionalidad, estatus migratorio, religión, sexo, identidad de género, orientación sexual o discapacidad (intencional y/o frecuente)",
+                    "Crear riesgo de lesiones ya sea mediante conductas imprudentes o la utilización de objetos que aparentemente podrían causar un daño físico (encendedores, hebillas de cinturón, bóxer, fajillas, cinturones, navajas, entre otros)",
+                    "Incitar o causar disturbios",
+                    "Utilizar la fuerza o amenazar utilizando la fuerza para apropiarse de los bienes de otros",
+                    "Participar en un incidente de violencia grupal o participar en riñas dentro y fuera del plantel",
+                    "Causar una lesión utilizando objetos que aparentemente podrían causar un daño físico (encendedores, hebillas de cinturón, bóxer, fajillas, cinturones, navajas)",
+                    "Poseer, vender o utilizar cualquier tipo de arma blanca o de fuego real o de juguete"
+                ]
+            }
+        };
+
+        const medidasPorTipo = {
+            "CONDUCTAS DE INDISCIPLINA LEVE": [
+                "Registro en Bitácora Escolar (Anexo 1).",
+                "Después de 3 conductas de esta categoría, aplica suspensión académica por 1 día dentro de las instalaciones del plantel.",
+                "Toda falta deberá ser informada a los padres de familia o tutores, además de quedar registrada en el expediente de la alumna o el alumno y en la Bitácora Escolar (Anexo 1).",
+                "Valorar si se canaliza al Sistema DIF, por reincidencia.",
+                "En caso de uso de dispositivos electrónicos sin autorización, retirar el equipo y entregarlo en la Dirección del plantel, citar a la figura parental para registrar en Bitácora Escolar y firmar acuerdos (Anexo 1)."
+            ],
+            "CONDUCTAS QUE PERTURBAN EL ORDEN": [
+                "<strong>Primera vez:</strong> Podrá aplicar 1 día de suspensión académica dentro de las instalaciones del plantel.",
+                "<strong>A la tercera vez:</strong> Citatorio a figura parental, Acta de Hechos, Firmar Carta compromiso para la sana convivencia y Canalización Interdisciplinaria.",
+                "Suspensión por parte de la dirección, por 3 a 5 días dentro de las instalaciones del plantel, con actividades dirigidas.",
+                "<strong>Retardos (10-20 min):</strong> Permanecerán durante la primera hora de clases realizando actividades académicas dirigidas.",
+                "<strong>Retardos (+20 min):</strong> Citar de inmediato vía telefónica a la figura parental y asentar en bitácora escolar.",
+                "La tercera ocasión de retardo: proceso de atención de conflictos con citatorio a figura parental y redacción de acta."
+            ],
+            "CONDUCTAS DE VIOLENCIA GRAVE": [
+                "<strong>Primera vez:</strong> Actividades extracurriculares sobre el tema en que incurre.",
+                "<strong>Reincidencia:</strong> Suspensión de clases por 3 días con servicio comunitario o actividades académicas dirigidas.",
+                "En caso de daño a propiedad escolar o de terceros, llamar a la figura parental para convenir la reparación del daño.",
+                "Citatorio a figura parental, Acta de Hechos (Anexo 5), Carta compromiso (Anexo 4) y Canalización Interdisciplinaria.",
+                "En caso de lesión, quienes ejercen la patria potestad cubrirán la totalidad de los gastos médicos hasta la completa recuperación."
+            ]
         };
 
         document.getElementById('tipoIndisciplina').addEventListener('change', function() {
             const tipo = this.value;
             const selectConducta = document.getElementById('conductaEspecifica');
-            const selectGravedad = document.getElementById('nivelGravedad');
+            const inputGravedad = document.getElementById('nivelGravedad');
             selectConducta.innerHTML = '<option value="">Seleccione...</option>';
             
+            inputGravedad.classList.remove('gravedad-Leve', 'gravedad-Moderado', 'gravedad-Grave');
+            
             if (tipo && conductasPorTipo[tipo]) {
-                selectGravedad.value = conductasPorTipo[tipo].gravedad;
+                const gravedad = conductasPorTipo[tipo].gravedad;
+                gravedadActual = gravedad;
+                inputGravedad.value = gravedad;
+                inputGravedad.classList.add('gravedad-' + gravedad);
+                
                 conductasPorTipo[tipo].conductas.forEach(c => {
                     const opt = document.createElement('option');
-                    opt.value = c; opt.textContent = c;
+                    opt.value = c;
+                    opt.textContent = c.length > 100 ? c.substring(0, 100) + '...' : c;
+                    opt.title = c;
                     selectConducta.appendChild(opt);
                 });
             } else {
-                selectGravedad.value = "";
+                inputGravedad.value = "";
+                gravedadActual = "";
             }
         });
 
@@ -249,6 +456,7 @@
             document.getElementById('fechaIncidente').valueAsDate = new Date();
             cargarAlumnos();
             cargarDocentes();
+            cargarHistorial();
         });
 
         async function cargarAlumnos() {
@@ -279,7 +487,7 @@
                 document.getElementById('alumnoLoading').style.display = 'none';
                 document.getElementById('alumnoError').style.display = 'block';
                 if (error.message === "AUTH_REQUIRED") {
-                    alert("⚠️ ERROR DE PERMISOS: El script de alumnos requiere configuración 'Cualquier persona' en la implementación.");
+                    alert("⚠️ ERROR DE PERMISOS: El script de alumnos requiere configuración 'Cualquier persona'.");
                 }
             }
         }
@@ -311,6 +519,112 @@
             }
         }
 
+        async function cargarHistorial() {
+            try {
+                const response = await fetch(SCRIPT_HISTORIAL);
+                if (!response.ok) throw new Error("Load failed");
+                const text = await response.text();
+                if (text.trim().startsWith('<!DOCTYPE')) throw new Error("AUTH_REQUIRED");
+                datosIncidencias = JSON.parse(text);
+                console.log(`✅ Historial actualizado: ${datosIncidencias.length} incidencias registradas`);
+            } catch (error) {
+                console.error("Error al cargar historial:", error);
+                datosIncidencias = [];
+            }
+        }
+
+        function contarIncidenciasAlumno(nombreAlumno) {
+            const panel = document.getElementById('reincidenciasPanel');
+            if (!nombreAlumno || datosIncidencias.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+
+            const nombreNorm = nombreAlumno.toString().trim().toUpperCase();
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            
+            let cicloCompleto = "";
+            let cicloCorto = "";
+            
+            if (month >= 7) {
+                cicloCompleto = `${year}-${year + 1}`;
+                cicloCorto = `${String(year).slice(-2)}${String(year + 1).slice(-2)}`;
+            } else {
+                cicloCompleto = `${year - 1}-${year}`;
+                cicloCorto = `${String(year - 1).slice(-2)}${String(year).slice(-2)}`;
+            }
+
+            let countLeve = 0;
+            let countModerado = 0;
+            let countGrave = 0;
+
+            datosIncidencias.forEach(incidencia => {
+                const keys = Object.keys(incidencia);
+                
+                let nombreIncidencia = "";
+                for (const key of keys) {
+                    if (key.toLowerCase().includes("alumno") || key.toLowerCase().includes("nombre")) {
+                        nombreIncidencia = String(incidencia[key] || "").trim().toUpperCase();
+                        if (nombreIncidencia && nombreIncidencia === nombreNorm) break;
+                    }
+                }
+
+                if (nombreIncidencia === nombreNorm) {
+                    let esCicloActual = false;
+                    for (const key of keys) {
+                        const val = String(incidencia[key] || "").trim();
+                        if (key.toLowerCase().includes("ciclo") && (val === cicloCompleto || val.includes(cicloCorto))) {
+                            esCicloActual = true;
+                            break;
+                        }
+                        if (key.toLowerCase().includes("folio") && val.startsWith(cicloCorto + "-")) {
+                            esCicloActual = true;
+                            break;
+                        }
+                    }
+
+                    if (esCicloActual) {
+                        let tipoFalta = "";
+                        for (const key of keys) {
+                            if (key.toLowerCase().includes("descripcion") || key.toLowerCase().includes("falta") || key.toLowerCase().includes("tipo")) {
+                                const valor = String(incidencia[key] || "").toUpperCase();
+                                if (valor.includes("INDISCIPLINA LEVE")) {
+                                    tipoFalta = "CONDUCTAS DE INDISCIPLINA LEVE";
+                                    break;
+                                } else if (valor.includes("PERTURBAN EL ORDEN") || valor.includes("PERTURBAN")) {
+                                    tipoFalta = "CONDUCTAS QUE PERTURBAN EL ORDEN";
+                                    break;
+                                } else if (valor.includes("VIOLENCIA GRAVE") || valor.includes("VIOLENCIA")) {
+                                    tipoFalta = "CONDUCTAS DE VIOLENCIA GRAVE";
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (tipoFalta === "CONDUCTAS DE INDISCIPLINA LEVE") countLeve++;
+                        else if (tipoFalta === "CONDUCTAS QUE PERTURBAN EL ORDEN") countModerado++;
+                        else if (tipoFalta === "CONDUCTAS DE VIOLENCIA GRAVE") countGrave++;
+                    }
+                }
+            });
+
+            const total = countLeve + countModerado + countGrave;
+
+            document.getElementById('countLeve').textContent = countLeve;
+            document.getElementById('countModerado').textContent = countModerado;
+            document.getElementById('countGrave').textContent = countGrave;
+            document.getElementById('countTotal').textContent = total;
+
+            if (total > 0) {
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
         function buscarYRellenarAlumno() {
             const texto = document.getElementById('buscarAlumno').value.toLowerCase().trim();
             const opciones = document.getElementById('listaAlumnos').options;
@@ -318,7 +632,12 @@
                 if (opciones[i].value.toLowerCase() === texto) {
                     const idx = parseInt(opciones[i].getAttribute('data-index'));
                     const a = datosAlumnos[idx];
-                    document.getElementById('manualNombreAlumno').value = a.nombre || a.Nombre || "";
+                    const nombre = a.nombre || a.Nombre || "";
+                    
+                    // ✅ Guardar el nombre real del alumno seleccionado
+                    alumnoSeleccionadoNombre = nombre;
+                    
+                    document.getElementById('manualNombreAlumno').value = nombre;
                     document.getElementById('manualMatricula').value = a.matricula || a.Matricula || "";
                     document.getElementById('manualMatriculaCompleta').value = a.matricula_id || a.MatriculaCompleta || "";
                     document.getElementById('manualGrado').value = a.grado || a.Grado || "1";
@@ -326,6 +645,8 @@
                     document.getElementById('manualNumeroLista').value = a.butaca || a.Numero || "";
                     document.getElementById('manualNombreTutor').value = a.tutor || a.Tutor || "";
                     document.getElementById('manualCelularTutor').value = a.celular_tutor || a.Celular || "";
+                    
+                    contarIncidenciasAlumno(nombre);
                     return;
                 }
             }
@@ -362,6 +683,27 @@
             alert("Datos guardados temporalmente.");
         }
 
+        function mostrarMedidas() {
+            const tipoSeleccionado = document.getElementById('resumenTipo').textContent;
+            const contenidoDiv = document.getElementById('contenidoMedidas');
+            
+            if (tipoSeleccionado && medidasPorTipo[tipoSeleccionado]) {
+                let html = `<h4 style="color: #0056b3; margin-top: 15px;">${tipoSeleccionado}</h4>`;
+                medidasPorTipo[tipoSeleccionado].forEach((medida, idx) => {
+                    html += `<div class="medida-item"><strong>${idx + 1}.</strong> ${medida}</div>`;
+                });
+                contenidoDiv.innerHTML = html;
+            } else {
+                contenidoDiv.innerHTML = '<p style="color: #dc3545; text-align: center;">No hay medidas disponibles para este tipo de incidencia.</p>';
+            }
+            
+            document.getElementById('modalMedidas').style.display = 'flex';
+        }
+
+        function cerrarModalMedidas() {
+            document.getElementById('modalMedidas').style.display = 'none';
+        }
+
         document.getElementById('formIncidencia').addEventListener('submit', async function(event) {
             event.preventDefault();
             const btn = document.getElementById('btnGenerarReporte');
@@ -378,10 +720,9 @@
                 numero: document.getElementById('manualNumeroLista').value,
                 fecha: document.getElementById('fechaIncidente').value,
                 docente: document.getElementById('manualNombreDocente').value,
-                descripcionFalta: document.getElementById('descripcionFalta').value,
-                nivelGravedad: document.getElementById('nivelGravedad').value,
-                conductaEspecifica: document.getElementById('conductaEspecifica').value,
-                observaciones: document.getElementById('observaciones').value,
+                descripcionFalta: document.getElementById('tipoIndisciplina').value,
+                nivelGravedad: document.getElementById('conductaEspecifica').value,
+                observaciones: document.getElementById('descripcionFalta').value,
                 compromiso: document.getElementById('compromiso').value
             };
 
@@ -404,9 +745,9 @@
                     document.getElementById('resumenGradoGrupo').textContent = formData.grado + "° " + formData.grupo + " (Lista: " + formData.numero + ")";
                     document.getElementById('resumenDocente').textContent = formData.docente;
                     document.getElementById('resumenTipo').textContent = document.getElementById('tipoIndisciplina').value;
-                    document.getElementById('resumenConducta').textContent = formData.conductaEspecifica;
-                    document.getElementById('resumenGravedad').textContent = formData.nivelGravedad;
-                    document.getElementById('resumenDescripcion').textContent = formData.descripcionFalta;
+                    document.getElementById('resumenConducta').textContent = document.getElementById('conductaEspecifica').value;
+                    document.getElementById('resumenGravedad').textContent = gravedadActual;
+                    document.getElementById('resumenDescripcion').textContent = document.getElementById('descripcionFalta').value;
 
                     const celularTutorRaw = document.getElementById('manualCelularTutor').value.replace(/\D/g, '');
                     let numeroWhatsApp = '';
@@ -423,6 +764,9 @@
                     }
 
                     const nombreTutorLimpio = (formData.nombreTutor || "Tutor").trim();
+                    const tipoIndisciplinaValor = document.getElementById('tipoIndisciplina').value;
+                    const conductaEspecificaValor = document.getElementById('conductaEspecifica').value;
+                    const descripcionFaltaValor = document.getElementById('descripcionFalta').value;
                     
                     const mensajeTutor = 
                         `*REPORTE DE INCIDENCIA ESCOLAR - FOLIO: ${result.folio}*` + "\n\n" +
@@ -430,10 +774,10 @@
                         `Estimado(a) Sr./Sra. ${nombreTutorLimpio},` + "\n\n" +
                         `Le informamos que su hijo(a) *${formData.nombreAlumno}* (${formData.grado}° ${formData.grupo}) incurrió en una falta el día ${formData.fecha}.` + "\n\n" +
                         `*Detalles de la falta:*` + "\n" +
-                        `• Tipo: ${document.getElementById('tipoIndisciplina').value}` + "\n" +
-                        `• Conducta: ${formData.conductaEspecifica}` + "\n" +
-                        `• Gravedad: ${formData.nivelGravedad}` + "\n" +
-                        `• Descripción: ${formData.descripcionFalta}` + "\n\n" +
+                        `• Tipo: ${tipoIndisciplinaValor}` + "\n" +
+                        `• Conducta: ${conductaEspecificaValor}` + "\n" +
+                        `• Gravedad: ${gravedadActual}` + "\n" +
+                        `• Descripción: ${descripcionFaltaValor}` + "\n\n" +
                         `*Recomendación:* Le sugerimos dialogar con su hijo(a) en casa sobre la importancia de respetar el reglamento escolar y mejorar su conducta.` + "\n\n" +
                         `*Nota:* En esta instancia, si no recibe una llamada telefónica de la escuela, no es necesario que acuda presencialmente, confiando en que con su apoyo en casa el alumno mejorará su comportamiento.` + "\n\n" +
                         `*Importante:* Le hacemos de su conocimiento que, en caso de reincidencia o dependiendo de la gravedad de futuras faltas, será necesario convocarlo a una reunión en Dirección para tratar el asunto de manera conjunta.` + "\n\n" +
@@ -468,15 +812,36 @@
             }
         });
 
-        function cerrarResumen() {
+        // ✅ FUNCIÓN MEJORADA: Usa el nombre real guardado para actualizar el panel
+        async function cerrarResumen() {
             document.getElementById('resumenReporte').style.display = 'none';
             document.getElementById('formIncidencia').style.display = 'block';
-            document.getElementById('formIncidencia').reset();
-            document.getElementById('fechaIncidente').valueAsDate = new Date();
+            
+            // Recargar el historial para incluir la incidencia que acaba de enviarse
+            await cargarHistorial();
+            
+            // Limpiar solo los campos de la incidencia
+            document.getElementById('tipoIndisciplina').value = "";
             document.getElementById('conductaEspecifica').innerHTML = '<option value="">Seleccione primero un tipo</option>';
-            document.getElementById('nivelGravedad').value = "";
+            
+            const inputGravedad = document.getElementById('nivelGravedad');
+            inputGravedad.value = "";
+            inputGravedad.classList.remove('gravedad-Leve', 'gravedad-Moderado', 'gravedad-Grave');
+            
+            document.getElementById('descripcionFalta').value = "";
+            document.getElementById('fechaIncidente').valueAsDate = new Date();
+            
+            gravedadActual = "";
             document.getElementById('avisoSinTelefono').style.display = 'none';
             document.getElementById('btnWaTutor').style.display = 'none';
+            
+            // ✅ Usar el nombre real guardado para actualizar el panel de reincidencias
+            if (alumnoSeleccionadoNombre) {
+                contarIncidenciasAlumno(alumnoSeleccionadoNombre);
+            } else {
+                document.getElementById('reincidenciasPanel').style.display = 'none';
+            }
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
