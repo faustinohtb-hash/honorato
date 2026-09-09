@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Permiso Escolar</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 20px auto; padding: 20px; background-color: #f4f6f9; color: #333; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header img { max-width: 120px; margin-bottom: 10px; }
+        .alert-warning { background-color: #fff3cd; color: #856404; border-left: 5px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 25px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 1rem; }
+        input:focus, select:focus, textarea:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-top: 20px; }
+        .checkbox-group input { width: auto; margin-top: 5px; }
+        .btn-group { margin-top: 25px; display: flex; gap: 15px; }
+        button { padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem; flex: 1; transition: background 0.3s; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-primary:disabled { background-color: #a0cfff; cursor: not-allowed; }
+        .btn-secondary { background-color: #6c757d; color: white; flex: 0.5; }
+        .btn-secondary:hover { background-color: #545b62; }
+        .footer { text-align: center; margin-top: 40px; font-size: 0.85rem; color: #666; border-top: 1px solid #ddd; padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Logo Escuela">
+        <h1>📋 Solicitud de Permiso Escolar</h1>
+        <p>Este formulario permite a los padres o tutores solicitar permiso para que sus hijos falten a clases o participen en actividades especiales.</p>
+    </div>
+
+    <!-- 🚨 AVISO REQUERIDO -->
+    <div class="alert-warning">
+        <strong>⚠️ AVISO IMPORTANTE SOBRE EL LÍMITE DE PERMISOS:</strong><br>
+        Cada alumno tiene un límite máximo de <strong>3 permisos por mes</strong>. 
+        Si necesitan más, deberán asistir a la institución personalmente a solicitarlo, 
+        presentando la documentación para justificar el motivo del permiso. 
+        De lo contrario, será tomada como inasistencia.
+    </div>
+
+    <form id="formPermiso">
+        <h3>👤 Datos del Padre o Tutor</h3>
+        <div class="form-group">
+            <label>Nombre completo del padre o tutor *</label>
+            <input type="text" id="nombreTutor" name="nombreTutor" required>
+        </div>
+        <div class="form-group">
+            <label>Teléfono de contacto *</label>
+            <input type="tel" id="telefono" name="telefono" required>
+        </div>
+        <!-- Campo de Correo electrónico eliminado -->
+
+        <h3>🎓 Datos del Estudiante</h3>
+        <div class="form-group">
+            <label>Nombre completo del estudiante *</label>
+            <input type="text" id="nombreEstudiante" name="nombreEstudiante" required>
+        </div>
+        <div class="form-group" style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <label>Grado *</label>
+                <select id="grado" name="grado" required>
+                    <option value="">Seleccione...</option>
+                    <option value="1°">1°</option>
+                    <option value="2°">2°</option>
+                    <option value="3°">3°</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label>Grupo *</label>
+                <select id="grupo" name="grupo" required>
+                    <option value="">Seleccione...</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>📝 Detalles del Permiso</h3>
+        <div class="form-group">
+            <label>Motivo del permiso *</label>
+            <select id="motivo" name="motivo" required>
+                <option value="">Seleccione...</option>
+                <option value="Cita médica">Cita médica</option>
+                <option value="Asunto familiar">Asunto familiar</option>
+                <option value="Actividad deportiva o cultural">Actividad deportiva o cultural</option>
+                <option value="Otro">Otro</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Especifique el motivo *</label>
+            <textarea id="especifique" name="especifique" rows="3" required></textarea>
+        </div>
+        <div class="form-group" style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <label>Fecha inicial del permiso *</label>
+                <input type="date" id="fechaInicial" name="fechaInicial" required>
+            </div>
+            <div style="flex: 1;">
+                <label>Cantidad de días de permiso *</label>
+                <input type="number" id="cantidadDias" name="cantidadDias" min="1" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Comentarios adicionales</label>
+            <textarea id="comentarios" name="comentarios" rows="3"></textarea>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="declaracion" name="declaracion" required>
+            <label for="declaracion" style="font-weight: normal; font-size: 0.95rem;">
+                Declaro que la información proporcionada es verídica y autorizo el permiso. *
+            </label>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn-primary" id="btnEnviar">📤 Enviar solicitud</button>
+            <button type="reset" class="btn-secondary">🔄 Nueva solicitud</button>
+        </div>
+    </form>
+
+    <div class="footer">
+        Formulario elaborado para la <strong>Escuela Secundaria Profr. Honorato Tlaseca Barrera</strong><br>
+        Huehuetlán el Chico, Puebla. Edición 2026.
+    </div>
+
+    <script>
+        // URL de tu Google Apps Script implementado
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2WbdErF_7IBxqNpICwhMVmd71ypgd81Idplyh7156L0U0Xt7xAzyqtIw41bzWBPeViA/exec';
+
+        document.getElementById('formPermiso').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const nombreEstudiante = document.getElementById('nombreEstudiante').value.trim();
+            const btnEnviar = document.getElementById('btnEnviar');
+            const textoOriginal = btnEnviar.innerText;
+            
+            btnEnviar.innerText = '⏳ Verificando permisos...';
+            btnEnviar.disabled = true;
+
+            try {
+                // Agregamos &t=${Date.now()} para evitar que el navegador guarde en caché la respuesta
+                const checkUrl = `${SCRIPT_URL}?accion=contar&nombre=${encodeURIComponent(nombreEstudiante)}&t=${Date.now()}`;
+                const response = await fetch(checkUrl, { method: 'GET', redirect: 'follow' });
+                const data = await response.json();
+                
+                if (data.count >= 3) {
+                    alert("⚠️ LÍMITE DE PERMISOS MENSUALES ALCANZADO\n\n" +
+                          "El alumno '" + nombreEstudiante + "' ya ha utilizado sus 3 permisos de este mes.\n\n" +
+                          "Si necesitan más, deberán asistir a la institución personalmente a solicitarlo, " +
+                          "presentando la documentación para justificar el motivo del permiso. " +
+                          "De lo contrario, será tomada como inasistencia.");
+                    btnEnviar.innerText = textoOriginal;
+                    btnEnviar.disabled = false;
+                    return; // DETIENE EL ENVÍO
+                }
+            } catch (error) {
+                console.warn("Error de verificación en línea, usando respaldo local.", error);
+                const hoy = new Date();
+                const clave = `permisos_${nombreEstudiante.toLowerCase()}_${hoy.getFullYear()}_${hoy.getMonth()}`;
+                const countLocal = parseInt(localStorage.getItem(clave) || '0');
+                
+                if (countLocal >= 3) {
+                    alert("⚠️ LÍMITE DE PERMISOS ALCANZADO\n\n" +
+                          "El sistema registra 3 permisos este mes para este alumno.\n" +
+                          "Deberá asistir personalmente a la institución con documentación justificante.");
+                    btnEnviar.innerText = textoOriginal;
+                    btnEnviar.disabled = false;
+                    return;
+                }
+            }
+
+            // Si pasa la validación, enviar a Google Sheets
+            btnEnviar.innerText = '📤 Enviando solicitud...';
+            const formData = new FormData(this);
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                alert("✅ Solicitud enviada correctamente.");
+                const hoy = new Date();
+                const clave = `permisos_${nombreEstudiante.toLowerCase()}_${hoy.getFullYear()}_${hoy.getMonth()}`;
+                const countLocal = parseInt(localStorage.getItem(clave) || '0');
+                localStorage.setItem(clave, countLocal + 1);
+                document.getElementById('formPermiso').reset();
+            })
+            .catch(error => {
+                alert("❌ Error al enviar la solicitud. Verifique su conexión e intente nuevamente.");
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                btnEnviar.innerText = textoOriginal;
+                btnEnviar.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
