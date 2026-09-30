@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Control de Asistencia QR — Secundaria Profr. Honorato Tlaseca Barrera</title>
+    <meta property="og:title" content="Control de Asistencia QR">
+    <meta property="og:description" content="Sistema de escaneo y registro de asistencia, retardos, salidas y faltas.">
+    <meta property="og:image" content="https://faustinohtb-hash.github.io/honorato/1784576408.png">
+    <meta property="og:type" content="website">
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh; font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            display: flex; flex-direction: column; align-items: center; padding: 20px 15px; color: #333;
+        }
+        .contenedor-principal {
+            background: #ffffff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px; width: 100%; overflow: hidden; animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .header-institucional {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff; padding: 25px 20px; text-align: center; position: relative; overflow: hidden;
+        }
+        .header-institucional::before {
+            content: ''; position: absolute; top: -50%; right: -10%; width: 300px; height: 300px;
+            background: rgba(255, 255, 255, 0.05); border-radius: 50%;
+        }
+        .escudo {
+            width: 80px; height: 80px; border-radius: 50%; background: #ffffff; padding: 5px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); object-fit: contain;
+            border: 3px solid rgba(255, 255, 255, 0.3); margin-bottom: 10px; position: relative; z-index: 2;
+        }
+        .titulo-sistema {
+            font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700;
+            letter-spacing: 0.5px; margin-bottom: 4px; position: relative; z-index: 2; text-transform: uppercase;
+        }
+        .subtitulo-escuela { font-size: 13px; font-weight: 300; opacity: 0.95; position: relative; z-index: 2; }
+
+        .controles-principales {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;
+            padding: 20px; background: #f8f9fa; border-bottom: 2px solid #eaeef2;
+        }
+        .btn-control {
+            padding: 12px 8px; border: none; border-radius: 12px;
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px;
+            cursor: pointer; transition: all 0.3s ease; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 6px; color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .btn-control:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+        .btn-control:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-control .icono { font-size: 24px; }
+        .btn-asistencia { background: linear-gradient(135deg, #27ae60, #1e8449); }
+        .btn-detener { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .btn-salida { background: linear-gradient(135deg, #f39c12, #d68910); }
+        .btn-faltas { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .btn-volver { background: linear-gradient(135deg, #95a5a6, #7f8c8d); display: none; }
+        
+        .btn-control.activo {
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.6), 0 4px 12px rgba(0,0,0,0.15);
+            animation: pulse-borde 2s infinite;
+        }
+        @keyframes pulse-borde {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(255,255,255,0.6), 0 4px 12px rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 0 0 5px rgba(255,255,255,0.9), 0 4px 12px rgba(0,0,0,0.15); }
+        }
+
+        .area-escaneo, .vista-faltas { padding: 25px 20px; background: #fafbfc; }
+        .vista-faltas { display: none; }
+        
+        .instrucciones {
+            background: #e3f2fd; border-left: 4px solid #2a5298; padding: 12px 15px;
+            border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: #1e3c72;
+            display: flex; align-items: center; gap: 10px;
+        }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; border: 2px dashed #2a5298; background: #000; }
+        
+        .ultimo-escaneo {
+            display: none; padding: 20px; background: #ffffff;
+            border-top: 1px solid #eaeef2; animation: slideUp 0.5s ease-out;
+        }
+        .ultimo-escaneo.activo { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .escaneo-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 2px solid #2a5298; }
+        .escaneo-icono {
+            font-size: 28px; background: linear-gradient(135deg, #27ae60, #1e8449);
+            width: 45px; height: 45px; border-radius: 10px; display: flex;
+            align-items: center; justify-content: center; color: white;
+        }
+        .escaneo-icono.error { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .escaneo-titulo { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: #1e3c72; }
+        .escaneo-subtitulo { font-size: 12px; color: #5a6c7d; }
+
+        .datos-alumno { background: #f8f9fa; border-radius: 10px; padding: 12px; margin-bottom: 15px; }
+        .dato-fila { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eaeef2; font-size: 13px; }
+        .dato-fila:last-child { border-bottom: none; }
+        .dato-label { font-weight: 600; color: #1e3c72; font-family: 'Montserrat', sans-serif; }
+        .dato-valor { color: #333; text-align: right; max-width: 60%; word-break: break-word; }
+        .estado-guardado { text-align: center; padding: 10px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px; color: #2a5298; background: #e3f2fd; }
+
+        .historial-seccion, .faltas-seccion { padding: 25px 20px; background: #f8f9fa; border-top: 1px solid #eaeef2; }
+        .historial-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .historial-titulo { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; color: #1e3c72; }
+        .contador { background: linear-gradient(135deg, #2a5298, #1e3c72); color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 600; }
+        
+        .lista-scroll { max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        
+        .item-falta {
+            background: white; padding: 15px; border-radius: 10px;
+            border-left: 4px solid #e74c3c; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .falta-nombre { font-weight: 700; font-size: 15px; color: #1e3c72; margin-bottom: 4px; }
+        .falta-grupo { font-size: 12px; color: #e74c3c; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+        .falta-tutor { font-size: 13px; color: #555; margin-bottom: 10px; line-height: 1.4; }
+        .btn-llamar {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #27ae60; color: white; text-decoration: none;
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            font-family: 'Montserrat', sans-serif; transition: background 0.3s;
+        }
+        .btn-llamar:hover { background: #1e8449; }
+        .btn-llamar.sin-telefono { background: #95a5a6; cursor: not-allowed; }
+
+        .control-sonido { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f0f4f8; border-top: 1px solid #eaeef2; }
+        .btn-sonido {
+            background: white; border: 2px solid #2a5298; color: #2a5298; padding: 8px 16px;
+            border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+            font-family: 'Montserrat', sans-serif; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-sonido.mute { border-color: #95a5a6; color: #95a5a6; }
+
+        .estado-escaneo { text-align: center; padding: 10px; font-size: 13px; color: #5a6c7d; font-style: italic; }
+        .estado-escaneo .pulso { display: inline-block; width: 8px; height: 8px; background: #27ae60; border-radius: 50%; margin-right: 6px; animation: pulse 1.5s infinite; }
+        .estado-escaneo .cargando { background: #f39c12; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
+
+        .footer-institucional { background: #1a252f; color: #b8c5d1; padding: 20px 25px; text-align: center; font-size: 11px; line-height: 1.6; }
+        .footer-institucional strong { color: #ffffff; font-weight: 600; }
+        .footer-divider { width: 40px; height: 2px; background: #2a5298; margin: 8px auto; }
+
+        @media (max-width: 480px) {
+            .titulo-sistema { font-size: 18px; }
+            .escudo { width: 70px; height: 70px; }
+            .controles-principales { grid-template-columns: 1fr 1fr; }
+            .dato-fila { flex-direction: column; gap: 2px; }
+            .dato-valor { text-align: left; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <header class="header-institucional">
+            <img src="https://faustinohtb-hash.github.io/honorato/imagenes/logo_escuela.png" alt="Escudo" class="escudo">
+            <h1 class="titulo-sistema">Control de Asistencia QR</h1>
+            <p class="subtitulo-escuela">Secundaria Profr. Honorato Tlaseca Barrera</p>
+        </header>
+
+        <div class="controles-principales">
+            <button class="btn-control btn-asistencia" id="btnAsistencia" onclick="iniciarModo('ASISTENCIA')">
+                <span class="icono">✅</span><span>Asistencia</span>
+            </button>
+            <button class="btn-control btn-salida" id="btnSalida" onclick="iniciarModo('SALIDA')">
+                <span class="icono">🚪</span><span>Salida</span>
+            </button>
+            <button class="btn-control btn-faltas" id="btnFaltas" onclick="mostrarVistaFaltas()">
+                <span class="icono">📋</span><span>Revisar Faltas</span>
+            </button>
+            <button class="btn-control btn-detener" id="btnDetener" onclick="detenerEscaneo()" disabled>
+                <span class="icono">⏹️</span><span>Detener</span>
+            </button>
+            <button class="btn-control btn-volver" id="btnVolver" onclick="volverAlEscaneo()">
+                <span class="icono">🔙</span><span>Volver</span>
+            </button>
+        </div>
+
+        <div id="vistaEscaneo" class="area-escaneo">
+            <div class="instrucciones" id="instrucciones">
+                <span>📱</span><span>Seleccione un modo para comenzar el escaneo.</span>
+            </div>
+            <div id="reader"></div>
+            <div class="estado-escaneo" id="estadoEscaneo">
+                <span class="pulso cargando"></span> Sincronizando datos...
+            </div>
+        </div>
+
+        <div id="vistaFaltas" class="vista-faltas">
+            <div class="historial-header">
+                <div class="historial-titulo">🚨 Alumnos Ausentes Hoy</div>
+                <div class="contador" id="contadorFaltas">0 faltas</div>
+            </div>
+            <div id="listaFaltas" class="lista-scroll">
+                <div style="text-align: center; color: #95a5a6; padding: 20px;">Cargando lista de faltas...</div>
+            </div>
+        </div>
+
+        <div class="control-sonido">
+            <button class="btn-sonido" id="btnSonido" onclick="toggleSonido()">🔊 Sonido: Activado</button>
+        </div>
+
+        <div class="ultimo-escaneo" id="ultimoEscaneo">
+            <div class="escaneo-header">
+                <div class="escaneo-icono" id="escaneoIcono">✓</div>
+                <div>
+                    <div class="escaneo-titulo" id="escaneoTitulo">Alumno Identificado</div>
+                    <div class="escaneo-subtitulo" id="escaneoSubtitulo"></div>
+                </div>
+            </div>
+            <div class="datos-alumno" id="datosAlumno"></div>
+            <div class="estado-guardado" id="estadoGuardado">💾 Guardando...</div>
+        </div>
+
+        <footer class="footer-institucional">
+            <strong>Secundaria Profr. Honorato Tlaseca Barrera</strong>
+            <div class="footer-divider"></div>
+            Carretera Puebla-Chiautla No.1, Huehuetlán el Chico, Pue. C.P. 74720<br>
+            © 2025 Todos los derechos reservados.
+        </footer>
+    </div>
+
+    <script>
+        let html5QrCode, listaAlumnos = [], asistenciasHoySet = new Set();
+        let escaneoActivo = false, modoActual = null, sonidoActivado = true;
+        let audioContext = null, alumnoActual = null, ultimoQR = null;
+
+        // ✅ URL DE TU SCRIPT (actualizada)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCk_wns72Cy4_eV-1hasA-mVDtFC6uBDkVcqsZRASYIrJdZnowjPQc5PmQTwD3uhkm2g/exec";
+
+        document.addEventListener('DOMContentLoaded', () => { cargarDatos(); });
+
+        function obtenerFechaEstricta(date) {
+            const d = new Date(date);
+            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        }
+
+        function obtenerHoraEstricta(date) {
+            return new Date(date).toLocaleTimeString('es-MX', { hour12: false });
+        }
+
+        function inicializarAudio() {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        async function reproducirBeep(frecuencia, tipo, duracion) {
+            if (!sonidoActivado) return;
+            inicializarAudio();
+            if (audioContext.state === 'suspended') await audioContext.resume();
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain); gain.connect(audioContext.destination);
+            osc.frequency.value = frecuencia; osc.type = tipo;
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duracion);
+            osc.start(audioContext.currentTime); osc.stop(audioContext.currentTime + duracion);
+        }
+
+        async function toggleSonido() {
+            sonidoActivado = !sonidoActivado;
+            const btn = document.getElementById('btnSonido');
+            if (sonidoActivado) {
+                btn.innerHTML = '🔊 Sonido: Activado'; btn.classList.remove('mute');
+                await reproducirBeep(1200, 'square', 0.15);
+            } else {
+                btn.innerHTML = '🔇 Sonido: Desactivado'; btn.classList.add('mute');
+            }
+        }
+
+        async function cargarDatos() {
+            try {
+                const estadoEl = document.getElementById('estadoEscaneo');
+                estadoEl.innerHTML = '<span class="pulso cargando"></span> Sincronizando datos...';
+                // cache: 'no-cache' fuerza a recargar los datos frescos del servidor
+                const response = await fetch(SCRIPT_URL, { cache: 'no-cache' });
+                if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
+                const data = await response.json();
+                
+                if (data.ok && Array.isArray(data.alumnos)) {
+                    listaAlumnos = data.alumnos;
+                    asistenciasHoySet = new Set((data.asistenciasHoy || []).map(m => String(m).trim()));
+                    
+                    console.log(`✅ Alumnos cargados: ${listaAlumnos.length}`);
+                    console.log(`✅ Asistencias de hoy detectadas: ${asistenciasHoySet.size}`);
+                    console.log(`📋 Matrículas registradas hoy:`, Array.from(asistenciasHoySet));
+                    
+                    estadoEl.innerHTML = '<span class="pulso"></span> Datos listos. Seleccione un modo.';
+                } else {
+                    throw new Error("Formato de datos incorrecto.");
+                }
+            } catch (error) {
+                console.error("❌ Error:", error);
+                document.getElementById('estadoEscaneo').innerHTML = `⚠️ Error: ${error.message}`;
+                document.getElementById('estadoEscaneo').style.color = '#c0392b';
+            }
+        }
+
+        function iniciarModo(modo) {
+            if (escaneoActivo) detenerEscaneo();
+            modoActual = modo;
+            actualizarBotones();
+            document.getElementById('instrucciones').innerHTML = `<span>${modo === 'ASISTENCIA' ? '✅' : '🚪'}</span><span>Modo ${modo} activo. Escanee el QR.</span>`;
+            iniciarCamara();
+        }
+
+        function detenerEscaneo() {
+            if (html5QrCode && escaneoActivo) {
+                html5QrCode.stop().then(() => {
+                    escaneoActivo = false; modoActual = null;
+                    actualizarBotones();
+                    document.getElementById('instrucciones').innerHTML = '<span>⏹️</span><span>Escaneo detenido.</span>';
+                    document.getElementById('estadoEscaneo').innerHTML = '<span class="pulso"></span> Cámara detenida.';
+                }).catch(err => console.log(err));
+            }
+        }
+
+        function actualizarBotones() {
+            document.getElementById('btnAsistencia').classList.toggle('activo', modoActual === 'ASISTENCIA');
+            document.getElementById('btnSalida').classList.toggle('activo', modoActual === 'SALIDA');
+            document.getElementById('btnDetener').disabled = !escaneoActivo;
+        }
+
+        function iniciarCamara() {
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+            
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    let cameraId = devices[0].id;
+                    for (let device of devices) {
+                        if (device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('trasera') || device.label.toLowerCase().includes('rear')) {
+                            cameraId = device.id; break;
+                        }
+                    }
+                    html5QrCode.start(cameraId, config, onScanSuccess, onScanFailure)
+                        .then(() => {
+                            escaneoActivo = true;
+                            actualizarBotones();
+                            document.getElementById('estadoEscaneo').innerHTML = '<span class="pulso"></span> Cámara activa. Escaneando...';
+                            inicializarAudio();
+                        }).catch(err => {
+                            console.error("Error cámara:", err);
+                            document.getElementById('estadoEscaneo').innerHTML = '⚠️ Permiso de cámara denegado o no disponible.';
+                        });
+                } else {
+                    document.getElementById('estadoEscaneo').innerHTML = '⚠️ No se detectaron cámaras.';
+                }
+            }).catch(err => {
+                console.error("Error obteniendo cámaras:", err);
+                document.getElementById('estadoEscaneo').innerHTML = '⚠️ Error al acceder a las cámaras.';
+            });
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (ultimoQR === decodedText) return;
+            ultimoQR = decodedText;
+            setTimeout(() => { ultimoQR = null; }, 1500);
+            buscarAlumno(decodedText);
+        }
+
+        function onScanFailure(error) {}
+
+        async function buscarAlumno(qrText) {
+            try {
+                const textoLimpio = String(qrText).trim().toUpperCase();
+                const alumno = listaAlumnos.find(a => String(a.matricula_id || "").trim().toUpperCase() === textoLimpio);
+                const ahora = new Date();
+                const horaEscaneo = obtenerHoraEstricta(ahora);
+
+                if (alumno) {
+                    alumnoActual = alumno;
+                    await reproducirBeep(1200, 'square', 0.15);
+                    mostrarExito(alumno, horaEscaneo);
+                    setTimeout(() => { guardarRegistro(); }, 500);
+                } else {
+                    alumnoActual = null;
+                    await reproducirBeep(400, 'square', 0.3);
+                    mostrarError(qrText, horaEscaneo);
+                }
+            } catch (error) {
+                console.error("Error en búsqueda:", error);
+                await reproducirBeep(400, 'square', 0.3);
+                mostrarError(qrText, obtenerHoraEstricta(new Date()));
+            }
+        }
+
+        function mostrarExito(alumno, horaEscaneo) {
+            const panel = document.getElementById('ultimoEscaneo');
+            const icono = document.getElementById('escaneoIcono');
+            const subtitulo = document.getElementById('escaneoSubtitulo');
+            const estadoGuardado = document.getElementById('estadoGuardado');
+
+            icono.textContent = '✓'; icono.classList.remove('error');
+            document.getElementById('escaneoTitulo').textContent = 'Alumno Identificado';
+            
+            const minutosTotales = new Date().getHours() * 60 + new Date().getMinutes();
+            let situacion = '', texto = '', color = '';
+
+            if (modoActual === 'SALIDA') { situacion = 'S'; texto = '🚪 Salida'; color = '#f39c12'; } 
+            else if (minutosTotales > 450) { situacion = 'R'; texto = '⚠️ Retardo'; color = '#e74c3c'; } 
+            else { situacion = 'A'; texto = '✅ Asistencia'; color = '#27ae60'; }
+
+            subtitulo.innerHTML = `Escaneado: ${horaEscaneo} <span style="color:${color}; font-weight:bold; margin-left:8px;">[${texto}]</span>`;
+            estadoGuardado.innerHTML = '💾 Guardando...';
+            estadoGuardado.style.color = '#2a5298'; estadoGuardado.style.background = '#e3f2fd';
+
+            document.getElementById('datosAlumno').innerHTML = `
+                <div class="dato-fila"><span class="dato-label">Nombre:</span><span class="dato-valor" style="font-weight:600;">${alumno.nombre}</span></div>
+                <div class="dato-fila"><span class="dato-label">Matrícula ID:</span><span class="dato-valor">${alumno.matricula_id}</span></div>
+                <div class="dato-fila"><span class="dato-label">Grado y Grupo:</span><span class="dato-valor">${alumno.grado}° "${alumno.grupo}"</span></div>
+            `;
+            panel.classList.add('activo');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function mostrarError(qrText, horaEscaneo) {
+            const panel = document.getElementById('ultimoEscaneo');
+            document.getElementById('escaneoIcono').textContent = '✕';
+            document.getElementById('escaneoIcono').classList.add('error');
+            document.getElementById('escaneoTitulo').textContent = 'Alumno No Encontrado';
+            document.getElementById('escaneoSubtitulo').textContent = `Escaneado: ${horaEscaneo}`;
+            document.getElementById('datosAlumno').innerHTML = `<div class="dato-fila"><span class="dato-label">QR:</span><span class="dato-valor" style="font-family:monospace; font-size:12px;">${qrText}</span></div>`;
+            const eg = document.getElementById('estadoGuardado');
+            eg.innerHTML = '❌ No se guardó'; eg.style.color = '#c0392b'; eg.style.background = '#fdecea';
+            panel.classList.add('activo');
+        }
+
+        async function guardarRegistro() {
+            if (!alumnoActual) return;
+            const ahora = new Date();
+            const minutosTotales = ahora.getHours() * 60 + ahora.getMinutes();
+            let situacion = '', horaEntrada = '', horaSalida = '';
+
+            if (modoActual === 'SALIDA') { situacion = 'S'; horaSalida = obtenerHoraEstricta(ahora); } 
+            else if (minutosTotales > 450) { situacion = 'R'; horaEntrada = obtenerHoraEstricta(ahora); } 
+            else { situacion = 'A'; horaEntrada = obtenerHoraEstricta(ahora); }
+
+            const matriculaLimpia = String(alumnoActual.matricula_id).trim();
+
+            const payload = {
+                situacion, fecha: obtenerFechaEstricta(ahora), horaEntrada, horaSalida,
+                nombreAlumno: alumnoActual.nombre, grado: alumnoActual.grado, grupo: alumnoActual.grupo,
+                matriculaId: matriculaLimpia
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                const resultado = await response.json();
+
+                if (resultado.ok) {
+                    await reproducirBeep(800, 'sine', 0.25);
+                    const eg = document.getElementById('estadoGuardado');
+                    eg.innerHTML = resultado.mensaje;
+                    eg.style.color = resultado.mensaje.includes('No se encontro') ? '#e67e22' : '#27ae60';
+                    eg.style.background = resultado.mensaje.includes('No se encontro') ? '#fef5e7' : '#e8f8f5';
+                    
+                    // Actualizar el conjunto de asistencias en memoria
+                    if (situacion === 'A' || situacion === 'R') {
+                        asistenciasHoySet.add(matriculaLimpia);
+                    }
+
+                    setTimeout(() => {
+                        document.getElementById('ultimoEscaneo').classList.remove('activo');
+                        alumnoActual = null;
+                    }, 1500);
+                } else {
+                    throw new Error(resultado.mensaje || 'Error del servidor');
+                }
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                const eg = document.getElementById('estadoGuardado');
+                eg.innerHTML = '❌ Error de red'; eg.style.color = '#c0392b'; eg.style.background = '#fdecea';
+            }
+        }
+
+        function mostrarVistaFaltas() {
+            detenerEscaneo();
+            document.getElementById('vistaEscaneo').style.display = 'none';
+            document.getElementById('ultimoEscaneo').classList.remove('activo');
+            document.getElementById('vistaFaltas').style.display = 'block';
+            document.getElementById('btnVolver').style.display = 'flex';
+            
+            ['btnAsistencia', 'btnSalida', 'btnFaltas', 'btnDetener'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+
+            renderizarFaltas();
+        }
+
+        function volverAlEscaneo() {
+            document.getElementById('vistaFaltas').style.display = 'none';
+            document.getElementById('vistaEscaneo').style.display = 'block';
+            document.getElementById('btnVolver').style.display = 'none';
+            
+            ['btnAsistencia', 'btnSalida', 'btnFaltas', 'btnDetener'].forEach(id => {
+                document.getElementById(id).style.display = 'flex';
+            });
+            
+            if (modoActual) iniciarModo(modoActual);
+        }
+
+        function renderizarFaltas() {
+            const contenedor = document.getElementById('listaFaltas');
+            const contador = document.getElementById('contadorFaltas');
+            
+            const faltantes = listaAlumnos.filter(alumno => {
+                const matricula = String(alumno.matricula_id || "").trim();
+                return matricula !== "" && !asistenciasHoySet.has(matricula);
+            });
+
+            faltantes.sort((a, b) => {
+                if (a.grado !== b.grado) return a.grado - b.grado;
+                return String(a.grupo).localeCompare(String(b.grupo));
+            });
+
+            contador.textContent = `${faltantes.length} falta${faltantes.length !== 1 ? 's' : ''}`;
+
+            if (faltantes.length === 0) {
+                contenedor.innerHTML = '<div style="text-align:center; padding:30px; color:#27ae60; font-weight:600;">🎉 ¡Excelente! No hay faltas registradas hoy.</div>';
+                return;
+            }
+
+            contenedor.innerHTML = faltantes.map(alumno => {
+                const telefonoLimpio = String(alumno.celular_tutor || "").replace(/\D/g, '');
+                const tieneTelefono = telefonoLimpio.length >= 10;
+                
+                return `
+                <div class="item-falta">
+                    <div class="falta-grupo">${alumno.grado}° Grado - Grupo "${alumno.grupo}"</div>
+                    <div class="falta-nombre">${alumno.nombre}</div>
+                    <div class="falta-tutor">
+                        <strong>Tutor:</strong> ${alumno.tutor || 'No registrado'}<br>
+                        <strong>Tel:</strong> ${alumno.celular_tutor || 'No registrado'}
+                    </div>
+                    ${tieneTelefono 
+                        ? `<a href="tel:${telefonoLimpio}" class="btn-llamar">📞 Llamar al Tutor</a>` 
+                        : `<span class="btn-llamar sin-telefono">📞 Sin teléfono</span>`
+                    }
+                </div>
+                `;
+            }).join('');
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (html5QrCode && escaneoActivo) html5QrCode.stop().catch(() => {});
+        });
+    </script>
+</body>
+</html>
