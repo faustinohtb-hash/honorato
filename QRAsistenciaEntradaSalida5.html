@@ -3,11 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control de Asistencia QR — Secundaria Profr. Honorato Tlaseca Barrera</title>
-    <meta property="og:title" content="Control de Asistencia QR">
-    <meta property="og:description" content="Sistema de escaneo y registro de asistencia, retardos, salidas y faltas.">
-    <meta property="og:image" content="https://faustinohtb-hash.github.io/honorato/1784576408.png">
+    
+    <!-- ✅ METADATOS PARA WHATSAPP Y REDES SOCIALES -->
+    <meta property="og:title" content="Control de Asistencia QR - Secundaria Profr. Honorato Tlaseca Barrera">
+    <meta property="og:description" content="Sistema de gestión de asistencia escolar con escaneo QR, registro de retardos, salidas y permisos. Secundaria Profr. Honorato Tlaseca Barrera - Huehuetlán el Chico, Puebla.">
+    <meta property="og:image" content="https://faustinohtb-hash.github.io/honorato/imagenes/logoweb.png">
+    <meta property="og:url" content="https://faustinohtb-hash.github.io/honorato/escaner-qr.html">
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Secundaria HTB">
+    
+    <!-- ✅ METADATOS PARA TWITTER -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Control de Asistencia QR - Secundaria Profr. Honorato Tlaseca Barrera">
+    <meta name="twitter:description" content="Sistema de gestión de asistencia escolar con escaneo QR">
+    <meta name="twitter:image" content="https://faustinohtb-hash.github.io/honorato/imagenes/logoweb.png">
+    
+    <!-- ✅ ICONOS PARA APP (iOS y Android) -->
+    <link rel="icon" type="image/png" href="https://faustinohtb-hash.github.io/honorato/imagenes/logoweb.png">
+    <link rel="apple-touch-icon" href="https://faustinohtb-hash.github.io/honorato/imagenes/logoweb.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://faustinohtb-hash.github.io/honorato/imagenes/logoweb.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://faustinohtb-hash.github.io/honorato/imagenes/logoweb.png">
+    <link rel="apple-touch-startup-image" href="https://faustinohtb-hash.github.io/honorato/imagenes/logoweb.png">
+    
+    <!-- ✅ MANIFEST PARA PWA (Progressive Web App) -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ29udHJvbCBkZSBBc2lzdGVuY2lhIFFSIC0gU2VjdW5kYXJpYSBIVCIiLCJzaG9ydF9uYW1lIjoiQXNpc3RlbmNpYSBRUiIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMWUzYzcyIiwidGhlbWVfY29sb3IiOiIjMWUzYzcyIiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vZmF1c3Rpbm9odGItaGFzaC5naXRodWIuaW8vaG9ub3JhdG8vaW1hZ2VuZXMvbG9nb3dlYi5wbmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
+    
+    <!-- ✅ META TAGS PARA MÓVIL -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Asistencia QR">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1e3c72">
+    <meta name="application-name" content="Control de Asistencia QR">
+    
+    <title>Control de Asistencia QR — Secundaria Profr. Honorato Tlaseca Barrera</title>
 
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -284,7 +313,7 @@
                 <span class="icono">🚪</span><span>Salida QR</span>
             </button>
             <button class="btn-control btn-manual-entrada" id="btnManualEntrada" onclick="mostrarVistaManual('ENTRADA')">
-                <span class="icono">✍️</span><span>Asistencia Manual</span>
+                <span class="icono">️</span><span>Asistencia Manual</span>
             </button>
             <button class="btn-control btn-manual-salida" id="btnManualSalida" onclick="mostrarVistaManual('SALIDA')">
                 <span class="icono">🚪</span><span>Salida Manual</span>
@@ -299,7 +328,7 @@
                 <span class="icono">🔍</span><span>Consultar</span>
             </button>
             <button class="btn-control btn-detener" id="btnDetener" onclick="detenerEscaneo()" disabled>
-                <span class="icono">⏹️</span><span>Detener Captura</span>
+                <span class="icono">️</span><span>Detener Captura</span>
             </button>
             <button class="btn-control btn-volver" id="btnVolver" onclick="volverAlEscaneo()">
                 <span class="icono">🔙</span><span>Volver</span>
@@ -473,7 +502,6 @@
             }
         }
 
-        // ✅ NUEVO: Sonido especial de "Ding" para sincronización exitosa
         async function reproducirSonidoSincronizacion() {
             if (!sonidoActivado) return;
             if (!audioContext) inicializarAudio();
@@ -484,12 +512,11 @@
             if (audioContext.state !== 'running') return;
             
             try {
-                // Primer tono (agudo)
                 const osc1 = audioContext.createOscillator();
                 const gain1 = audioContext.createGain();
                 osc1.connect(gain1);
                 gain1.connect(audioContext.destination);
-                osc1.frequency.value = 880; // Nota La (A5)
+                osc1.frequency.value = 880;
                 osc1.type = 'sine';
                 const ahora = audioContext.currentTime;
                 gain1.gain.setValueAtTime(0.2, ahora);
@@ -497,13 +524,12 @@
                 osc1.start(ahora);
                 osc1.stop(ahora + 0.2);
                 
-                // Segundo tono (más agudo, con delay)
                 setTimeout(() => {
                     const osc2 = audioContext.createOscillator();
                     const gain2 = audioContext.createGain();
                     osc2.connect(gain2);
                     gain2.connect(audioContext.destination);
-                    osc2.frequency.value = 1320; // Nota Mi (E6)
+                    osc2.frequency.value = 1320;
                     osc2.type = 'sine';
                     const ahora2 = audioContext.currentTime;
                     gain2.gain.setValueAtTime(0.2, ahora2);
@@ -520,7 +546,7 @@
             sonidoActivado = !sonidoActivado;
             const btn = document.getElementById('btnSonido');
             if (sonidoActivado) {
-                btn.innerHTML = '🔊 Sonido: Activado'; btn.classList.remove('mute');
+                btn.innerHTML = ' Sonido: Activado'; btn.classList.remove('mute');
                 await reproducirBeep(1200, 'square', 0.15);
             } else {
                 btn.innerHTML = '🔇 Sonido: Desactivado'; btn.classList.add('mute');
@@ -603,8 +629,6 @@
                     estadoEl.innerHTML = '<span class="pulso"></span> Datos listos. Seleccione un modo.';
                     
                     actualizarContadores();
-                    
-                    // ✅ NUEVO: Reproducir sonido de sincronización exitosa
                     await reproducirSonidoSincronizacion();
                 } else {
                     throw new Error("Formato de datos incorrecto.");
@@ -1019,7 +1043,7 @@
                     textoSituacion = 'Salida';
                 } else if (registro.situacion === 'P') {
                     claseSituacion = 'permiso';
-                    iconoSituacion = '📝';
+                    iconoSituacion = '';
                     textoSituacion = 'Permiso';
                 }
 
